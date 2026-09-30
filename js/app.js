@@ -191,6 +191,7 @@ class ExamApp {
 
     this.startTimer();
     this.loadQuestion(0);
+    document.body.classList.add("exam-mode");
     this.showScreen("screen-exam");
     window.soundEngine.select();
     this.showToast("Mamba MVP Proctored Examination Session Active");
@@ -374,6 +375,7 @@ class ExamApp {
   finalizeExam() {
     this.closeModal("submit-modal");
     clearInterval(this.timerInterval);
+    document.body.classList.remove("exam-mode");
     this.isExamActive = false;
     this.examFinished = true;
 
@@ -832,6 +834,7 @@ ${JSON.stringify(payload, null, 2)}
     this.currentIndex = 0;
     this.isExamActive = false;
     this.examFinished = false;
+    document.body.classList.remove("exam-mode");
     document.getElementById("header-exam-meta").style.display = "none";
     this.showScreen("screen-orientation");
   }

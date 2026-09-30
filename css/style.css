@@ -1732,6 +1732,275 @@ body {
   }
 }
 
+/* Desktop Advisory Banner on Orientation Page */
+.desktop-advisory-banner {
+  background: #fff8f5;
+  border: 2px solid var(--accent-orange);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-neo);
+  padding: 18px 22px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.advisory-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--accent-orange-light);
+  border: 2px solid var(--accent-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.advisory-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.advisory-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.advisory-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.advisory-tag {
+  background: var(--accent-orange);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.advisory-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.advisory-text code {
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-orange);
+}
+
+/* Sidebar shortcuts card */
+.shortcuts-card {
+  background: #fdfefe;
+}
+
+.shortcut-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.shortcut-row kbd {
+  background: #f1f5f9;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  box-shadow: 1px 1px 0px var(--border-strong);
+}
+
+/* ==========================================================================
+   Desktop Single-Page Viewport Experience for Exam Session (Zero Window Scroll)
+   ========================================================================== */
+@media (min-width: 1024px) {
+  body.exam-mode {
+    overflow: hidden !important;
+    height: 100vh !important;
+  }
+
+  body.exam-mode .app-wrapper {
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  body.exam-mode .studio-header {
+    height: 64px !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.exam-mode .main-content {
+    height: calc(100vh - 64px) !important;
+    overflow: hidden !important;
+    padding: 14px 28px !important;
+  }
+
+  body.exam-mode #screen-exam {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  body.exam-mode .exam-layout {
+    height: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 380px !important;
+    gap: 20px !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
+  }
+
+  body.exam-mode .question-canvas {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding: 20px 28px !important;
+  }
+
+  body.exam-mode .canvas-top-bar {
+    flex-shrink: 0 !important;
+    margin-bottom: 12px !important;
+    padding-bottom: 10px !important;
+  }
+
+  body.exam-mode .question-statement-box {
+    flex-shrink: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.exam-mode .q-number-label {
+    margin-bottom: 4px !important;
+    font-size: 0.78rem !important;
+  }
+
+  body.exam-mode .question-text {
+    font-size: 1.15rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+  }
+
+  body.exam-mode .scenario-card {
+    padding: 8px 14px !important;
+    margin-bottom: 10px !important;
+    font-size: 0.86rem !important;
+    line-height: 1.4 !important;
+  }
+
+  body.exam-mode .options-list {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    padding-right: 6px !important;
+  }
+
+  body.exam-mode .option-item {
+    padding: 10px 16px !important;
+    gap: 12px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  body.exam-mode .opt-letter {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.82rem !important;
+  }
+
+  body.exam-mode .opt-content {
+    font-size: 0.92rem !important;
+    line-height: 1.38 !important;
+    padding-top: 2px !important;
+  }
+
+  body.exam-mode .canvas-footer {
+    flex-shrink: 0 !important;
+    padding-top: 12px !important;
+    margin-top: auto !important;
+    border-top: 2px solid var(--border-subtle) !important;
+  }
+
+  body.exam-mode .exam-sidebar {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    overflow: hidden !important;
+    justify-content: space-between !important;
+  }
+
+  body.exam-mode .sidebar-card {
+    padding: 12px 14px !important;
+  }
+
+  body.exam-mode .sidebar-title {
+    font-size: 0.95rem !important;
+    margin-bottom: 6px !important;
+  }
+
+  body.exam-mode .matrix-legend {
+    gap: 6px !important;
+    margin-bottom: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  body.exam-mode .matrix-grid {
+    display: grid !important;
+    grid-template-columns: repeat(10, 1fr) !important;
+    gap: 3.5px !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-right: 0 !important;
+  }
+
+  body.exam-mode .matrix-btn {
+    height: 27px !important;
+    font-size: 0.74rem !important;
+    border-width: 1px !important;
+  }
+
+  body.exam-mode .candidate-mini-card {
+    padding: 6px 10px !important;
+    gap: 4px !important;
+  }
+
+  body.exam-mode .mini-prop {
+    font-size: 0.76rem !important;
+  }
+
+  body.exam-mode .shortcuts-card {
+    padding: 8px 12px !important;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .exam-layout {
