@@ -115,6 +115,51 @@ class ExamApp {
       if (modal) modal.classList.add("active");
     });
 
+    // Audience Inquiry Modal triggers
+    document.querySelectorAll(".audience-inquire-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const track = btn.dataset.track || "General Inquiry";
+        const title = btn.dataset.title || "Partner Proposal";
+        const modal = document.getElementById("inquiry-modal");
+        const trackInput = document.getElementById("inq-track");
+        const titleEl = document.getElementById("inquiry-modal-title");
+        if (trackInput) trackInput.value = track;
+        if (titleEl) titleEl.textContent = title;
+        if (modal) modal.classList.add("active");
+        window.soundEngine?.select();
+      });
+    });
+
+    // Inquiry Form Submit
+    const inqForm = document.getElementById("inquiry-form");
+    if (inqForm) {
+      inqForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const track = document.getElementById("inq-track")?.value || "Partner Inquiry";
+        const name = document.getElementById("inq-name")?.value.trim() || "Partner";
+        const email = document.getElementById("inq-email")?.value.trim() || "";
+        const org = document.getElementById("inq-org")?.value.trim() || "";
+        const msg = document.getElementById("inq-msg")?.value.trim() || "";
+
+        const subject = encodeURIComponent(`[Mamba MVP Ecosystem] ${track} Inquiry - ${org} (${name})`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nOrganization: ${org}\nEngagement Track: ${track}\n\nMessage/Proposal:\n${msg}`);
+
+        this.closeModal("inquiry-modal");
+        window.soundEngine?.pass();
+        this.showToast("Inquiry submitted! Our team at 71 Ayer Rajah Crescent will respond within 24h.");
+        window.location.href = `mailto:partnerships@evecount.com?subject=${subject}&body=${body}`;
+        inqForm.reset();
+      });
+    }
+
+    // Audience Chips Active State Navigation
+    document.querySelectorAll(".audience-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".audience-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+      });
+    });
+
     // Booking actions
     document.getElementById("btn-confirm-booking")?.addEventListener("click", () => this.confirmBooking());
 

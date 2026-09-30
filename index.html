@@ -36,6 +36,15 @@
         </div>
       </a>
 
+      <!-- Audience Navigation Links for Landing Page -->
+      <nav class="header-nav-links" id="header-nav-links">
+        <a href="#section-founders" class="header-nav-item">Founders</a>
+        <a href="#section-schools" class="header-nav-item">Schools</a>
+        <a href="#section-enterprise" class="header-nav-item">Enterprise</a>
+        <a href="#section-careers" class="header-nav-item">Careers</a>
+        <a href="#section-mentors" class="header-nav-item">Partners</a>
+      </nav>
+
       <!-- Exam Meta Indicators (Visible during exam) -->
       <div class="header-exam-meta" id="header-exam-meta" style="display: none;">
         <div class="meta-pill">
@@ -120,8 +129,29 @@
           </div>
         </div>
 
-        <!-- Rules & Highlights Grid -->
-        <div class="rules-grid">
+        <!-- PartyRock-style Multiple Audiences Quick Navigator -->
+        <div class="audience-nav-strip">
+          <a href="#section-founders" class="audience-chip active">
+            <span>🚀</span> <strong>For Founders</strong> (50-Q Exam & Safe Term Sheet)
+          </a>
+          <a href="#section-schools" class="audience-chip">
+            <span>🎓</span> <strong>Schools & Academia</strong> (Venture Labs)
+          </a>
+          <a href="#section-enterprise" class="audience-chip">
+            <span>🏢</span> <strong>Enterprise Intensives</strong> (48h AI Sprints)
+          </a>
+          <a href="#section-careers" class="audience-chip">
+            <span>💼</span> <strong>Careers</strong> (Commissioned Sales Frontline)
+          </a>
+          <a href="#section-mentors" class="audience-chip">
+            <span>🤝</span> <strong>Ecosystem Partners</strong> (Block 71 Syndicate)
+          </a>
+        </div>
+
+        <!-- SECTION 1: Founders Diagnostic & Cohort 1 Gate -->
+        <div id="section-founders">
+          <!-- Rules & Highlights Grid -->
+          <div class="rules-grid">
           <div class="rule-card">
             <div class="rule-icon cyan">🎯</div>
             <h3>80% Passing Threshold</h3>
@@ -250,6 +280,251 @@
             </button>
           </form>
         </div>
+        </div> <!-- End of #section-founders -->
+
+        <!-- ====================================================================
+             SECTION 2: Schools & Universities (Campus Venture Engineering)
+             ==================================================================== -->
+        <section class="audience-section" id="section-schools">
+          <div class="section-badge-row">
+            <span class="audience-badge purple">ACADEMIA & VENTURE PEDAGOGY</span>
+            <span class="audience-tag">Singapore & Regional Campuses</span>
+          </div>
+          <div class="section-heading-box">
+            <h2 class="section-title">We Go To Schools To Teach Venture Engineering</h2>
+            <p class="section-desc">
+              Bridging academic computer science with real-world venture monetization. We conduct hands-on venture masterclasses, AWS Generative AI labs, and hackathon incubation tracks across NUS, NTU, SMU, polytechnics, and regional universities.
+            </p>
+          </div>
+
+          <div class="audience-cards-grid">
+            <div class="audience-card">
+              <div class="card-icon-pill">🎓</div>
+              <h3>Campus Guest Masterclasses</h3>
+              <p>Practical, code-driven 2-hour workshops teaching students how to move beyond theoretical models into fast, shippable enterprise AI prototypes with real customer telemetry.</p>
+              <ul class="audience-feature-list">
+                <li>Hands-on AWS Bedrock & Claude streaming architectures</li>
+                <li>0-to-1 MVP scoping: ruthlessly trimming low-signal features</li>
+                <li>Live demonstration of prompt orchestration & tool routing</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🏆</div>
+              <h3>Hackathon Incubation Tracks</h3>
+              <p>We co-design enterprise problem statements with university student clubs, mentor finalist teams, and award direct fast-track admission into Mamba MVP for winning builds.</p>
+              <ul class="audience-feature-list">
+                <li>Sponsored prize pools & dedicated cloud credit grants</li>
+                <li>Direct interview bypass for podium hackathon winners</li>
+                <li>Ongoing office hours at 71 Ayer Rajah Crescent</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">📖</div>
+              <h3>Venture Engineering Syllabus</h3>
+              <p>Open-source curriculum modules teaching empirical customer discovery (<em>The Mom Test</em>), Paul Graham's Default Alive math, and standard post-money SAFE cap table models.</p>
+              <ul class="audience-feature-list">
+                <li>Real-world case studies of pre-seed failure modes</li>
+                <li>Guest lectures by General Partners and EIRs</li>
+                <li>Access to the 50-Question Proctored Entrance Diagnostic</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="audience-action-box">
+            <div class="action-text">
+              <strong>Are you a faculty member, professor, or student club lead?</strong>
+              <span>Partner with Mamba MVP to bring real venture engineering to your campus.</span>
+            </div>
+            <button type="button" class="btn-primary audience-inquire-btn" data-track="Schools & Academia" data-title="Request University Masterclass or Hackathon Partnership">
+              🏫 Inquire for University Workshop
+            </button>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 3: Enterprise Intensives & Executive Bootcamps
+             ==================================================================== -->
+        <section class="audience-section" id="section-enterprise">
+          <div class="section-badge-row">
+            <span class="audience-badge cyan">CORPORATE VENTURE SPRINT</span>
+            <span class="audience-tag">48-Hour Rapid POC Rails</span>
+          </div>
+          <div class="section-heading-box">
+            <h2 class="section-title">Enterprise Intensives & Executive AI Bootcamps</h2>
+            <p class="section-desc">
+              From Day-0 vibe to enterprise AI systems that monetize. We lead corporate innovation units and enterprise engineering teams through compressed 48-hour sprints to build and test high-ROI AI workflows on enterprise data.
+            </p>
+          </div>
+
+          <div class="audience-cards-grid">
+            <div class="audience-card">
+              <div class="card-icon-pill">⚡</div>
+              <h3>48-Hour AI Workflow Sprints</h3>
+              <p>Stop talking in multi-month committee meetings. We co-build a working, production-grade agentic workflow tailored to your internal operations in 48 hours.</p>
+              <ul class="audience-feature-list">
+                <li>Automated invoice reconciliation, compliance, and OCR</li>
+                <li>Secure local/VPC execution with strict zero-data-retention</li>
+                <li>Working proof-of-concept ready for internal stakeholder demo</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🏢</div>
+              <h3>Venture Client Acceleration</h3>
+              <p>Accelerate your procurement pipeline. We match specific enterprise operational bottlenecks directly with pre-vetted Mamba MVP cohort startups for paid, rapid pilot validation.</p>
+              <ul class="audience-feature-list">
+                <li>Turnkey legal pilots with 14-day contracting turnaround</li>
+                <li>Derisked technology evaluation backed by studio engineers</li>
+                <li>Direct equity co-investment option for corporate venture arms</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🛡️</div>
+              <h3>Executive AI Risk & Governance</h3>
+              <p>Intensive executive briefings for CIOs, CISOs, and business unit leaders on LLM hallucination containment, compliance moats, and avoiding platform 'sherlocking' traps.</p>
+              <ul class="audience-feature-list">
+                <li>Data sovereignty & proprietary IP assignment frameworks</li>
+                <li>Vendor diligence checklists: differentiating real tech from wrappers</li>
+                <li>Calculating true unit economics & inference gross margins</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="audience-action-box">
+            <div class="action-text">
+              <strong>Looking to accelerate corporate AI deployment or pilot new solutions?</strong>
+              <span>Schedule a dedicated venture briefing with our enterprise partners at Block 71.</span>
+            </div>
+            <button type="button" class="btn-primary audience-inquire-btn" data-track="Enterprise Intensives" data-title="Schedule Enterprise Intensive or Corporate Sprint">
+              🏢 Book Enterprise Intensive Briefing
+            </button>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 4: Careers & Commissioned Sales Frontline
+             ==================================================================== -->
+        <section class="audience-section" id="section-careers">
+          <div class="section-badge-row">
+            <span class="audience-badge emerald">REVENUE ENGINE & CAREERS</span>
+            <span class="audience-tag">Uncapped Commissions • Singapore & APAC</span>
+          </div>
+          <div class="section-heading-box">
+            <h2 class="section-title">Join Our Commissioned Sales Frontline</h2>
+            <p class="section-desc">
+              Great enterprise software fails without ruthless frontline sales execution. We recruit, train, and equip commissioned sales professionals and tech evangelists to sell high-ACV AI software to mid-market and enterprise accounts.
+            </p>
+          </div>
+
+          <div class="audience-cards-grid">
+            <div class="audience-card">
+              <div class="card-icon-pill">💼</div>
+              <h3>Frontline Enterprise Sales Reps</h3>
+              <p>Operate as the spearhead revenue engine for high-velocity Mamba MVP portfolio companies across logistics, finance, legal, and operational tech.</p>
+              <ul class="audience-feature-list">
+                <li>Direct access to qualified warm leads and inbound discovery calls</li>
+                <li>Sell cutting-edge B2B AI software that solves urgent daily pain</li>
+                <li>Full technical support from portfolio principal engineers on demos</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">💰</div>
+              <h3>Uncapped Commission Structure</h3>
+              <p>Earn between 15% to 25% on first-year contract value (ACV) with instant milestone payouts on closed annual and multi-year enterprise software contracts.</p>
+              <ul class="audience-feature-list">
+                <li>Lucrative commission on $10k to $100k+ enterprise contracts</li>
+                <li>Immediate payout rails upon customer invoice settlement</li>
+                <li>Quarterly top-performer equity carry bonuses</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🚀</div>
+              <h3>Venture BD Fellowship</h3>
+              <p>A launchpad for ambitious sales operators. Master high-ticket software sales, work side-by-side with venture-backed founders, and transition into founding Head of Sales roles.</p>
+              <ul class="audience-feature-list">
+                <li>Direct mentorship from seasoned SaaS sales executives</li>
+                <li>Pathways to full-time founding VP of Sales roles in breakout startups</li>
+                <li>Carry allocations in the venture studio fund</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="audience-action-box">
+            <div class="action-text">
+              <strong>Are you a hunter with proven enterprise or B2B sales grit?</strong>
+              <span>Apply to join our frontline revenue syndicate and start closing cohort deals.</span>
+            </div>
+            <button type="button" class="btn-primary audience-inquire-btn" data-track="Commissioned Sales Frontline" data-title="Apply for Commissioned Sales Frontline">
+              💼 Apply for Sales Frontline
+            </button>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SECTION 5: Mentors & Organisational System Partners
+             ==================================================================== -->
+        <section class="audience-section" id="section-mentors">
+          <div class="section-badge-row">
+            <span class="audience-badge gold">BLOCK 71 VENTURE ECOSYSTEM</span>
+            <span class="audience-tag">71 Ayer Rajah Crescent, Singapore</span>
+          </div>
+          <div class="section-heading-box">
+            <h2 class="section-title">Mentors, Angels & Organisational System Partners</h2>
+            <p class="section-desc">
+              Building a venture ecosystem requires an orchestrated coalition of capital, domain expertise, banking rails, and corporate distribution. We partner with industry leaders to power Cohort 1.
+            </p>
+          </div>
+
+          <div class="audience-cards-grid">
+            <div class="audience-card">
+              <div class="card-icon-pill">🤝</div>
+              <h3>Angel Syndicate & Co-Investors</h3>
+              <p>Co-invest alongside Mamba MVP in qualified cohort graduates with standardized Post-Money SAFEs, transparent diagnostic evaluation scores, and direct follow-on rights.</p>
+              <ul class="audience-feature-list">
+                <li>Pre-vetted dealflow evaluated through the 50-Question Diagnostic</li>
+                <li>Clean cap table hygiene and zero messy convertible note stacking</li>
+                <li>Private invitations to Cohort 1 Demo Day at 71 Ayer Rajah</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🧠</div>
+              <h3>Domain Mentors & Advisors</h3>
+              <p>Senior engineering leads, former enterprise founders, and commercial experts who provide tactical 1-on-1 guidance to our founders during the 90-day program.</p>
+              <ul class="audience-feature-list">
+                <li>Curated matching based on founder technical & market bottlenecks</li>
+                <li>Advisor equity pool grants (0.25% - 1.0%) with standard vesting</li>
+                <li>Bi-weekly sparring sessions with venture partner James Sun</li>
+              </ul>
+            </div>
+
+            <div class="audience-card">
+              <div class="card-icon-pill">🌐</div>
+              <h3>Organisational System Partners</h3>
+              <p>Infrastructure providers powering our turnkey venture stack—from international legal structuring and SME banking rails to cloud credits and compliance.</p>
+              <ul class="audience-feature-list">
+                <li>Turnkey legal packs for Singapore and Delaware flips</li>
+                <li>Pre-approved corporate banking and credit card rails</li>
+                <li>$100,000+ in AWS Bedrock, GCP, and OpenAI credit pools</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="audience-action-box">
+            <div class="action-text">
+              <strong>Interested in mentoring, co-investing, or offering ecosystem rails?</strong>
+              <span>Connect directly with our Venture Architecture team at 71 Ayer Rajah Crescent.</span>
+            </div>
+            <button type="button" class="btn-primary audience-inquire-btn" data-track="Mentors & Ecosystem Partners" data-title="Join Mentor Network or Ecosystem Partnership">
+              🤝 Join Ecosystem Syndicate
+            </button>
+          </div>
+        </section>
       </section>
 
       <!-- ====================================================================
@@ -746,6 +1021,54 @@
       <div class="modal-actions" style="justify-content: flex-end;">
         <button class="btn-primary" onclick="document.getElementById('rubric-modal').classList.remove('active')">Close Rubric</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Audience & Ecosystem Partner Inquiry Modal -->
+  <div class="modal-overlay" id="inquiry-modal">
+    <div class="modal-card" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="inquiry-modal-title">Partner Inquiry</h3>
+          <p id="inquiry-modal-sub" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Connect with Mamba MVP Venture Studio (71 Ayer Rajah Crescent)</p>
+        </div>
+        <button class="icon-btn" onclick="document.getElementById('inquiry-modal').classList.remove('active')" style="border-radius: 50%;">✕</button>
+      </div>
+
+      <form id="inquiry-form" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="form-group">
+          <label class="form-label" for="inq-track">Program Track / Engagement Area</label>
+          <input type="text" class="form-input" id="inq-track" readonly style="background: #f8fafc; font-weight: 700; color: var(--accent-orange);">
+        </div>
+
+        <div class="form-grid" style="margin-bottom: 0;">
+          <div class="form-group">
+            <label class="form-label" for="inq-name">Your Full Name *</label>
+            <input type="text" class="form-input" id="inq-name" required placeholder="Alex Tan">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inq-email">Work / Academic Email *</label>
+            <input type="email" class="form-input" id="inq-email" required placeholder="alex@organization.com">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inq-org">Organization / Institution / University *</label>
+          <input type="text" class="form-input" id="inq-org" required placeholder="e.g. NUS / DBS / Grab / Enterprise Singapore">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inq-msg">Brief Message / Proposal</label>
+          <textarea class="form-input" id="inq-msg" rows="3" placeholder="Tell us about your campus workshop date, enterprise scope, sales track record, or syndicate interest..."></textarea>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 8px;">
+          <button type="button" class="btn-secondary" onclick="document.getElementById('inquiry-modal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="btn-primary" style="background: var(--accent-orange);">
+            <span>Submit Proposal ➔</span>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
