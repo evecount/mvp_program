@@ -92,7 +92,7 @@ Regardless of startup stage, every applicant must answer:
   - Interactive **50-Scenario Navigation Grid**: Visual tracking for Validated (green), Unanswered (muted), Flagged for Review (orange dot), and Current Scenario (cyan glow).
   - Streamlined single-page desktop experience (locked 100vh viewport, zero window scrolling, side-by-side scenario matrix).
   - Keyboard shortcuts (`A, B, C, D` or `1, 2, 3, 4` to select options; `F` to toggle flag; Arrow keys to navigate).
-  - Web Audio API synthesizer for crisp proctored sound feedback.
+  - Web Audio API synthesizer for crisp tactile sound feedback.
 - **Strict 80% Benchmark Gate**:
   - Requires **$\ge 40 / 50$ validated decisions ($80\%$)** to unlock partner conversations.
   - Submission guard modal preventing accidental submits with unanswered questions.

@@ -1,5 +1,5 @@
 /**
- * Sound synthesizer using Web Audio API for proctored exam experience
+ * Sound synthesizer using Web Audio API for The 0-to-1 Founder Benchmark
  */
 class SoundEngine {
   constructor() {
