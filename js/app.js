@@ -209,7 +209,7 @@ class ExamApp {
     const agreeCheck = document.getElementById("cand-agree");
 
     if (!agreeCheck.checked) {
-      alert("Please confirm the examination honor code to proceed.");
+      alert("Please confirm the honor code to proceed with the benchmark.");
       return;
     }
 
@@ -239,7 +239,7 @@ class ExamApp {
     document.body.classList.add("exam-mode");
     this.showScreen("screen-exam");
     window.soundEngine.select();
-    this.showToast("Mamba MVP Proctored Examination Session Active");
+    this.showToast("The 0-to-1 Founder Benchmark Active");
   }
 
   startTimer() {
@@ -267,7 +267,7 @@ class ExamApp {
 
       if (this.timerSeconds === 300) {
         window.soundEngine.warning();
-        this.showToast("5 minutes remaining in examination session!", "warning");
+        this.showToast("5 minutes remaining in benchmark session!", "warning");
       }
     }, 1000);
   }
@@ -733,7 +733,7 @@ KEY INVESTMENT TERMS:
 
   getApplicationPayload() {
     return {
-      exam: "Mamba MVP Venture Studio Cohort 1 Entrance Examination",
+      benchmark: "The 0-to-1 Founder Benchmark (Cohort 1)",
       cohort: "Cohort 1 (2026)",
       location: "71 Ayer Rajah Crescent, Singapore",
       candidate: {
@@ -812,8 +812,8 @@ ${this.candidate.first30days}
 3. What is the strongest reason this business might fail?
 ${this.candidate.failureRisk}
 
-=== 50-QUESTION EXAMINATION EVALUATION ===
-Overall Score: ${this.results.percentage}% (${this.results.correctCount}/${this.results.totalQuestions} correct)
+=== 50-DECISION 0-TO-1 FOUNDER BENCHMARK ===
+Overall Score: ${this.results.percentage}% (${this.results.correctCount}/${this.results.totalQuestions} validated)
 Threshold Status: ${this.results.passed ? "QUALIFIED & ADMITTED (>= 80%)" : "DIAGNOSTIC (Under 80%)"}
 Verification Code: ${this.results.certHash}
 Submission Date: ${this.results.timestamp}
