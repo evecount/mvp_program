@@ -146,7 +146,7 @@ class ExamApp {
 
         this.closeModal("inquiry-modal");
         window.soundEngine?.pass();
-        this.showToast("Inquiry submitted! Our team at 71 Ayer Rajah Crescent will respond within 24h.");
+        this.showToast("Inquiry submitted! Our investment team will respond within 24h.");
         window.location.href = `mailto:partnerships@evecount.com?subject=${subject}&body=${body}`;
         inqForm.reset();
       });
@@ -735,7 +735,7 @@ Verification Reference: ${this.results?.certHash || "MAMBA-C1-PASS"}
 Score: ${this.results?.percentage}% (Passing threshold: 80%)
 
 KEY INVESTMENT TERMS:
-- Program: Mamba MVP (Cohort 1) — 71 Ayer Rajah Crescent, Singapore
+- Program: Mamba MVP (Cohort 1) — Singapore
 - Investment Capital: $125,000 USD via standard Post-Money SAFE
 - Valuation Cap: $2,500,000 USD (5.0% Studio equity participation)
 - Acceleration Duration: 90 Days (Phase 1 MVP Validation to Demo Day)
@@ -755,7 +755,7 @@ KEY INVESTMENT TERMS:
     return {
       benchmark: "The 0-to-1 Founder Benchmark (Cohort 1)",
       cohort: "Cohort 1 (2026)",
-      location: "71 Ayer Rajah Crescent, Singapore",
+      location: "Singapore",
       candidate: {
         name: this.candidate.fullName,
         email: this.candidate.email,

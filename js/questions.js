@@ -819,7 +819,7 @@ const DOMAIN_METADATA = {
     weight: "10%",
     weightVal: 0.10,
     icon: "target",
-    description: "Leveraging 71 Ayer Rajah rails, venture engineering, and demonstrating meaningful progress in 90 days."
+    description: "Leveraging venture studio engineering rails and demonstrating meaningful progress in 90 days."
   }
 };
 

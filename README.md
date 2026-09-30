@@ -6,7 +6,7 @@
 [![Question Count](https://img.shields.io/badge/Scenarios-50_Decisions-blue.svg)](https://github.com/evecount/mvp_program)
 [![Benchmark Threshold](https://img.shields.io/badge/Benchmark_Threshold-80%25_(40%2F50)-f59e0b.svg)](https://github.com/evecount/mvp_program)
 
-An interactive, high-stakes empirical venture diagnostic portal designed for **Mamba MVP (Cohort 1)** at **71 Ayer Rajah Crescent (Block 71), Singapore**. Rather than a static academic test, **The 0-to-1 Founder Benchmark** is an active validation simulator evaluating founders across 50 deep scenarios on real 0-to-1 execution, ruthless MVP scoping, customer discovery, and venture finance acumen.
+An interactive, high-stakes empirical venture diagnostic portal designed for **Mamba MVP (Cohort 1)** in **Singapore**. Rather than a static academic test, **The 0-to-1 Founder Benchmark** is an active validation simulator evaluating founders across 50 deep scenarios on real 0-to-1 execution, ruthless MVP scoping, customer discovery, and venture finance acumen.
 
 **Live Portal URL (GitHub Pages)**: [https://evecount.github.io/mvp_program/](https://evecount.github.io/mvp_program/)
 
@@ -20,7 +20,7 @@ In the style of modern developer platforms like AWS PartyRock, this portal serve
 2. **🎓 For Schools & Academia**: Campus masterclasses, 0-to-1 entrepreneurship workshops, student hackathon tracks, and academic credits.
 3. **🏢 For Enterprise Intensives**: 48-hour AI innovation bootcamps, rapid proof-of-concept sprints, and corporate venture acceleration.
 4. **💼 For Experienced Founders & Commercial Operators**: Commercial EIR engagements, 15%–25% deal origination revenue share on closed enterprise AI contracts, and founding commercial co-founder pathways.
-5. **🤝 For Ecosystem Partners**: Syndicate co-investors, Block 71 network partners, corporate sponsors, legal and banking rails.
+5. **🤝 For Ecosystem Partners**: Syndicate co-investors, institutional partners, corporate sponsors, legal and banking rails.
 
 ---
 
