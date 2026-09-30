@@ -17,7 +17,7 @@ class ExamApp {
     this.userAnswers = {}; // { [qId]: optionIndex }
     this.flagged = new Set(); // Set of qIds
 
-    this.timerSeconds = 25 * 60; // 25 minutes
+    this.timerSeconds = 60 * 60; // 60 minutes for 50 questions
     this.timerInterval = null;
     this.isExamActive = false;
     this.examFinished = false;
@@ -90,6 +90,17 @@ class ExamApp {
     // Offer Letter actions
     document.getElementById("btn-print-offer")?.addEventListener("click", () => window.print());
     document.getElementById("btn-copy-offer")?.addEventListener("click", () => this.copyOfferLetter());
+
+    // Application Transmission to Studio
+    document.getElementById("btn-submit-application")?.addEventListener("click", () => this.transmitApplication());
+    document.getElementById("btn-copy-payload")?.addEventListener("click", () => this.copyApplicationPayload());
+    document.getElementById("btn-download-record")?.addEventListener("click", () => this.downloadApplicationProof());
+
+    // LinkedIn Share Buttons
+    document.getElementById("hero-btn-linkedin-share")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      this.shareOnLinkedIn();
+    });
 
     // Retake Exam
     document.getElementById("btn-retake-exam")?.addEventListener("click", () => this.resetExam());
@@ -639,10 +650,102 @@ KEY INVESTMENT TERMS:
     });
   }
 
+  getApplicationPayload() {
+    return {
+      exam: "EveCount Venture Studio Cohort 1 Entrance Examination",
+      cohort: "Cohort 1 (2026)",
+      candidate: {
+        name: this.candidate.fullName,
+        email: this.candidate.email,
+        startup: this.candidate.startupName,
+        track: this.candidate.track
+      },
+      evaluation: {
+        scorePercentage: this.results ? `${this.results.percentage}%` : "N/A",
+        scoreRaw: this.results ? `${this.results.correctCount} / ${this.results.totalQuestions}` : "N/A",
+        qualified: this.results ? this.results.passed : false,
+        verificationHash: this.results?.certHash || "N/A",
+        certifiedDate: this.results?.timestamp || new Date().toISOString(),
+        domainCompetencies: this.results?.domainStats || {}
+      },
+      answersSummary: this.questions.map(q => ({
+        id: q.id,
+        domain: q.domain,
+        selectedOption: this.userAnswers[q.id] !== undefined ? q.options[this.userAnswers[q.id]] : "Unanswered",
+        correctOption: q.options[q.correct],
+        isCorrect: this.userAnswers[q.id] === q.correct
+      }))
+    };
+  }
+
+  transmitApplication() {
+    if (!this.results) return;
+    const payload = this.getApplicationPayload();
+    const subject = encodeURIComponent(`[Cohort 1 Application] ${this.candidate.startupName} (${this.candidate.fullName}) - Score: ${this.results.percentage}% [${this.results.certHash}]`);
+    const body = encodeURIComponent(`Dear EveCount Venture Studio Admissions Committee,
+
+Please find my verified diagnostic examination submission for Cohort 1 below:
+
+Candidate: ${this.candidate.fullName}
+Startup Project: ${this.candidate.startupName}
+Focus Track: ${this.candidate.track}
+Email: ${this.candidate.email}
+
+Evaluation Results:
+Score: ${this.results.percentage}% (${this.results.correctCount}/${this.results.totalQuestions} correct)
+Threshold Status: ${this.results.passed ? "QUALIFIED & ADMITTED (>= 80%)" : "DIAGNOSTIC (Under 80%)"}
+Verification Code: ${this.results.certHash}
+Submission Date: ${this.results.timestamp}
+
+Attached / Pasted Payload:
+${JSON.stringify(payload, null, 2)}
+    `);
+
+    // Update modal score preview
+    const scoreEl = document.getElementById("modal-app-score");
+    if (scoreEl) {
+      scoreEl.textContent = `${this.results.percentage}% (${this.results.passed ? "Cohort 1 Qualified" : "Diagnostic Completed"})`;
+    }
+
+    const modal = document.getElementById("app-transmitted-modal");
+    if (modal) modal.classList.add("active");
+
+    // Open mailto link as fallback
+    window.location.href = `mailto:admissions@evecount.com?subject=${subject}&body=${body}`;
+    this.showToast("Application dossier dispatched to admissions@evecount.com");
+  }
+
+  copyApplicationPayload() {
+    const payload = this.getApplicationPayload();
+    navigator.clipboard.writeText(JSON.stringify(payload, null, 2)).then(() => {
+      this.showToast("Application payload (.json) copied to clipboard!");
+    }).catch(() => {
+      this.showToast("Failed to copy payload", "error");
+    });
+  }
+
+  downloadApplicationProof() {
+    const payload = this.getApplicationPayload();
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", `EveCount_Cohort1_Proof_${this.candidate.startupName.replace(/\s+/g, "_")}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    this.showToast("Certificate proof downloaded (.json)");
+  }
+
+  shareOnLinkedIn() {
+    const portalUrl = "https://evecount.github.io/mvp_program/";
+    const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(portalUrl)}`;
+    window.open(shareUrl, "_blank", "width=600,height=600");
+  }
+
   resetExam() {
     this.userAnswers = {};
     this.flagged.clear();
-    this.timerSeconds = 25 * 60;
+    this.timerSeconds = 60 * 60; // 60 minutes
     this.results = null;
     this.currentIndex = 0;
     this.isExamActive = false;

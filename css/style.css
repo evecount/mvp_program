@@ -858,17 +858,29 @@ body {
 .matrix-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 8px;
+  gap: 6px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.matrix-grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.matrix-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
 }
 
 .matrix-btn {
-  aspect-ratio: 1;
+  height: 34px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -876,6 +888,56 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* LinkedIn & Social Share Buttons */
+.btn-linkedin {
+  background: #0a66c2;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(10, 102, 194, 0.3);
+}
+
+.btn-linkedin:hover {
+  background: #084e96;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(10, 102, 194, 0.45);
+}
+
+.submission-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  margin-top: 32px;
+  text-align: center;
+}
+
+.submission-box h3 {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.submission-box p {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin-bottom: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .matrix-btn:hover {

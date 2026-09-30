@@ -3,8 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EveCount Venture Studio | Cohort 1 Founder Entrance Examination</title>
-  <meta name="description" content="Official entrance examination and certification portal for EveCount Venture Studio Cohort 1. Achieve 80% to unlock instant admission offer letter and partner meeting booking.">
+  <title>EveCount Venture Studio | Cohort 1 Founder Entrance Examination (50 Questions)</title>
+  <meta name="description" content="Official 50-question entrance examination and certification portal for EveCount Venture Studio Cohort 1. Score 80% to unlock instant admission offer letter and partner meeting.">
+  
+  <!-- Open Graph & LinkedIn Social Meta Tags -->
+  <meta property="og:title" content="EveCount Venture Studio — Cohort 1 Founder Entrance Examination">
+  <meta property="og:description" content="Are you ready for venture-backed velocity? Take the 50-question AWS-style entrance diagnostic. 80% passing threshold unlocks Cohort 1 admission offer & partner interview.">
+  <meta property="og:url" content="https://evecount.github.io/mvp_program/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=1200&h=630&q=80">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="EveCount Venture Studio — Cohort 1 Entrance Examination">
+  <meta name="twitter:description" content="50-Question Proctored Venture Diagnostic. 80% passing bar to unlock Cohort 1 Admission Offer Letter & Partner Meeting.">
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
 </head>
@@ -21,7 +32,7 @@
             EveCount Studio
             <span class="cohort-tag">Cohort 1</span>
           </div>
-          <div class="brand-sub">MVP Program • Entrance Examination</div>
+          <div class="brand-sub">MVP Program • 50-Question Entrance Examination</div>
         </div>
       </a>
 
@@ -34,7 +45,7 @@
 
         <div class="timer-box">
           <span>⏱</span>
-          <span id="exam-timer-display">25:00</span>
+          <span id="exam-timer-display">60:00</span>
         </div>
       </div>
 
@@ -64,16 +75,23 @@
       <section class="screen active" id="screen-orientation">
         <div class="hero-portal">
           <div class="portal-eyebrow">
-            <span>●</span> Official Cohort 1 Diagnostic Gate
+            <span>●</span> Official Cohort 1 Diagnostic Gate (50 Questions)
           </div>
           <h1 class="portal-title">
             Venture Studio Entrance <span class="glow">Certification</span>
           </h1>
           <p class="portal-desc">
-            We evaluate founders like cloud architects sit for rigorous technical certifications. 
-            Demonstrate your mastery of 0-to-1 MVP velocity, ruthless customer discovery, and venture economics. 
-            Score <strong>80% or higher</strong> to immediately unlock an official <strong>Cohort 1 Offer Letter</strong> and an expedited term sheet consultation with our General Partners.
+            We evaluate founders just like cloud architects sit for rigorous technical AWS certification exams. 
+            Demonstrate your mastery across <strong>50 comprehensive scenarios</strong> in 0-to-1 MVP velocity, Mom Test customer discovery, SAFE capitalization, and founder grit. 
+            Score <strong>80% or higher (40/50 correct)</strong> to instantly unlock a formal <strong>Cohort 1 Offer Letter</strong> and an expedited term sheet consultation with our General Partners.
           </p>
+
+          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fevecount.github.io%2Fmvp_program%2F" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              <span>Share Exam Challenge on LinkedIn</span>
+            </a>
+          </div>
         </div>
 
         <!-- Rules & Highlights Grid -->
@@ -81,7 +99,7 @@
           <div class="rule-card">
             <div class="rule-icon cyan">🎯</div>
             <h3>80% Passing Threshold</h3>
-            <p>20 high-fidelity venture scenarios spanning product scoping, GTM, SAFE financing, moats, and founder crisis decisions. Must score ≥ 16/20.</p>
+            <p>50 high-fidelity venture scenarios across 5 core domains. Must score ≥ 40/50 within 60 minutes to qualify for studio funding.</p>
           </div>
 
           <div class="rule-card">
@@ -205,7 +223,7 @@
             <div class="sidebar-card">
               <div class="sidebar-title">
                 <span>Question Matrix</span>
-                <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);">20 Questions</span>
+                <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);" id="sidebar-q-total">50 Questions</span>
               </div>
 
               <div class="matrix-legend">
@@ -216,7 +234,7 @@
               </div>
 
               <div class="matrix-grid" id="matrix-grid">
-                <!-- 1 to 20 grid buttons generated by JS -->
+                <!-- 1 to 50 grid buttons generated by JS -->
               </div>
             </div>
 
@@ -239,7 +257,7 @@
                 </div>
                 <div class="mini-prop">
                   <span class="label">Passing Score:</span>
-                  <span class="val" style="color: var(--accent-emerald);">80% (16/20)</span>
+                  <span class="val" style="color: var(--accent-emerald);">80% (40/50)</span>
                 </div>
               </div>
             </div>
@@ -261,8 +279,8 @@
               <span class="score-percent">%</span>
             </div>
 
-            <div class="score-threshold-tag">
-              COHORT 1 PASSING THRESHOLD: 80% (16 / 20 CORRECT)
+            <div class="score-threshold-tag" id="score-threshold-tag">
+              COHORT 1 PASSING THRESHOLD: 80% (40 / 50 CORRECT)
             </div>
 
             <p class="result-message" id="result-message">
@@ -275,6 +293,10 @@
               </a>
               <a href="#booking-section" class="btn-submit-exam" style="text-decoration: none;">
                 📅 Schedule Venture Partner Meeting
+              </a>
+              <a href="#" id="hero-btn-linkedin-share" class="btn-linkedin" target="_blank" rel="noopener noreferrer">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                <span>Post Badge on LinkedIn</span>
               </a>
             </div>
 
@@ -460,11 +482,30 @@
             </div>
           </div>
 
+          <!-- Official Candidate Application Transmission Box -->
+          <div class="submission-box" id="candidate-submission-box">
+            <h3>Transmit Application & Diagnostic Proof</h3>
+            <p>
+              Submit your verified evaluation score, candidate profile, and thesis directly to the EveCount Venture Studio Admissions Committee. We review certified 80%+ submissions within 24 hours.
+            </p>
+            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+              <button class="btn-primary" id="btn-submit-application">
+                🚀 Transmit Application to Studio
+              </button>
+              <button class="btn-secondary" id="btn-copy-payload">
+                📋 Copy Application Payload (.json)
+              </button>
+              <button class="btn-secondary" id="btn-download-record">
+                💾 Download Certificate Proof
+              </button>
+            </div>
+          </div>
+
           <!-- Detailed Question Analysis Accordion -->
           <div class="review-accordion-card" style="margin-top: 36px;">
             <div class="breakdown-title">
               <span>Full Question Review & Explanations</span>
-              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">20 Comprehensive Heuristics</span>
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">50 Comprehensive Heuristics</span>
             </div>
 
             <div id="detailed-review-list">
@@ -490,7 +531,7 @@
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
           <span>Unanswered Questions:</span>
-          <strong id="modal-unanswered-stat" style="color: var(--accent-rose);">20</strong>
+          <strong id="modal-unanswered-stat" style="color: var(--accent-rose);">50</strong>
         </div>
         <div style="display: flex; justify-content: space-between;">
           <span>Flagged for Review:</span>
@@ -499,12 +540,34 @@
       </div>
 
       <p style="font-size: 0.82rem; color: var(--text-muted);">
-        Note: You need at least <strong>16 correct answers (80%)</strong> to qualify for Cohort 1 admission. Unanswered questions receive 0 points.
+        Note: You need at least <strong>40 correct answers (80%)</strong> to qualify for Cohort 1 admission. Unanswered questions receive 0 points.
       </p>
 
       <div class="modal-actions">
         <button class="btn-secondary" id="btn-cancel-submit">Keep Working</button>
         <button class="btn-primary" id="btn-confirm-submit">Confirm & Calculate Score</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Transmitted Modal -->
+  <div class="modal-overlay" id="app-transmitted-modal">
+    <div class="modal-box">
+      <div style="font-size: 2.2rem; text-align: center; margin-bottom: 12px;">📬</div>
+      <h3 style="text-align: center;">Application Successfully Transmitted!</h3>
+      <p style="text-align: center;">
+        Your verified examination results and startup dossier have been dispatched to the <strong>EveCount Venture Studio Investment Committee</strong>.
+      </p>
+
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; margin: 18px 0; font-family: var(--font-mono); font-size: 0.85rem;">
+        <div style="margin-bottom: 6px;"><strong>Candidate:</strong> <span class="cand-display-name">Alex Chen</span></div>
+        <div style="margin-bottom: 6px;"><strong>Startup:</strong> <span class="cand-display-startup">Nexus Flow</span></div>
+        <div style="margin-bottom: 6px;"><strong>Verified Score:</strong> <span id="modal-app-score">85% (Cohort 1 Qualified)</span></div>
+        <div><strong>Admissions Dispatch:</strong> admissions@evecount.com</div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: center; gap: 12px;">
+        <button class="btn-primary" onclick="document.getElementById('app-transmitted-modal').classList.remove('active')">Got It</button>
       </div>
     </div>
   </div>
