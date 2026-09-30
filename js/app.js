@@ -160,6 +160,26 @@ class ExamApp {
       });
     });
 
+    // Autofill Sample Answers button
+    document.getElementById("btn-autofill-sample")?.addEventListener("click", () => {
+      const nameInput = document.getElementById("cand-name");
+      const emailInput = document.getElementById("cand-email");
+      const startupInput = document.getElementById("cand-startup");
+      const qEvidence = document.getElementById("q-evidence");
+      const qFirst30 = document.getElementById("q-first30days");
+      const qRisk = document.getElementById("q-failure-risk");
+
+      if (nameInput) nameInput.value = "Alex Chen";
+      if (emailInput) emailInput.value = "alex@nexusflow.ai";
+      if (startupInput) startupInput.value = "Nexus Flow AI";
+      if (qEvidence) qEvidence.value = "We conducted 18 structured customer interviews with mid-market logistics managers. 7 signed LOIs for an automated reconciliation pilot at $650/month each; 4 shared confidential sample freight invoices to benchmark data accuracy.";
+      if (qFirst30) qFirst30.value = "1. Days 1–10: Deploy a Wizard-of-Oz invoice parser for our 3 warmest LOI signups to process 20 live shipment files manually.\n2. Days 11–20: Measure discrepancies caught vs manual audits, iterate workflow UX with store operators.\n3. Days 21–30: Convert 2 pilot partners into upfront annual prepaid contracts ($7,800 ACV) before writing automated ERP connectors.";
+      if (qRisk) qRisk.value = "Slow enterprise procurement cycles (90-180 days) stalling cash flow before reaching Default Alive. To counter this, we are strictly prioritizing mid-market operators who can swipe corporate credit cards within 14 days.";
+
+      window.soundEngine?.select();
+      this.showToast("Sample candidate answers loaded!");
+    });
+
     // Booking actions
     document.getElementById("btn-confirm-booking")?.addEventListener("click", () => this.confirmBooking());
 
@@ -217,9 +237,9 @@ class ExamApp {
     this.candidate.email = emailInput.value.trim() || "founder@startup.io";
     this.candidate.startupName = startupInput.value.trim() || "Stealth Venture";
     this.candidate.track = trackInput.value;
-    this.candidate.evidence = document.getElementById("q-evidence")?.value.trim() || "";
-    this.candidate.first30days = document.getElementById("q-first30days")?.value.trim() || "";
-    this.candidate.failureRisk = document.getElementById("q-failure-risk")?.value.trim() || "";
+    this.candidate.evidence = document.getElementById("q-evidence")?.value.trim() || "Customer discovery interviews and pilot pipeline in progress";
+    this.candidate.first30days = document.getElementById("q-first30days")?.value.trim() || "30-day velocity plan and MVP customer tests";
+    this.candidate.failureRisk = document.getElementById("q-failure-risk")?.value.trim() || "Sales cycle velocity and runway management";
 
     // Update UI candidate labels
     document.querySelectorAll(".cand-display-name").forEach(el => el.textContent = this.candidate.fullName);

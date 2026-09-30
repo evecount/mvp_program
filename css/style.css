@@ -828,6 +828,62 @@ body.exam-mode .header-nav-links {
   box-shadow: 0 0 0 3px var(--accent-orange-shadow);
 }
 
+.form-input::placeholder,
+textarea.form-input::placeholder {
+  color: #94a3b8;
+  font-size: 0.86rem;
+  font-style: italic;
+  opacity: 0.85;
+  line-height: 1.45;
+}
+
+.field-example-guide {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid var(--accent-orange);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 0.80rem;
+  line-height: 1.45;
+}
+
+.guide-tag {
+  font-weight: 800;
+  color: var(--accent-orange);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding-top: 1px;
+}
+
+.guide-text {
+  color: #64748b;
+  font-style: italic;
+}
+
+.btn-autofill-demo {
+  background: #f1f5f9;
+  border: 1px dashed var(--border-strong);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-autofill-demo:hover {
+  background: #e2e8f0;
+  color: var(--text-primary);
+  border-color: var(--accent-orange);
+}
+
 .pressure-pledge-box {
   background: var(--bg-tint-orange);
   border: 2px solid var(--accent-orange);

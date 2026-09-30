@@ -195,17 +195,17 @@
             <div class="form-grid">
               <div class="form-group">
                 <label class="form-label" for="cand-name">Founder Full Name *</label>
-                <input type="text" class="form-input" id="cand-name" placeholder="e.g. Alex Chen" required value="Alex Chen">
+                <input type="text" class="form-input" id="cand-name" placeholder="e.g. Alex Chen" required>
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="cand-email">Founder Work Email *</label>
-                <input type="email" class="form-input" id="cand-email" placeholder="alex@startup.ai" required value="founder@stealth.io">
+                <input type="email" class="form-input" id="cand-email" placeholder="e.g. alex@startup.ai" required>
               </div>
 
               <div class="form-group">
                 <label class="form-label" for="cand-startup">Startup Project Title / Working Name *</label>
-                <input type="text" class="form-input" id="cand-startup" placeholder="e.g. Nexus Intelligence" required value="Nexus Flow AI">
+                <input type="text" class="form-input" id="cand-startup" placeholder="e.g. Nexus Flow AI" required>
               </div>
 
               <div class="form-group">
@@ -221,37 +221,52 @@
 
             <!-- Mamba MVP Mandatory Founder Questionnaire (3 Must-Ask Questions) -->
             <div style="margin-top: 24px; padding-top: 22px; border-top: 2px solid var(--border-strong);">
-              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                 <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
                   Mamba MVP Mandatory Evaluation Questions
                 </h3>
-                <span class="cohort-tag" style="background: var(--accent-orange); color: #fff; border-color: var(--border-strong);">3 Required</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <button type="button" class="btn-autofill-demo" id="btn-autofill-sample">
+                    ⚡ Fill Sample Answers
+                  </button>
+                  <span class="cohort-tag" style="background: var(--accent-orange); color: #fff; border-color: var(--border-strong);">3 Required</span>
+                </div>
               </div>
               <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
                 Mandatory criteria set by Venture Partner James Sun. Separates market reality from personal attachment; evaluated on specificity, risk awareness, and 90-day execution realism.
               </p>
 
-              <div class="form-group" style="margin-bottom: 18px;">
+              <div class="form-group" style="margin-bottom: 20px;">
                 <label class="form-label" for="q-evidence">
                   1. What evidence do you have that somebody actually wants this? *
                 </label>
-                <textarea class="form-input" id="q-evidence" rows="3" required placeholder="Describe concrete customer conversations, LOIs, pilot contracts, or observed behavioral proof (separates founders who have spoken to the market from people who simply like their own idea)...">We conducted 18 structured customer interviews with mid-market logistics managers. 7 signed LOIs for an automated reconciliation pilot at $650/month each; 4 shared confidential sample freight invoices to benchmark data accuracy.</textarea>
+                <div class="field-example-guide">
+                  <span class="guide-tag">💡 Strong Example:</span>
+                  <span class="guide-text">"We conducted 18 structured customer interviews with mid-market logistics managers. 7 signed LOIs for an automated reconciliation pilot at $650/month each; 4 shared confidential sample freight invoices to benchmark data accuracy."</span>
+                </div>
+                <textarea class="form-input" id="q-evidence" rows="3" required placeholder="Enter your concrete customer discovery proof, customer interviews, signed LOIs, pilot contracts, or observed behavioral proof..."></textarea>
               </div>
 
-              <div class="form-group" style="margin-bottom: 18px;">
+              <div class="form-group" style="margin-bottom: 20px;">
                 <label class="form-label" for="q-first30days">
                   2. If you were accepted today, what are the first three things you would do in the next 30 days? *
                 </label>
-                <textarea class="form-input" id="q-first30days" rows="3" required placeholder="Specific execution actions for Days 1–10, Days 11–20, Days 21–30 (strong founders give concrete actions, weaker candidates give broad aspirations)...">1. Days 1–10: Deploy a Wizard-of-Oz invoice parser for our 3 warmest LOI signups to process 20 live shipment files manually.
-2. Days 11–20: Measure discrepancies caught vs manual audits, iterate workflow UX with store operators.
-3. Days 21–30: Convert 2 pilot partners into upfront annual prepaid contracts ($7,800 ACV) before writing automated ERP connectors.</textarea>
+                <div class="field-example-guide">
+                  <span class="guide-tag">💡 Strong Example:</span>
+                  <span class="guide-text">"1. Days 1–10: Deploy a Wizard-of-Oz invoice parser for our 3 warmest LOI signups to process 20 live shipment files manually. 2. Days 11–20: Measure discrepancies caught vs manual audits, iterate workflow UX. 3. Days 21–30: Convert 2 pilot partners into upfront annual prepaid contracts ($7,800 ACV)."</span>
+                </div>
+                <textarea class="form-input" id="q-first30days" rows="3" required placeholder="Outline specific execution actions for Days 1–10, Days 11–20, and Days 21–30 (concrete actions vs broad aspirations)..."></textarea>
               </div>
 
               <div class="form-group" style="margin-bottom: 22px;">
                 <label class="form-label" for="q-failure-risk">
                   3. What is the strongest reason this business might fail? *
                 </label>
-                <textarea class="form-input" id="q-failure-risk" rows="2" required placeholder="Identify your critical operational, market, or distribution vulnerabilities (tests intellectual honesty and risk comprehension)...">Slow enterprise procurement cycles (90-180 days) stalling cash flow before reaching Default Alive. To counter this, we are strictly prioritizing mid-market operators who can swipe corporate credit cards within 14 days.</textarea>
+                <div class="field-example-guide">
+                  <span class="guide-tag">💡 Strong Example:</span>
+                  <span class="guide-text">"Slow enterprise procurement cycles (90-180 days) stalling cash flow before reaching Default Alive. To counter this, we are strictly prioritizing mid-market operators who can swipe corporate credit cards within 14 days."</span>
+                </div>
+                <textarea class="form-input" id="q-failure-risk" rows="2" required placeholder="Identify your critical operational, market, or distribution vulnerabilities (tests intellectual honesty and risk comprehension)..."></textarea>
               </div>
             </div>
 
