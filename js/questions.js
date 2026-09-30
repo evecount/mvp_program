@@ -659,16 +659,16 @@ const EXAM_QUESTIONS = [
     id: 43,
     domain: "Founder Decision Making & Crisis Execution",
     domainKey: "grit",
-    question: "When should an early-stage startup initiate a decisive product pivot?",
-    scenario: "Cohort 1 review at week 8.",
+    question: "You spend the first month of Mamba MVP interviewing 30 potential customers. Twenty-five tell you they don't want the product you're planning to build. What do you do?",
+    scenario: "Out of 30 structured target customer interviews in Month 1, 25 explicitly state they do not feel the pain point and would not purchase your proposed solution. Five express mild curiosity but have no budget.",
     options: [
-      "Whenever a customer cancels their subscription on day 3.",
-      "After repeated, systematic customer interviews and sprint cycles reveal that users do not feel intense pain, will not pay, or lack retention despite rapid iterations on positioning.",
-      "Whenever the founders read a trending tech news headline about a new open-source model release.",
-      "Never; pivoting is a sign of weakness and conviction means sticking to the initial idea for 5 years regardless of evidence."
+      "Dismiss the 25 negative responses as unvisionary operators who don't understand the future; double down on building the original MVP to prove them wrong at Demo Day.",
+      "Offer the product completely free or pay the 25 negative prospects Amazon gift cards to agree to install it anyway.",
+      "Deeply analyze the specific reasons why the 25 said no; investigate whether the problem is nonexistent, if you targeted the wrong ICP, or if their actual acute daily pain points point to a high-conviction pivot worth building.",
+      "Conclude that entrepreneurship is not for you and immediately shut down without speaking to the venture partners."
     ],
-    correct: 1,
-    explanation: "Pivots should not be whimsical reactions to isolated negative feedback, nor avoided through stubborn denial. A pivot is warranted when systematic, empirical evidence across multiple sprints confirms that the core hypothesis lacks acute demand or customer willingness to pay."
+    correct: 2,
+    explanation: "As Mamba MVP venture partner James Sun emphasizes: validation can mean discovering that the original idea is wrong. Great founders do not get defensive or cling stubbornly to a disproven thesis. They treat disconfirming evidence as a gift, uncover the true underlying job-to-be-done, and pivot toward what the market is actually desperate for."
   },
   {
     id: 44,
@@ -777,31 +777,179 @@ const EXAM_QUESTIONS = [
   }
 ];
 
-// Domain weights and metadata
+// Mamba MVP 6 Panel Scoring Dimensions (Inaugural Cohort Rubric)
 const DOMAIN_METADATA = {
-  scoping: {
-    name: "MVP Scoping & Engineering Velocity",
+  founder: {
+    name: "Founder Quality & Commitment",
+    weight: "25%",
+    weightVal: 0.25,
+    icon: "award",
+    description: "Motivation, founder-market fit, credibility, and full commitment throughout the 90-day program."
+  },
+  insight: {
+    name: "Problem / Customer Insight",
+    weight: "20%",
+    weightVal: 0.20,
+    icon: "search",
+    description: "Clarity of thinking, genuine observation vs isolation, understanding who specifically has this problem."
+  },
+  validation: {
+    name: "Evidence of Validation",
+    weight: "15%",
+    weightVal: 0.15,
+    icon: "check-circle",
+    description: "Actual proof of customer conversations, Mom Test discovery, and demand signals separating truth from hype."
+  },
+  execution: {
+    name: "Execution Ability & 0-to-1 Velocity",
+    weight: "15%",
+    weightVal: 0.15,
     icon: "zap",
-    description: "0-to-1 rapid prototyping, eliminating premature microservices, and asymptotic cohort retention plateaus."
+    description: "Resourcefulness, MVP scoping speed, and shipping what is buildable and testable without massive capital."
   },
-  gtm: {
-    name: "Customer Discovery & Go-To-Market",
-    icon: "users",
-    description: "Mom Test customer discovery, founder-led outbound sales, fully-loaded CAC calculations, and pilot LOIs."
-  },
-  economics: {
-    name: "Unit Economics, Runway & SAFE Financing",
-    icon: "trending-up",
-    description: "Post-Money SAFE caps, net burn/runway math, LTV/CAC benchmark ratios, and venture dilution defense."
-  },
-  defensibility: {
-    name: "Defensibility, Moats & Wedge Strategy",
-    icon: "shield",
-    description: "Hamilton Helmer's 7 Powers, bottom-up TAM modeling, counter-positioning, and Trojan-horse wedge entry."
-  },
-  grit: {
-    name: "Founder Decision Making & Crisis Execution",
+  coachability: {
+    name: "Coachability & Adaptability",
+    weight: "15%",
+    weightVal: 0.15,
     icon: "compass",
-    description: "4-year vesting cliff enforcement, short runway triage, systematic pivots, and cap table crisis control."
+    description: "Intellectual honesty, handling disconfirming evidence (e.g. 25/30 customer rejections), and willingness to pivot."
+  },
+  fit: {
+    name: "Fit with Mamba MVP / 90-Day Potential",
+    weight: "10%",
+    weightVal: 0.10,
+    icon: "target",
+    description: "Leveraging 71 Ayer Rajah rails, venture engineering, and demonstrating meaningful progress in 90 days."
   }
 };
+
+// Map questions 1-50 to the 6 panel scoring dimensions
+const QUESTION_DIMENSION_MAP = {
+  // Scoping & Execution (Execution: 1-10)
+  1: "execution", 2: "execution", 3: "validation", 4: "execution", 5: "execution",
+  6: "execution", 7: "execution", 8: "coachability", 9: "execution", 10: "execution",
+  // Customer & GTM (Insight & Validation: 11-20)
+  11: "validation", 12: "founder", 13: "validation", 14: "execution", 15: "insight",
+  16: "insight", 17: "insight", 18: "validation", 19: "execution", 20: "insight",
+  // Economics & Financing (Fit & Execution: 21-30)
+  21: "fit", 22: "founder", 23: "insight", 24: "fit", 25: "fit",
+  26: "fit", 27: "fit", 28: "insight", 29: "founder", 30: "fit",
+  // Defensibility & Wedge (Insight & Validation: 31-40)
+  31: "insight", 32: "insight", 33: "insight", 34: "validation", 35: "validation",
+  36: "insight", 37: "fit", 38: "insight", 39: "insight", 40: "coachability",
+  // Founder Grit & Crisis (Founder & Coachability: 41-50)
+  41: "founder", 42: "founder", 43: "coachability", 44: "founder", 45: "coachability",
+  46: "founder", 47: "coachability", 48: "founder", 49: "founder", 50: "founder"
+};
+
+// James Sun's 18 Mandatory Founder Interview Questions & Panel Expectations Table
+const MAMBA_INTERVIEW_QUESTIONS_18 = [
+  {
+    num: 1,
+    area: "Founder",
+    question: "Tell us about yourself and why you want to build this company.",
+    lookingFor: "Motivation, founder-market fit, credibility."
+  },
+  {
+    num: 2,
+    area: "Problem",
+    question: "What problem are you trying to solve, and who specifically has this problem?",
+    lookingFor: "Clarity of thinking and customer understanding."
+  },
+  {
+    num: 3,
+    area: "Insight",
+    question: "Why do you believe this is a real problem worth solving? What have you personally observed?",
+    lookingFor: "Genuine insight vs. an idea generated in isolation."
+  },
+  {
+    num: 4,
+    area: "Validation",
+    question: "What have you done so far to validate the problem with potential customers?",
+    lookingFor: "Evidence, customer conversations, initiative."
+  },
+  {
+    num: 5,
+    area: "Solution",
+    question: "Explain your solution to us in 60 seconds without using technical jargon.",
+    lookingFor: "Ability to communicate the value proposition."
+  },
+  {
+    num: 6,
+    area: "Differentiation",
+    question: "What are customers doing today instead of using your solution?",
+    lookingFor: "Understanding of alternatives and competition."
+  },
+  {
+    num: 7,
+    area: "Customer",
+    question: "Who would be your first 10 customers, and how would you reach them?",
+    lookingFor: "GTM thinking and specificity."
+  },
+  {
+    num: 8,
+    area: "Business Model",
+    question: "Who pays you, what would they pay for, and how do you eventually make money?",
+    lookingFor: "Commercial awareness."
+  },
+  {
+    num: 9,
+    area: "Execution",
+    question: "If we gave you no additional funding for the next 90 days, what could you realistically build and test?",
+    lookingFor: "Resourcefulness and MVP mentality."
+  },
+  {
+    num: 10,
+    area: "Commitment",
+    question: "How much time can you realistically commit to the venture during the 90-day program?",
+    lookingFor: "Actual availability and seriousness."
+  },
+  {
+    num: 11,
+    area: "Team",
+    question: "What can you personally execute today, and what capabilities are missing from your team?",
+    lookingFor: "Self-awareness and team gaps."
+  },
+  {
+    num: 12,
+    area: "Technology / AI",
+    question: "Where could technology or AI create a meaningful advantage in your business rather than simply being an add-on?",
+    lookingFor: "Technology thinking without forcing 'AI'."
+  },
+  {
+    num: 13,
+    area: "Coachability",
+    question: "Tell us about an assumption you had about this business that you've already discovered might be wrong.",
+    lookingFor: "Intellectual honesty and adaptability."
+  },
+  {
+    num: 14,
+    area: "Resilience",
+    question: "What would make you abandon or significantly change this idea?",
+    lookingFor: "Evidence-based decision making rather than attachment."
+  },
+  {
+    num: 15,
+    area: "Ambition",
+    question: "If this works, what does this company look like three years from now?",
+    lookingFor: "Scale of ambition and vision."
+  },
+  {
+    num: 16,
+    area: "Program Fit",
+    question: "What is the single biggest thing stopping you from moving this business forward today?",
+    lookingFor: "Whether Mamba can genuinely help."
+  },
+  {
+    num: 17,
+    area: "90-Day Goal",
+    question: "What would success look like for you at the end of the Mamba MVP program?",
+    lookingFor: "Clear outcomes and realistic expectations."
+  },
+  {
+    num: 18,
+    area: "Mamba",
+    question: "Why Mamba MVP, and what do you expect from us that you cannot easily do yourself?",
+    lookingFor: "Program fit and expectations."
+  }
+];

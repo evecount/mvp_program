@@ -1,4 +1,4 @@
-# EveCount Venture Studio — Cohort 1 Entrance Examination & Admission Portal ⚡
+# Mamba MVP Venture Studio — Cohort 1 Entrance Examination & Admission Portal ⚡
 
 [![Deploy to GitHub Pages](https://github.com/evecount/mvp_program/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/evecount/mvp_program/actions/workflows/deploy-pages.yml)
 [![Live Portal](https://img.shields.io/badge/Live_Portal-GitHub_Pages-00f2fe.svg)](https://evecount.github.io/mvp_program/)
@@ -6,7 +6,7 @@
 [![Question Count](https://img.shields.io/badge/Questions-50_Scenarios-blue.svg)](https://github.com/evecount/mvp_program)
 [![Passing Threshold](https://img.shields.io/badge/Passing_Threshold-80%25_(40%2F50)-f59e0b.svg)](https://github.com/evecount/mvp_program)
 
-An interactive, high-stakes proctored diagnostic examination portal designed for **EveCount Venture Studio (Cohort 1)**. Modeled after rigorous enterprise certification exams (such as AWS Solutions Architect and Cloud Practitioner examinations), this platform evaluates aspiring founders across 50 deep scenarios on real 0-to-1 execution, ruthless MVP scoping, and venture finance acumen.
+An interactive, high-stakes proctored diagnostic examination portal designed for **Mamba MVP (Cohort 1)** at **71 Ayer Rajah Crescent (Block 71), Singapore**. Modeled after rigorous enterprise certification exams (such as AWS Solutions Architect and Cloud Practitioner examinations), this platform evaluates aspiring founders across 50 deep scenarios on real 0-to-1 execution, ruthless MVP scoping, and venture finance acumen.
 
 **Live Portal URL (GitHub Pages)**: [https://evecount.github.io/mvp_program/](https://evecount.github.io/mvp_program/)
 
@@ -16,7 +16,7 @@ An interactive, high-stakes proctored diagnostic examination portal designed for
 
 ```
    ┌───────────────────────┐
-   │  Candidate Check-in   │  Founder Profile, Startup Concept, Domain Track
+   │  Candidate Check-in   │  Founder Profile, 3 Mandatory Questions (James Sun Criteria)
    └──────────┬────────────┘
               │
               ▼
@@ -26,7 +26,7 @@ An interactive, high-stakes proctored diagnostic examination portal designed for
               │
               ▼
    ┌───────────────────────┐
-   │ Instant Scoring Dial  │  Automated Real-Time Grading & Percentile Calc
+   │ Instant Scoring Dial  │  Automated Real-Time Grading & 6-Dimension Diagnostics
    └──────────┬────────────┘
               │
        ┌──────┴──────┐
@@ -35,9 +35,9 @@ An interactive, high-stakes proctored diagnostic examination portal designed for
        │             │
        ▼             ▼
 ┌──────────────┐  ┌────────────────────────────────────────────────────────┐
-│  Diagnostic  │  │ 1. Formal Cohort 1 Admission Offer Letter ($125,000)   │
+│  Diagnostic  │  │ 1. Formal Mamba MVP Offer Letter ($125,000 SAFE)       │
 │  Syllabus &  │  │ 2. Post-Money SAFE Term Sheet Model ($2.5M Cap / 5%)   │
-│  Retake Gate │  │ 3. Direct Partner Interview Booking (Google Meet/.ics) │
+│  Retake Gate │  │ 3. Direct Interview with James Sun & Investment Leads │
 └──────────────┘  │ 4. 1-Click LinkedIn Badge & Certified Results Share    │
                   │ 5. Official Application Dossier Transmission to Studio │
                   └────────────────────────────────────────────────────────┘
@@ -45,17 +45,31 @@ An interactive, high-stakes proctored diagnostic examination portal designed for
 
 ---
 
-## 📊 Core Diagnostic Domains (50 Scenarios, 10 per Track)
+## 📋 Venture Partner Mandatory Criteria (James Sun Guidelines)
 
-Candidates face 50 comprehensive scenarios representing the daily realities of pre-seed startups:
+### 1. Three Must-Ask Questions (Mandatory at Check-In)
+Regardless of startup stage, every applicant must answer:
+1. **“What evidence do you have that somebody actually wants this?”**
+   *Separates founders who have spoken to the market from people who simply like their own idea.*
+2. **“If you were accepted today, what are the first three things you would do in the next 30 days?”**
+   *Reveals execution ability extremely quickly (specific actions vs broad aspirations).*
+3. **“What is the strongest reason this business might fail?”**
+   *Tests whether the founder understands their own risks; strong candidates don't pretend their idea is perfect.*
 
-| Domain | Focus & Heuristics | Questions |
-| :--- | :--- | :---: |
-| **1. MVP Scoping & Engineering Velocity** | Concierge / Wizard-of-Oz prototypes, monoliths vs premature microservices on Kubernetes, asymptotic cohort retention curves, resisting low-ACV custom feature traps, choosing fast tech stacks, LLM latency & streaming UX, technical debt hygiene, vocal minority traps, daily continuous shipping, alpha depth vs vanity waitlists. | 10 |
-| **2. Customer Discovery & Go-To-Market** | *The Mom Test* rules on invalid hypotheticals, founder-led outbound sales, fully-loaded CAC calculations, venture-admissible enterprise LOIs, the $15/mo SaaS death valley, polite rejection decoding, high-converting cold outbound anatomy, reverse trials, Weinberg's Bullseye single-channel discipline, voluntary vs involuntary churn. | 10 |
-| **3. Unit Economics, Runway & SAFE Financing** | Post-Money SAFE valuation caps & dilution percentages, Net Burn vs Gross Burn, LTV/CAC benchmark ratios ($\ge 3.0\times$), priced rounds vs convertible debt, caps vs discounts, Pre-Money vs Post-Money SAFE compounding, Option Pool Shuffle mechanics, AI wrapper gross margin realities, Paul Graham's Default Alive framework, down-round anti-dilution implications. | 10 |
-| **4. Defensibility, Moats & Wedge Strategy** | Hamilton Helmer's *7 Powers*, bottom-up TAM modeling, counter-positioning business models, Trojan-horse wedge market entry, solving the two-sided marketplace chicken-and-egg dilemma, Systems of Record vs utilities, commercial open-source (COSS) monetization, regulatory compliance moats, Vertical SaaS embedded fintech, platform API risk ('sherlocking'). | 10 |
-| **5. Founder Decision Making & Crisis Execution** | Standard 4-year vesting with 1-year cliff enforcement, surviving short runways with enterprise whales vs SMB velocity, empirical pivot criteria, defending against predatory term sheets (35% equity & personal guarantees), co-founder decision rights & deadlock prevention, humane layoff execution, high-signal investor updates, key hire departure resilience, day-1 PIIA/IP assignment, and Cohort 1 graduation syndicate criteria. | 10 |
+### 2. Core Scenario Question (Question #43 in Exam)
+> **“You spend the first month of Mamba MVP interviewing 30 potential customers. Twenty-five tell you they don't want the product you're planning to build. What do you do?”**
+>
+> *Evaluates how founders process disconfirming evidence, whether they're defensive, whether they will pivot, and whether they understand that validation can mean discovering that the original idea is wrong. Mamba MVP helps founders determine what is actually worth building.*
+
+### 3. Panel Evaluation Scoring Rubric (6 Dimensions)
+| Dimension | Weight | Focus & Criteria |
+| :--- | :---: | :--- |
+| **Founder quality & commitment** | **25%** | Motivation, founder-market fit, credibility, and full-time commitment. |
+| **Problem / customer insight** | **20%** | Clarity of thinking, genuine observation vs idea generated in isolation. |
+| **Evidence of validation** | **15%** | Customer discovery proof, structured interviews, LOIs, and demand signals. |
+| **Execution ability** | **15%** | Resourcefulness, MVP scoping speed, and shipping what is buildable within 90 days. |
+| **Coachability & adaptability** | **15%** | Intellectual honesty, processing disconfirming feedback, and willingness to pivot. |
+| **Fit with Mamba MVP / 90-day potential** | **10%** | Clear 90-day outcomes, alignment with studio engineering rails, case study potential. |
 
 ---
 

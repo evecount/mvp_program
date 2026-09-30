@@ -8,7 +8,10 @@ class ExamApp {
       fullName: "",
       email: "",
       startupName: "",
-      track: "B2B AI & SaaS",
+      track: "B2B Enterprise AI & Workflow",
+      evidence: "",
+      first30days: "",
+      failureRisk: "",
       agreed: false
     };
 
@@ -25,7 +28,7 @@ class ExamApp {
     this.results = null;
 
     this.booking = {
-      partner: "Dr. Evelyn Vance (Founding Partner)",
+      partner: "James Sun (Venture Partner • Admissions Lead)",
       date: "",
       time: "10:00 AM SGT / UTC+8",
       notes: ""
@@ -38,6 +41,7 @@ class ExamApp {
     this.bindEvents();
     this.renderMatrix();
     this.populateBookingDates();
+    this.populateRubricTable();
   }
 
   bindEvents() {
@@ -105,6 +109,12 @@ class ExamApp {
     // Retake Exam
     document.getElementById("btn-retake-exam")?.addEventListener("click", () => this.resetExam());
 
+    // Rubric Modal triggers
+    document.getElementById("btn-open-rubric-modal")?.addEventListener("click", () => {
+      const modal = document.getElementById("rubric-modal");
+      if (modal) modal.classList.add("active");
+    });
+
     // Booking actions
     document.getElementById("btn-confirm-booking")?.addEventListener("click", () => this.confirmBooking());
 
@@ -162,6 +172,9 @@ class ExamApp {
     this.candidate.email = emailInput.value.trim() || "founder@startup.io";
     this.candidate.startupName = startupInput.value.trim() || "Stealth Venture";
     this.candidate.track = trackInput.value;
+    this.candidate.evidence = document.getElementById("q-evidence")?.value.trim() || "";
+    this.candidate.first30days = document.getElementById("q-first30days")?.value.trim() || "";
+    this.candidate.failureRisk = document.getElementById("q-failure-risk")?.value.trim() || "";
 
     // Update UI candidate labels
     document.querySelectorAll(".cand-display-name").forEach(el => el.textContent = this.candidate.fullName);
@@ -180,7 +193,7 @@ class ExamApp {
     this.loadQuestion(0);
     this.showScreen("screen-exam");
     window.soundEngine.select();
-    this.showToast("Cohort 1 Proctored Examination Session Active");
+    this.showToast("Mamba MVP Proctored Examination Session Active");
   }
 
   startTimer() {
@@ -364,14 +377,15 @@ class ExamApp {
     this.isExamActive = false;
     this.examFinished = true;
 
-    // Calculate score
+    // Calculate score & 6 Panel Dimensions (James Sun Framework)
     let correctCount = 0;
     const domainStats = {
-      scoping: { correct: 0, total: 0 },
-      gtm: { correct: 0, total: 0 },
-      economics: { correct: 0, total: 0 },
-      defensibility: { correct: 0, total: 0 },
-      grit: { correct: 0, total: 0 }
+      founder: { correct: 0, total: 0 },
+      insight: { correct: 0, total: 0 },
+      validation: { correct: 0, total: 0 },
+      execution: { correct: 0, total: 0 },
+      coachability: { correct: 0, total: 0 },
+      fit: { correct: 0, total: 0 }
     };
 
     this.questions.forEach(q => {
@@ -379,9 +393,10 @@ class ExamApp {
       const isCorrect = userChoice === q.correct;
       if (isCorrect) correctCount++;
 
-      if (domainStats[q.domainKey]) {
-        domainStats[q.domainKey].total++;
-        if (isCorrect) domainStats[q.domainKey].correct++;
+      const dimKey = (typeof QUESTION_DIMENSION_MAP !== "undefined" && QUESTION_DIMENSION_MAP[q.id]) || "execution";
+      if (domainStats[dimKey]) {
+        domainStats[dimKey].total++;
+        if (isCorrect) domainStats[dimKey].correct++;
       }
     });
 
@@ -396,7 +411,7 @@ class ExamApp {
       passed,
       domainStats,
       timestamp: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
-      certHash: `MVP-C1-${passed ? "PASS" : "DIAG"}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
+      certHash: `MAMBA-C1-${passed ? "PASS" : "DIAG"}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`
     };
 
     this.renderResults();
@@ -422,8 +437,8 @@ class ExamApp {
 
       hero.className = "result-hero passed";
       stamp.className = "badge-stamp passed";
-      stamp.innerHTML = `✓ CERTIFIED & ADMITTED — COHORT 1 QUALIFIED`;
-      msg.innerHTML = `Congratulations, <strong>${this.candidate.fullName}</strong>! You have scored <strong>${r.percentage}%</strong> on the EveCount Venture Studio Entrance Exam, exceeding the strict 80% passing bar. Your admission offer letter and direct venture partner calendar access are unlocked below.`;
+      stamp.innerHTML = `✓ CERTIFIED & ADMITTED — MAMBA MVP QUALIFIED`;
+      msg.innerHTML = `Congratulations, <strong>${this.candidate.fullName}</strong>! You scored <strong>${r.percentage}%</strong> on the Mamba MVP Entrance Exam, exceeding the strict 80% passing bar. Your formal admission offer letter from James Sun and direct partner calendar access are unlocked below.`;
       
       passActions.style.display = "block";
       failActions.style.display = "none";
@@ -436,7 +451,7 @@ class ExamApp {
       hero.className = "result-hero failed";
       stamp.className = "badge-stamp failed";
       stamp.innerHTML = `✕ THRESHOLD NOT MET — 80% REQUIRED`;
-      msg.innerHTML = `You scored <strong>${r.percentage}%</strong> (${r.correctCount} / ${r.totalQuestions} correct). Our venture studio maintains an unyielding 80% qualification standard for Cohort 1. Partner calendar slots and official offer letters are unlocked only for scores ≥ 80%. Review your domain breakdown below and retake the diagnostic once prepared.`;
+      msg.innerHTML = `You scored <strong>${r.percentage}%</strong> (${r.correctCount} / ${r.totalQuestions} correct). Mamba MVP maintains an unyielding 80% qualification standard for Cohort 1. Review your 6-dimension panel breakdown below and retake the diagnostic once prepared.`;
 
       passActions.style.display = "none";
       failActions.style.display = "block";
@@ -452,20 +467,20 @@ class ExamApp {
     if (offerCandName) offerCandName.textContent = this.candidate.fullName;
     if (offerStartupName) offerStartupName.textContent = this.candidate.startupName;
 
-    // Render Domain Competency Bars
+    // Render 6 Dimension Panel Competency Bars
     const barsContainer = document.getElementById("domain-bars-container");
     barsContainer.innerHTML = "";
 
     Object.keys(DOMAIN_METADATA).forEach(key => {
       const meta = DOMAIN_METADATA[key];
-      const stat = r.domainStats[key] || { correct: 0, total: 4 };
-      const domainPct = Math.round((stat.correct / stat.total) * 100);
+      const stat = r.domainStats[key] || { correct: 0, total: 8 };
+      const domainPct = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
 
       const item = document.createElement("div");
       item.className = "domain-bar-item";
       item.innerHTML = `
         <div class="bar-meta">
-          <span class="domain-name">${meta.name}</span>
+          <span class="domain-name"><strong>${meta.name}</strong> <span style="color: var(--accent-orange); font-size: 0.8rem; font-weight: 800;">[Weight: ${meta.weight}]</span></span>
           <span class="domain-score">${stat.correct}/${stat.total} (${domainPct}%)</span>
         </div>
         <div class="bar-track">
@@ -572,6 +587,22 @@ class ExamApp {
     });
   }
 
+  populateRubricTable() {
+    const tbody = document.getElementById("rubric-table-body");
+    if (!tbody || typeof MAMBA_INTERVIEW_QUESTIONS_18 === "undefined") return;
+    tbody.innerHTML = "";
+
+    MAMBA_INTERVIEW_QUESTIONS_18.forEach((item) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td style="font-weight: 700; color: var(--accent-orange);">${item.num}. ${item.area}</td>
+        <td style="color: var(--text-primary); font-weight: 600;">${item.question}</td>
+        <td style="color: var(--text-secondary); font-size: 0.82rem;">${item.lookingFor}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
   confirmBooking() {
     const dateSelect = document.getElementById("booking-date-select");
     const dateVal = dateSelect ? dateSelect.value : "Upcoming Date";
@@ -628,17 +659,20 @@ END:VCALENDAR`;
 
   copyOfferLetter() {
     const letterText = `
-EVECOUNT VENTURE STUDIO — COHORT 1 ADMISSION OFFER & TERM SHEET
+MAMBA MVP VENTURE STUDIO — COHORT 1 ADMISSION OFFER & TERM SHEET
 Date: ${this.results?.timestamp || "2026"}
 Candidate: ${this.candidate.fullName}
 Startup Entity: ${this.candidate.startupName}
-Verification Reference: ${this.results?.certHash || "MVP-C1-PASS"}
+Focus Track: ${this.candidate.track}
+Verification Reference: ${this.results?.certHash || "MAMBA-C1-PASS"}
 Score: ${this.results?.percentage}% (Passing threshold: 80%)
 
 KEY INVESTMENT TERMS:
+- Program: Mamba MVP (Cohort 1) — 71 Ayer Rajah Crescent, Singapore
 - Investment Capital: $125,000 USD via standard Post-Money SAFE
 - Valuation Cap: $2,500,000 USD (5.0% Studio equity participation)
-- Acceleration Duration: 12 Weeks (Phase 1 MVP Validation to Demo Day)
+- Acceleration Duration: 90 Days (Phase 1 MVP Validation to Demo Day)
+- Program Leadership: James Sun (Venture Partner • Admissions Lead)
 - Resources: Dedicated Principal Engineer, $100k Cloud Credits (AWS/GCP), In-House Design Sprint
 - Governing Law: Delaware / Singapore international standard venture jurisdiction
     `.trim();
@@ -652,13 +686,31 @@ KEY INVESTMENT TERMS:
 
   getApplicationPayload() {
     return {
-      exam: "EveCount Venture Studio Cohort 1 Entrance Examination",
+      exam: "Mamba MVP Venture Studio Cohort 1 Entrance Examination",
       cohort: "Cohort 1 (2026)",
+      location: "71 Ayer Rajah Crescent, Singapore",
       candidate: {
         name: this.candidate.fullName,
         email: this.candidate.email,
         startup: this.candidate.startupName,
         track: this.candidate.track
+      },
+      mandatoryQuestionnaire: {
+        q1_evidenceOfDemand: {
+          question: "What evidence do you have that somebody actually wants this?",
+          purpose: "Separates founders who have spoken to the market from people who simply like their own idea.",
+          response: this.candidate.evidence
+        },
+        q2_first30DaysExecution: {
+          question: "If you were accepted today, what are the first three things you would do in the next 30 days?",
+          purpose: "Reveals execution ability extremely quickly (specific actions vs broad aspirations).",
+          response: this.candidate.first30days
+        },
+        q3_strongestFailureRisk: {
+          question: "What is the strongest reason this business might fail?",
+          purpose: "Tests whether the founder understands their own risks and intellectual honesty.",
+          response: this.candidate.failureRisk
+        }
       },
       evaluation: {
         scorePercentage: this.results ? `${this.results.percentage}%` : "N/A",
@@ -666,7 +718,19 @@ KEY INVESTMENT TERMS:
         qualified: this.results ? this.results.passed : false,
         verificationHash: this.results?.certHash || "N/A",
         certifiedDate: this.results?.timestamp || new Date().toISOString(),
-        domainCompetencies: this.results?.domainStats || {}
+        panelDimensionsWeighted: Object.keys(DOMAIN_METADATA).map(key => {
+          const meta = DOMAIN_METADATA[key];
+          const stat = this.results?.domainStats[key] || { correct: 0, total: 0 };
+          const pct = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
+          return {
+            dimensionKey: key,
+            name: meta.name,
+            weight: meta.weight,
+            correct: stat.correct,
+            total: stat.total,
+            percentage: `${pct}%`
+          };
+        })
       },
       answersSummary: this.questions.map(q => ({
         id: q.id,
@@ -681,23 +745,41 @@ KEY INVESTMENT TERMS:
   transmitApplication() {
     if (!this.results) return;
     const payload = this.getApplicationPayload();
-    const subject = encodeURIComponent(`[Cohort 1 Application] ${this.candidate.startupName} (${this.candidate.fullName}) - Score: ${this.results.percentage}% [${this.results.certHash}]`);
-    const body = encodeURIComponent(`Dear EveCount Venture Studio Admissions Committee,
+    const subject = encodeURIComponent(`[Mamba MVP Cohort 1] ${this.candidate.startupName} (${this.candidate.fullName}) - Score: ${this.results.percentage}% [${this.results.certHash}]`);
+    const body = encodeURIComponent(`Dear Mamba MVP Admissions Committee & James Sun,
 
-Please find my verified diagnostic examination submission for Cohort 1 below:
+Please find my verified entrance diagnostic submission and founder questionnaire for Cohort 1 below:
 
 Candidate: ${this.candidate.fullName}
 Startup Project: ${this.candidate.startupName}
 Focus Track: ${this.candidate.track}
 Email: ${this.candidate.email}
 
-Evaluation Results:
-Score: ${this.results.percentage}% (${this.results.correctCount}/${this.results.totalQuestions} correct)
+=== MANDATORY FOUNDER QUESTIONNAIRE ===
+1. What evidence do you have that somebody actually wants this?
+${this.candidate.evidence}
+
+2. If you were accepted today, what are the first three things you would do in the next 30 days?
+${this.candidate.first30days}
+
+3. What is the strongest reason this business might fail?
+${this.candidate.failureRisk}
+
+=== 50-QUESTION EXAMINATION EVALUATION ===
+Overall Score: ${this.results.percentage}% (${this.results.correctCount}/${this.results.totalQuestions} correct)
 Threshold Status: ${this.results.passed ? "QUALIFIED & ADMITTED (>= 80%)" : "DIAGNOSTIC (Under 80%)"}
 Verification Code: ${this.results.certHash}
 Submission Date: ${this.results.timestamp}
 
-Attached / Pasted Payload:
+=== 6-DIMENSION PANEL SCORING BREAKDOWN ===
+${Object.keys(DOMAIN_METADATA).map(k => {
+  const m = DOMAIN_METADATA[k];
+  const s = this.results.domainStats[k] || { correct: 0, total: 0 };
+  const p = s.total > 0 ? Math.round((s.correct / s.total) * 100) : 0;
+  return `• ${m.name} (Weight: ${m.weight}): ${s.correct}/${s.total} (${p}%)`;
+}).join("\n")}
+
+Attached Full JSON Payload:
 ${JSON.stringify(payload, null, 2)}
     `);
 
@@ -729,7 +811,7 @@ ${JSON.stringify(payload, null, 2)}
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.setAttribute("download", `EveCount_Cohort1_Proof_${this.candidate.startupName.replace(/\s+/g, "_")}.json`);
+    link.setAttribute("download", `Mamba_MVP_Cohort1_Proof_${this.candidate.startupName.replace(/\s+/g, "_")}.json`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

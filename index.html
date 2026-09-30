@@ -26,13 +26,13 @@
     <!-- Top Proctored Header Bar -->
     <header class="studio-header">
       <a href="#" class="brand-badge" onclick="location.reload(); return false;">
-        <div class="brand-logo-icon">EC</div>
+        <div class="brand-logo-icon">VS</div>
         <div class="brand-text">
           <div class="brand-title">
-            EveCount Studio
+            Venture Studio
             <span class="cohort-tag">Cohort 1</span>
           </div>
-          <div class="brand-sub">MVP Program • 50-Question Entrance Examination</div>
+          <div class="brand-sub">Mamba MVP Program • 50-Question Entrance Examination</div>
         </div>
       </a>
 
@@ -109,11 +109,14 @@
             Score <strong>80% or higher (40/50 correct)</strong> to instantly unlock a formal <strong>Cohort 1 Offer Letter</strong> and an expedited term sheet consultation with our General Partners.
           </p>
 
-          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
+          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
             <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fevecount.github.io%2Fmvp_program%2F" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
               <span>Share Exam Challenge on LinkedIn</span>
             </a>
+            <button type="button" class="btn-secondary" id="btn-open-rubric-modal">
+              📋 View Mamba MVP 18-Question Rubric
+            </button>
           </div>
         </div>
 
@@ -122,13 +125,13 @@
           <div class="rule-card">
             <div class="rule-icon cyan">🎯</div>
             <h3>80% Passing Threshold</h3>
-            <p>50 high-fidelity venture scenarios across 5 core domains. Must score ≥ 40/50 within 60 minutes to qualify for studio funding.</p>
+            <p>50 high-fidelity venture scenarios across 6 panel dimensions. Must score ≥ 40/50 within 60 minutes to qualify for studio funding.</p>
           </div>
 
           <div class="rule-card">
             <div class="rule-icon emerald">⚡</div>
             <h3>Instant Scoring Engine</h3>
-            <p>Automated real-time grading, percentile assessment, and domain competency diagnostics calculated immediately upon submission.</p>
+            <p>Automated real-time grading, percentile assessment, and 6-dimension panel diagnostics calculated immediately upon submission.</p>
           </div>
 
           <div class="rule-card">
@@ -148,10 +151,10 @@
         <div class="checkin-container">
           <div class="checkin-header">
             <div>
-              <h2>Candidate Check-In</h2>
-              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Initialize your proctored evaluation environment</p>
+              <h2>Mamba MVP Candidate Check-In</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Inaugural Cohort 1 • 71 Ayer Rajah Crescent, Singapore</p>
             </div>
-            <span>ID: MVP-C1-2026</span>
+            <span>ID: MAMBA-C1-2026</span>
           </div>
 
           <form id="checkin-form">
@@ -172,20 +175,56 @@
               </div>
 
               <div class="form-group">
-                <label class="form-label" for="cand-track">Cohort 1 Domain Focus *</label>
+                <label class="form-label" for="cand-track">Mamba MVP Domain Focus *</label>
                 <select class="form-select" id="cand-track">
-                  <option value="B2B AI & Workflow SaaS">B2B AI & Workflow SaaS</option>
+                  <option value="B2B Enterprise AI & Workflow">B2B Enterprise AI & Workflow</option>
                   <option value="FinTech & Capital Infrastructure">FinTech & Capital Infrastructure</option>
                   <option value="DeepTech & Autonomous Systems">DeepTech & Autonomous Systems</option>
-                  <option value="Consumer Platforms & Marketplaces">Consumer Platforms & Marketplaces</option>
+                  <option value="Vertical SaaS & Marketplace Rails">Vertical SaaS & Marketplace Rails</option>
                 </select>
+              </div>
+            </div>
+
+            <!-- Mamba MVP Mandatory Founder Questionnaire (3 Must-Ask Questions) -->
+            <div style="margin-top: 24px; padding-top: 22px; border-top: 2px solid var(--border-strong);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <h3 style="font-family: var(--font-heading); font-size: 1.15rem; font-weight: 800; color: var(--text-primary);">
+                  Mamba MVP Mandatory Evaluation Questions
+                </h3>
+                <span class="cohort-tag" style="background: var(--accent-orange); color: #fff; border-color: var(--border-strong);">3 Required</span>
+              </div>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+                Mandatory criteria set by Venture Partner James Sun. Separates market reality from personal attachment; evaluated on specificity, risk awareness, and 90-day execution realism.
+              </p>
+
+              <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="q-evidence">
+                  1. What evidence do you have that somebody actually wants this? *
+                </label>
+                <textarea class="form-input" id="q-evidence" rows="3" required placeholder="Describe concrete customer conversations, LOIs, pilot contracts, or observed behavioral proof (separates founders who have spoken to the market from people who simply like their own idea)...">We conducted 18 structured customer interviews with mid-market logistics managers. 7 signed LOIs for an automated reconciliation pilot at $650/month each; 4 shared confidential sample freight invoices to benchmark data accuracy.</textarea>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 18px;">
+                <label class="form-label" for="q-first30days">
+                  2. If you were accepted today, what are the first three things you would do in the next 30 days? *
+                </label>
+                <textarea class="form-input" id="q-first30days" rows="3" required placeholder="Specific execution actions for Days 1–10, Days 11–20, Days 21–30 (strong founders give concrete actions, weaker candidates give broad aspirations)...">1. Days 1–10: Deploy a Wizard-of-Oz invoice parser for our 3 warmest LOI signups to process 20 live shipment files manually.
+2. Days 11–20: Measure discrepancies caught vs manual audits, iterate workflow UX with store operators.
+3. Days 21–30: Convert 2 pilot partners into upfront annual prepaid contracts ($7,800 ACV) before writing automated ERP connectors.</textarea>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 22px;">
+                <label class="form-label" for="q-failure-risk">
+                  3. What is the strongest reason this business might fail? *
+                </label>
+                <textarea class="form-input" id="q-failure-risk" rows="2" required placeholder="Identify your critical operational, market, or distribution vulnerabilities (tests intellectual honesty and risk comprehension)...">Slow enterprise procurement cycles (90-180 days) stalling cash flow before reaching Default Alive. To counter this, we are strictly prioritizing mid-market operators who can swipe corporate credit cards within 14 days.</textarea>
               </div>
             </div>
 
             <div class="proctor-checklist">
               <label class="checkbox-label">
                 <input type="checkbox" id="cand-agree" required checked>
-                <span>I certify that I am taking this diagnostic independently under the EveCount Venture Studio honor code. Time limit: 25 minutes.</span>
+                <span>I certify that I am taking this diagnostic independently under the Mamba MVP honor code. Time limit: 60 minutes for 50 scenario questions.</span>
               </label>
             </div>
 
@@ -351,12 +390,12 @@
 
                 <div class="offer-letterhead">
                   <div class="letterhead-brand">
-                    <h1>EVECOUNT VENTURE STUDIO</h1>
-                    <p>Cohort 1 Accelerator • Singapore & Delaware Registry</p>
+                    <h1>MAMBA MVP VENTURE STUDIO</h1>
+                    <p>Inaugural Cohort 1 • 71 Ayer Rajah Crescent (Block 71), Singapore</p>
                   </div>
                   <div class="letterhead-meta">
                     <div><strong>Date:</strong> <span id="offer-date">September 30, 2026</span></div>
-                    <div><strong>Verification Code:</strong> <span id="offer-cert-hash" style="font-family: var(--font-mono);">MVP-C1-80PCT</span></div>
+                    <div><strong>Verification Code:</strong> <span id="offer-cert-hash" style="font-family: var(--font-mono);">MAMBA-C1-80PCT</span></div>
                     <div><strong>Status:</strong> <span id="offer-score-badge" style="color: #059669; font-weight: 700;">85% Qualification Score</span></div>
                   </div>
                 </div>
@@ -367,7 +406,7 @@
                   </div>
 
                   <p>
-                    On behalf of the General Partners and Investment Committee at EveCount Venture Studio, we are thrilled to congratulate you on successfully passing the <strong>Cohort 1 Founder Entrance Examination</strong>. Your diagnostic score demonstrates the strategic acumen, velocity discipline, and capital comprehension required to build venture-scale technology companies.
+                    On behalf of James Sun and the Investment Committee at Mamba MVP Venture Studio, we are thrilled to congratulate you on successfully passing the <strong>Mamba MVP Cohort 1 Founder Entrance Examination</strong>. Your diagnostic score demonstrates the strategic acumen, velocity discipline, and capital comprehension required to build venture-scale technology companies.
                   </p>
 
                   <p style="margin-top: 14px;">
@@ -390,14 +429,14 @@
                       </tr>
                       <tr>
                         <th>Program Duration</th>
-                        <td><strong>12 Weeks</strong> intensive acceleration in stealth mode, concluding with Institutional Demo Day.</td>
+                        <td><strong>90 Days (12 Weeks)</strong> intensive acceleration at 71 Ayer Rajah Crescent, concluding with Institutional Demo Day.</td>
                       </tr>
                       <tr>
                         <th>Dedicated Studio Resources</th>
                         <td>
                           • Dedicated Fractional CTO / Principal Engineer pairing.<br>
                           • $100,000 in un-capped cloud compute credits (AWS, Google Cloud, Azure).<br>
-                          • In-house UX/UI design sprint squad & legal incorporation handling.
+                          • Turnkey legal bundles, mandatory default SME banking, and in-house UX/UI design sprint squad.
                         </td>
                       </tr>
                       <tr>
@@ -413,9 +452,9 @@
 
                   <div class="signature-row">
                     <div class="signature-block">
-                      <div class="sig-title">FOR EVECOUNT VENTURE STUDIO</div>
-                      <div class="sig-name">Dr. Evelyn Vance</div>
-                      <div style="font-size: 0.8rem; color: #64748b;">Managing General Partner</div>
+                      <div class="sig-title">FOR MAMBA MVP VENTURE STUDIO</div>
+                      <div class="sig-name">James Sun</div>
+                      <div style="font-size: 0.8rem; color: #64748b;">Venture Partner & Admissions Lead</div>
                     </div>
 
                     <div class="signature-block">
@@ -450,27 +489,27 @@
                 <div>
                   <label class="form-label" style="margin-bottom: 12px;">1. Select Venture Lead</label>
                   <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <div class="partner-card selected" data-partner="Dr. Evelyn Vance (Founding Partner)">
-                      <div class="partner-avatar">EV</div>
+                    <div class="partner-card selected" data-partner="James Sun (Venture Partner • Admissions Lead)">
+                      <div class="partner-avatar">JS</div>
+                      <div class="partner-info">
+                        <h4>James Sun</h4>
+                        <p>Venture Partner • Mamba MVP Admissions Lead</p>
+                      </div>
+                    </div>
+
+                    <div class="partner-card" data-partner="Dr. Evelyn Vance (Founding General Partner)">
+                      <div class="partner-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">EV</div>
                       <div class="partner-info">
                         <h4>Dr. Evelyn Vance</h4>
                         <p>Managing General Partner • AI & Systems</p>
                       </div>
                     </div>
 
-                    <div class="partner-card" data-partner="Marcus Sterling (EIR & Head of Product)">
-                      <div class="partner-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">MS</div>
+                    <div class="partner-card" data-partner="Marcus Sterling (EIR & Head of Venture Engineering)">
+                      <div class="partner-avatar" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">MS</div>
                       <div class="partner-info">
                         <h4>Marcus Sterling</h4>
                         <p>Entrepreneur-in-Residence • B2B SaaS Scale</p>
-                      </div>
-                    </div>
-
-                    <div class="partner-card" data-partner="Aria Tanaka (Investment Principal)">
-                      <div class="partner-avatar" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">AT</div>
-                      <div class="partner-info">
-                        <h4>Aria Tanaka</h4>
-                        <p>Investment Principal • FinTech & Capital</p>
                       </div>
                     </div>
                   </div>
@@ -613,6 +652,72 @@
       <div class="modal-actions" style="justify-content: center; gap: 12px;">
         <button class="btn-secondary" onclick="document.getElementById('booking-modal').classList.remove('active')">Close</button>
         <button class="btn-primary" id="btn-download-ics">📥 Download .ics Calendar File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mamba MVP 18-Question Interview Rubric Modal -->
+  <div class="modal-overlay" id="rubric-modal">
+    <div class="modal-box" style="max-width: 820px; max-height: 85vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid var(--border-strong); padding-bottom: 12px;">
+        <div>
+          <h3 style="margin-bottom: 4px;">Mamba MVP Founder Evaluation Rubric</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0;">Inaugural Cohort 1 • 6 Dimension Panel Scoring & 18 Question Syllabus</p>
+        </div>
+        <button class="icon-btn" onclick="document.getElementById('rubric-modal').classList.remove('active')" style="border-radius: 50%;">✕</button>
+      </div>
+
+      <!-- Panel Scoring Dimensions Breakdown (James Sun Framework) -->
+      <div style="background: var(--bg-tint-orange); border: 2px solid var(--accent-orange); border-radius: var(--radius-md); padding: 18px; margin-bottom: 22px;">
+        <h4 style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin-bottom: 8px;">
+          Panel Scoring Weights (Inaugural Cohort Standard)
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px;">
+          Every interviewer scores candidates 1–5 across these six weighted dimensions:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; font-size: 0.84rem;">
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Founder Quality & Commitment</strong>: <span style="color: var(--accent-orange); font-weight: 800;">25%</span>
+          </div>
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Problem / Customer Insight</strong>: <span style="color: var(--accent-orange); font-weight: 800;">20%</span>
+          </div>
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Evidence of Validation</strong>: <span style="color: var(--accent-orange); font-weight: 800;">15%</span>
+          </div>
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Execution Ability & MVP</strong>: <span style="color: var(--accent-orange); font-weight: 800;">15%</span>
+          </div>
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Coachability & Adaptability</strong>: <span style="color: var(--accent-orange); font-weight: 800;">15%</span>
+          </div>
+          <div style="background: #fff; padding: 10px; border-radius: 6px; border: 1.5px solid var(--border-strong);">
+            <strong>Fit with Mamba / 90-Day</strong>: <span style="color: var(--accent-orange); font-weight: 800;">10%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 Question Syllabus Table -->
+      <h4 style="font-family: var(--font-heading); font-size: 1.05rem; font-weight: 800; margin-bottom: 10px;">
+        18 Partner Interview Questions & Evaluation Goals
+      </h4>
+      <div style="overflow-x: auto; margin-bottom: 20px;">
+        <table class="offer-term-table" style="font-size: 0.85rem; margin: 0;">
+          <thead>
+            <tr style="background: #f1f5f9;">
+              <th style="width: 14%;">Area</th>
+              <th style="width: 48%;">Question</th>
+              <th style="width: 38%;">What Panel is Looking For</th>
+            </tr>
+          </thead>
+          <tbody id="rubric-table-body">
+            <!-- Populated dynamically from MAMBA_INTERVIEW_QUESTIONS_18 -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-actions" style="justify-content: flex-end;">
+        <button class="btn-primary" onclick="document.getElementById('rubric-modal').classList.remove('active')">Close Rubric</button>
       </div>
     </div>
   </div>
