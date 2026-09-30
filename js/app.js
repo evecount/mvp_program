@@ -740,7 +740,7 @@ KEY INVESTMENT TERMS:
 - Valuation Cap: $2,500,000 USD (5.0% Studio equity participation)
 - Acceleration Duration: 90 Days (Phase 1 MVP Validation to Demo Day)
 - Program Leadership: James Sun (Venture Partner • Admissions Lead)
-- Resources: Dedicated Principal Engineer, $100k Cloud Credits (AWS/GCP), In-House Design Sprint
+- Resources: Dedicated Principal Engineer, Partner Cloud & AI Compute Rails (AWS/GCP/OpenAI), In-House Design Sprint
 - Governing Law: Delaware / Singapore international standard venture jurisdiction
     `.trim();
 
