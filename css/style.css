@@ -428,9 +428,118 @@ body.exam-mode .header-nav-links {
 
 /* Secondary Portal Intro Box */
 .hero-portal {
-  text-align: center;
-  max-width: 860px;
+  max-width: 960px;
   margin: 0 auto 36px auto;
+}
+
+.hero-portal-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  text-align: left;
+}
+
+.hero-portal-content {
+  flex: 1;
+}
+
+/* Lovable-Style Mascot Card (Mamba the Builder) */
+.hero-mascot-card {
+  background: #ffffff;
+  border-radius: 24px;
+  border: 2px solid rgba(15, 23, 42, 0.1);
+  padding: 16px 20px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.14), 0 4px 12px rgba(15, 23, 42, 0.06);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  cursor: pointer;
+  width: 176px;
+}
+
+.hero-mascot-card:hover {
+  transform: translateY(-6px) rotate(-2deg);
+  box-shadow: 0 24px 44px -8px rgba(15, 23, 42, 0.22), 0 8px 16px rgba(15, 23, 42, 0.08);
+}
+
+.mascot-img-wrap {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.hero-mascot-sticker {
+  width: 114px;
+  height: 114px;
+  object-fit: contain;
+  border-radius: 16px;
+  filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.2));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hero-mascot-card:hover .hero-mascot-sticker {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.mascot-badge-pill {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fc6736;
+  background: #fff3ed;
+  border: 1px solid #fdb89a;
+  padding: 4px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.mascot-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  display: inline-block;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.mascot-meta {
+  text-align: center;
+}
+
+.mascot-meta strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-weight: 800;
+}
+
+.mascot-meta span {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .hero-portal-inner {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+  .hero-portal-content {
+    text-align: center;
+  }
 }
 
 .portal-eyebrow {
@@ -495,8 +604,8 @@ body.exam-mode .header-nav-links {
 }
 
 .rule-icon {
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -504,33 +613,37 @@ body.exam-mode .header-nav-links {
 }
 
 .rule-sticker {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
-  border-radius: 10px;
-  filter: drop-shadow(3px 4px 0px rgba(15, 23, 42, 0.28));
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.2s ease;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 2px;
+  border: 1.5px solid rgba(15, 23, 42, 0.08);
+  filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.18)) drop-shadow(0 2px 5px rgba(15, 23, 42, 0.08));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
   display: block;
 }
 
 .rule-card:hover .rule-sticker {
-  transform: scale(1.15) rotate(-5deg);
-  filter: drop-shadow(4px 7px 0px rgba(15, 23, 42, 0.38));
+  transform: translateY(-4px) scale(1.15) rotate(-5deg);
+  filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.26)) drop-shadow(0 4px 10px rgba(15, 23, 42, 0.12));
 }
 
 .chip-sticker {
   width: 22px;
   height: 22px;
   object-fit: contain;
-  border-radius: 4px;
+  border-radius: 6px;
+  background: #ffffff;
   vertical-align: middle;
   margin-right: 7px;
-  filter: drop-shadow(1px 1px 0px rgba(0,0,0,0.25));
-  transition: transform 0.15s ease;
+  filter: drop-shadow(0 3px 6px rgba(15, 23, 42, 0.18));
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .audience-chip:hover .chip-sticker {
-  transform: scale(1.2) rotate(-8deg);
+  transform: scale(1.25) rotate(-8deg);
 }
 
 .section-heading-with-sticker {
@@ -542,17 +655,21 @@ body.exam-mode .header-nav-links {
 }
 
 .section-hero-sticker {
-  width: 82px;
-  height: 82px;
+  width: 88px;
+  height: 88px;
   object-fit: contain;
-  border-radius: 14px;
-  filter: drop-shadow(4px 6px 0px rgba(15, 23, 42, 0.25));
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 3px;
+  border: 2px solid rgba(15, 23, 42, 0.08);
+  filter: drop-shadow(0 12px 24px rgba(15, 23, 42, 0.20)) drop-shadow(0 4px 8px rgba(15, 23, 42, 0.10));
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.35s ease;
   flex-shrink: 0;
 }
 
 .audience-section:hover .section-hero-sticker {
-  transform: scale(1.12) rotate(6deg);
+  transform: translateY(-5px) scale(1.12) rotate(5deg);
+  filter: drop-shadow(0 20px 32px rgba(15, 23, 42, 0.26)) drop-shadow(0 6px 12px rgba(15, 23, 42, 0.14));
 }
 
 .rule-card h3 {
@@ -704,6 +821,41 @@ body.exam-mode .header-nav-links {
   transform: translate(-2px, -2px);
   box-shadow: 5px 5px 0px var(--border-strong);
   border-color: var(--accent-orange);
+}
+
+.card-sticker-box {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.card-sticker {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 2px;
+  border: 1.5px solid rgba(15, 23, 42, 0.08);
+  filter: drop-shadow(0 10px 18px rgba(15, 23, 42, 0.18)) drop-shadow(0 2px 5px rgba(15, 23, 42, 0.08));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  display: block;
+}
+
+.audience-card:hover .card-sticker {
+  transform: translateY(-4px) scale(1.15) rotate(-5deg);
+  filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.26)) drop-shadow(0 4px 10px rgba(15, 23, 42, 0.12));
+}
+
+.audience-card:nth-child(2):hover .card-sticker {
+  transform: translateY(-4px) scale(1.15) rotate(5deg);
+}
+
+.audience-card:nth-child(3):hover .card-sticker {
+  transform: translateY(-4px) scale(1.15) rotate(-4deg);
 }
 
 .card-icon-pill {
