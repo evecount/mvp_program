@@ -526,48 +526,42 @@ body.exam-mode .header-nav-links {
   line-height: 1.5;
 }
 
-/* PartyRock Style Audience Navigation Strip */
+/* PartyRock Style Audience Navigation Strip (Clean Centered Wrap, Zero Side Scroll) */
 .audience-nav-strip {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 10px 4px 18px 4px;
-  margin-bottom: 28px;
-  scrollbar-width: thin;
-}
-
-.audience-nav-strip::-webkit-scrollbar {
-  height: 6px;
-}
-
-.audience-nav-strip::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 0;
+  margin: 0 auto 32px auto;
+  max-width: 860px;
+  overflow: visible;
 }
 
 .audience-chip {
   text-decoration: none;
-  white-space: nowrap;
   background: #ffffff;
   border: 2px solid var(--border-strong);
   border-radius: 999px;
-  box-shadow: var(--shadow-neo);
-  padding: 10px 18px;
+  box-shadow: 2px 2px 0px var(--border-strong);
+  padding: 7px 16px;
   color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .audience-chip:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px var(--border-strong);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--border-strong);
   border-color: var(--accent-orange);
+  background: #fff8f5;
 }
 
 .audience-chip:active {
@@ -576,10 +570,10 @@ body.exam-mode .header-nav-links {
 }
 
 .audience-chip.active {
-  background: var(--accent-orange-light);
-  border-color: var(--accent-orange);
-  box-shadow: 3px 3px 0px var(--accent-orange);
-  color: var(--accent-orange);
+  background: var(--accent-orange);
+  border-color: var(--border-strong);
+  box-shadow: 2px 2px 0px var(--border-strong);
+  color: #ffffff;
 }
 
 /* Audience Multi-Section Layouts */
