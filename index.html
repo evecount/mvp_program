@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EveCount Venture Studio | Cohort 1 Founder Entrance Examination</title>
+  <meta name="description" content="Official entrance examination and certification portal for EveCount Venture Studio Cohort 1. Achieve 80% to unlock instant admission offer letter and partner meeting booking.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <div class="grid-overlay"></div>
+
+  <div class="app-wrapper">
+    <!-- Top Proctored Header Bar -->
+    <header class="studio-header">
+      <a href="#" class="brand-badge" onclick="location.reload(); return false;">
+        <div class="brand-logo-icon">EC</div>
+        <div class="brand-text">
+          <div class="brand-title">
+            EveCount Studio
+            <span class="cohort-tag">Cohort 1</span>
+          </div>
+          <div class="brand-sub">MVP Program • Entrance Examination</div>
+        </div>
+      </a>
+
+      <!-- Exam Meta Indicators (Visible during exam) -->
+      <div class="header-exam-meta" id="header-exam-meta" style="display: none;">
+        <div class="meta-pill">
+          <span class="live-indicator"></span>
+          <span>PROCTORED LIVE SESSION</span>
+        </div>
+
+        <div class="timer-box">
+          <span>⏱</span>
+          <span id="exam-timer-display">25:00</span>
+        </div>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="header-actions">
+        <button class="icon-btn active" id="btn-toggle-sound" title="Sound Effects Enabled">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+        </button>
+
+        <button class="icon-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen Mode">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- ====================================================================
+           SCREEN 1: Candidate Registration & Orientation
+           ==================================================================== -->
+      <section class="screen active" id="screen-orientation">
+        <div class="hero-portal">
+          <div class="portal-eyebrow">
+            <span>●</span> Official Cohort 1 Diagnostic Gate
+          </div>
+          <h1 class="portal-title">
+            Venture Studio Entrance <span class="glow">Certification</span>
+          </h1>
+          <p class="portal-desc">
+            We evaluate founders like cloud architects sit for rigorous technical certifications. 
+            Demonstrate your mastery of 0-to-1 MVP velocity, ruthless customer discovery, and venture economics. 
+            Score <strong>80% or higher</strong> to immediately unlock an official <strong>Cohort 1 Offer Letter</strong> and an expedited term sheet consultation with our General Partners.
+          </p>
+        </div>
+
+        <!-- Rules & Highlights Grid -->
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-icon cyan">🎯</div>
+            <h3>80% Passing Threshold</h3>
+            <p>20 high-fidelity venture scenarios spanning product scoping, GTM, SAFE financing, moats, and founder crisis decisions. Must score ≥ 16/20.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon emerald">⚡</div>
+            <h3>Instant Scoring Engine</h3>
+            <p>Automated real-time grading, percentile assessment, and domain competency diagnostics calculated immediately upon submission.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon gold">📜</div>
+            <h3>Sample Incubator Offer Letter</h3>
+            <p>Passing candidates receive a formal $125,000 SAFE venture studio offer letter and term sheet model ready for PDF export.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-icon purple">🤝</div>
+            <h3>Direct Partner Booking</h3>
+            <p>Bypass conventional email queues. Qualified founders immediately select a dedicated 1-on-1 interview slot with our investment team.</p>
+          </div>
+        </div>
+
+        <!-- Checkin Registration Form -->
+        <div class="checkin-container">
+          <div class="checkin-header">
+            <div>
+              <h2>Candidate Check-In</h2>
+              <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Initialize your proctored evaluation environment</p>
+            </div>
+            <span>ID: MVP-C1-2026</span>
+          </div>
+
+          <form id="checkin-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="cand-name">Founder Full Name *</label>
+                <input type="text" class="form-input" id="cand-name" placeholder="e.g. Alex Chen" required value="Alex Chen">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cand-email">Founder Work Email *</label>
+                <input type="email" class="form-input" id="cand-email" placeholder="alex@startup.ai" required value="founder@stealth.io">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cand-startup">Startup Project Title / Working Name *</label>
+                <input type="text" class="form-input" id="cand-startup" placeholder="e.g. Nexus Intelligence" required value="Nexus Flow AI">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cand-track">Cohort 1 Domain Focus *</label>
+                <select class="form-select" id="cand-track">
+                  <option value="B2B AI & Workflow SaaS">B2B AI & Workflow SaaS</option>
+                  <option value="FinTech & Capital Infrastructure">FinTech & Capital Infrastructure</option>
+                  <option value="DeepTech & Autonomous Systems">DeepTech & Autonomous Systems</option>
+                  <option value="Consumer Platforms & Marketplaces">Consumer Platforms & Marketplaces</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="proctor-checklist">
+              <label class="checkbox-label">
+                <input type="checkbox" id="cand-agree" required checked>
+                <span>I certify that I am taking this diagnostic independently under the EveCount Venture Studio honor code. Time limit: 25 minutes.</span>
+              </label>
+            </div>
+
+            <button type="submit" class="cta-button" id="btn-start-exam">
+              <span>Begin Proctored Examination</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCREEN 2: The Proctored Examination Room
+           ==================================================================== -->
+      <section class="screen" id="screen-exam">
+        <div class="exam-layout">
+          <!-- Main Question Area -->
+          <div class="question-canvas">
+            <div class="canvas-top-bar">
+              <div class="domain-badge" id="q-domain-badge">MVP Scoping & Rapid Velocity</div>
+              <button class="flag-btn" id="btn-flag-q">
+                <span>⚐</span> Flag for Review
+              </button>
+            </div>
+
+            <div class="question-statement-box">
+              <span class="q-number-label" id="q-counter-label">QUESTION 1 OF 20</span>
+              <h2 class="question-text" id="q-text">Loading question text...</h2>
+              <div class="scenario-card" id="q-scenario">Loading scenario...</div>
+            </div>
+
+            <!-- Options List -->
+            <div class="options-list" id="options-container">
+              <!-- Dynamically populated -->
+            </div>
+
+            <!-- Canvas Footer Navigation -->
+            <div class="canvas-footer">
+              <button class="btn-secondary" id="btn-prev-q">
+                <span>❮</span> Previous
+              </button>
+
+              <div class="nav-buttons-group">
+                <button class="btn-submit-exam" id="btn-submit-exam">
+                  Submit Examination
+                </button>
+                <button class="btn-primary" id="btn-next-q">
+                  Next Question ❯
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Sidebar: Question Matrix & Candidate Card -->
+          <aside class="exam-sidebar">
+            <div class="sidebar-card">
+              <div class="sidebar-title">
+                <span>Question Matrix</span>
+                <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);">20 Questions</span>
+              </div>
+
+              <div class="matrix-legend">
+                <div class="legend-item"><span class="legend-dot answered"></span> Answered</div>
+                <div class="legend-item"><span class="legend-dot unanswered"></span> Unanswered</div>
+                <div class="legend-item"><span class="legend-dot flagged"></span> Flagged</div>
+                <div class="legend-item"><span class="legend-dot current"></span> Current</div>
+              </div>
+
+              <div class="matrix-grid" id="matrix-grid">
+                <!-- 1 to 20 grid buttons generated by JS -->
+              </div>
+            </div>
+
+            <div class="sidebar-card">
+              <div class="sidebar-title">
+                <span>Session Context</span>
+              </div>
+              <div class="candidate-mini-card">
+                <div class="mini-prop">
+                  <span class="label">Candidate:</span>
+                  <span class="val cand-display-name">Alex Chen</span>
+                </div>
+                <div class="mini-prop">
+                  <span class="label">Startup:</span>
+                  <span class="val cand-display-startup">Nexus Flow</span>
+                </div>
+                <div class="mini-prop">
+                  <span class="label">Track:</span>
+                  <span class="val cand-display-track">B2B AI</span>
+                </div>
+                <div class="mini-prop">
+                  <span class="label">Passing Score:</span>
+                  <span class="val" style="color: var(--accent-emerald);">80% (16/20)</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           SCREEN 3: Examination Results & Scoring Dashboard
+           ==================================================================== -->
+      <section class="screen" id="screen-results">
+        <div class="results-container">
+          <!-- Hero Result Banner -->
+          <div class="result-hero" id="result-hero">
+            <div class="badge-stamp" id="result-stamp">EVALUATING RESPONSES...</div>
+
+            <div class="score-display">
+              <span class="score-number" id="result-score-number">--</span>
+              <span class="score-percent">%</span>
+            </div>
+
+            <div class="score-threshold-tag">
+              COHORT 1 PASSING THRESHOLD: 80% (16 / 20 CORRECT)
+            </div>
+
+            <p class="result-message" id="result-message">
+              Calculating results...
+            </p>
+
+            <div class="result-ctas" id="passed-action-panel" style="display: none;">
+              <a href="#offer-letter-section" class="btn-primary" style="text-decoration: none;">
+                📜 View Cohort 1 Offer Letter & Term Sheet
+              </a>
+              <a href="#booking-section" class="btn-submit-exam" style="text-decoration: none;">
+                📅 Schedule Venture Partner Meeting
+              </a>
+            </div>
+
+            <div class="result-ctas" id="failed-action-panel" style="display: none;">
+              <button class="btn-secondary" id="btn-retake-exam">
+                🔄 Reset & Retake Diagnostic Exam
+              </button>
+            </div>
+          </div>
+
+          <!-- Domain Competency Breakdown -->
+          <div class="domain-breakdown-card">
+            <div class="breakdown-title">
+              <span>Domain Competency Diagnostic</span>
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">Weighted Analysis</span>
+            </div>
+
+            <div class="domain-bars-list" id="domain-bars-container">
+              <!-- Dynamically populated domain bars -->
+            </div>
+          </div>
+
+          <!-- PASSED STATE: Offer Letter & Meeting Booking -->
+          <div id="passed-exclusive-content">
+            <!-- Sample Incubator Offer Letter Section -->
+            <div class="offer-section" id="offer-letter-section">
+              <div class="offer-paper">
+                <div class="offer-watermark">COHORT 1 OFFER</div>
+
+                <div class="offer-letterhead">
+                  <div class="letterhead-brand">
+                    <h1>EVECOUNT VENTURE STUDIO</h1>
+                    <p>Cohort 1 Accelerator • Singapore & Delaware Registry</p>
+                  </div>
+                  <div class="letterhead-meta">
+                    <div><strong>Date:</strong> <span id="offer-date">September 30, 2026</span></div>
+                    <div><strong>Verification Code:</strong> <span id="offer-cert-hash" style="font-family: var(--font-mono);">MVP-C1-80PCT</span></div>
+                    <div><strong>Status:</strong> <span id="offer-score-badge" style="color: #059669; font-weight: 700;">85% Qualification Score</span></div>
+                  </div>
+                </div>
+
+                <div class="offer-body">
+                  <div class="offer-salutation">
+                    Dear <span id="offer-cand-name">Alex Chen</span> & the Founding Team of <span id="offer-startup-name">Nexus Flow</span>,
+                  </div>
+
+                  <p>
+                    On behalf of the General Partners and Investment Committee at EveCount Venture Studio, we are thrilled to congratulate you on successfully passing the <strong>Cohort 1 Founder Entrance Examination</strong>. Your diagnostic score demonstrates the strategic acumen, velocity discipline, and capital comprehension required to build venture-scale technology companies.
+                  </p>
+
+                  <p style="margin-top: 14px;">
+                    We are pleased to extend this formal <strong>Venture Studio Offer & Term Sheet Sample</strong> for your admission into Cohort 1. The investment and acceleration parameters are outlined below:
+                  </p>
+
+                  <table class="offer-term-table">
+                    <tbody>
+                      <tr>
+                        <th>Investment Commitment</th>
+                        <td><strong>$125,000 USD</strong> in direct pre-seed growth capital.</td>
+                      </tr>
+                      <tr>
+                        <th>Investment Instrument</th>
+                        <td>Standard Post-Money Simple Agreement for Future Equity (SAFE).</td>
+                      </tr>
+                      <tr>
+                        <th>Post-Money Valuation Cap</th>
+                        <td><strong>$2,500,000 USD</strong> (5.00% Studio equity participation).</td>
+                      </tr>
+                      <tr>
+                        <th>Program Duration</th>
+                        <td><strong>12 Weeks</strong> intensive acceleration in stealth mode, concluding with Institutional Demo Day.</td>
+                      </tr>
+                      <tr>
+                        <th>Dedicated Studio Resources</th>
+                        <td>
+                          • Dedicated Fractional CTO / Principal Engineer pairing.<br>
+                          • $100,000 in un-capped cloud compute credits (AWS, Google Cloud, Azure).<br>
+                          • In-house UX/UI design sprint squad & legal incorporation handling.
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Board & Governance</th>
+                        <td>Founder maintains full Board control; Studio receives standard observer rights and pro-rata participation in Series Seed.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <p>
+                    This offer confirms our commitment to back your enterprise through product validation, customer acquisition, and institutional syndicate funding. Please use the booking portal below to schedule your execution onboarding session with our partnership team.
+                  </p>
+
+                  <div class="signature-row">
+                    <div class="signature-block">
+                      <div class="sig-title">FOR EVECOUNT VENTURE STUDIO</div>
+                      <div class="sig-name">Dr. Evelyn Vance</div>
+                      <div style="font-size: 0.8rem; color: #64748b;">Managing General Partner</div>
+                    </div>
+
+                    <div class="signature-block">
+                      <div class="sig-title">ACCEPTED AND ACKNOWLEDGED</div>
+                      <div class="sig-name cand-display-name">Alex Chen</div>
+                      <div style="font-size: 0.8rem; color: #64748b;">Founder & CEO, <span class="cand-display-startup">Nexus Flow</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Offer Letter Actions -->
+              <div class="offer-controls">
+                <button class="btn-primary" id="btn-print-offer">
+                  🖨️ Print / Save as PDF
+                </button>
+                <button class="btn-secondary" id="btn-copy-offer">
+                  📋 Copy Term Sheet Text
+                </button>
+              </div>
+            </div>
+
+            <!-- Venture Team Calendar Booking Module -->
+            <div class="booking-card" id="booking-section">
+              <div class="booking-header">
+                <h2>Schedule Your Partner Interview</h2>
+                <p>Lock in your direct 30-minute term sheet walkthrough with our investment partners.</p>
+              </div>
+
+              <div class="booking-grid">
+                <!-- Partner Selector -->
+                <div>
+                  <label class="form-label" style="margin-bottom: 12px;">1. Select Venture Lead</label>
+                  <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="partner-card selected" data-partner="Dr. Evelyn Vance (Founding Partner)">
+                      <div class="partner-avatar">EV</div>
+                      <div class="partner-info">
+                        <h4>Dr. Evelyn Vance</h4>
+                        <p>Managing General Partner • AI & Systems</p>
+                      </div>
+                    </div>
+
+                    <div class="partner-card" data-partner="Marcus Sterling (EIR & Head of Product)">
+                      <div class="partner-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">MS</div>
+                      <div class="partner-info">
+                        <h4>Marcus Sterling</h4>
+                        <p>Entrepreneur-in-Residence • B2B SaaS Scale</p>
+                      </div>
+                    </div>
+
+                    <div class="partner-card" data-partner="Aria Tanaka (Investment Principal)">
+                      <div class="partner-avatar" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">AT</div>
+                      <div class="partner-info">
+                        <h4>Aria Tanaka</h4>
+                        <p>Investment Principal • FinTech & Capital</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Date & Slot Selector -->
+                <div>
+                  <label class="form-label" for="booking-date-select">2. Select Available Date</label>
+                  <select class="form-select" id="booking-date-select" style="margin-bottom: 16px;">
+                    <!-- Populated by JS -->
+                  </select>
+
+                  <label class="form-label">3. Select Time Window (UTC+8 / SGT)</label>
+                  <div class="time-slots-list">
+                    <button class="slot-btn selected" data-time="10:00 AM SGT">10:00 AM</button>
+                    <button class="slot-btn" data-time="11:30 AM SGT">11:30 AM</button>
+                    <button class="slot-btn" data-time="02:00 PM SGT">02:00 PM</button>
+                    <button class="slot-btn" data-time="03:30 PM SGT">03:30 PM</button>
+                    <button class="slot-btn" data-time="05:00 PM SGT">05:00 PM</button>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 16px;">
+                    <label class="form-label" for="booking-pitch-notes">Pitch Note / Target Milestone (Optional)</label>
+                    <textarea class="form-input" id="booking-pitch-notes" rows="2" placeholder="Brief note on your prototype progress or key questions for the partners..."></textarea>
+                  </div>
+
+                  <button class="cta-button" id="btn-confirm-booking" style="margin-top: 20px;">
+                    📅 Confirm Meeting & Generate Calendar Invite
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Question Analysis Accordion -->
+          <div class="review-accordion-card" style="margin-top: 36px;">
+            <div class="breakdown-title">
+              <span>Full Question Review & Explanations</span>
+              <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">20 Comprehensive Heuristics</span>
+            </div>
+
+            <div id="detailed-review-list">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Submission Confirmation Modal -->
+  <div class="modal-overlay" id="submit-modal">
+    <div class="modal-box">
+      <h3>Ready to Submit Examination?</h3>
+      <p>Please review your response status before locking in your final evaluation score:</p>
+      
+      <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span>Answered Questions:</span>
+          <strong id="modal-answered-stat" style="color: var(--accent-emerald);">0</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span>Unanswered Questions:</span>
+          <strong id="modal-unanswered-stat" style="color: var(--accent-rose);">20</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>Flagged for Review:</span>
+          <strong id="modal-flagged-stat" style="color: var(--accent-amber);">0</strong>
+        </div>
+      </div>
+
+      <p style="font-size: 0.82rem; color: var(--text-muted);">
+        Note: You need at least <strong>16 correct answers (80%)</strong> to qualify for Cohort 1 admission. Unanswered questions receive 0 points.
+      </p>
+
+      <div class="modal-actions">
+        <button class="btn-secondary" id="btn-cancel-submit">Keep Working</button>
+        <button class="btn-primary" id="btn-confirm-submit">Confirm & Calculate Score</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Booking Confirmed Modal -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal-box">
+      <div style="font-size: 2.2rem; text-align: center; margin-bottom: 12px;">🎉</div>
+      <h3 style="text-align: center;">Partner Interview Reserved!</h3>
+      <p style="text-align: center;">
+        Your Cohort 1 Term Sheet Walkthrough has been scheduled with <strong id="modal-booking-partner">Dr. Evelyn Vance</strong>.
+      </p>
+
+      <div style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; margin: 18px 0; font-family: var(--font-mono); font-size: 0.85rem;">
+        <div style="margin-bottom: 6px;"><strong>Date & Time:</strong> <span id="modal-booking-datetime">--</span></div>
+        <div style="margin-bottom: 6px;"><strong>Candidate:</strong> <span class="cand-display-name">Alex Chen</span> (<span id="modal-booking-email">founder@startup.io</span>)</div>
+        <div><strong>Location:</strong> Google Meet (Invite Link Sent)</div>
+      </div>
+
+      <div class="modal-actions" style="justify-content: center; gap: 12px;">
+        <button class="btn-secondary" onclick="document.getElementById('booking-modal').classList.remove('active')">Close</button>
+        <button class="btn-primary" id="btn-download-ics">📥 Download .ics Calendar File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/questions.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
