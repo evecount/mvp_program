@@ -19,7 +19,7 @@ In the style of modern developer platforms like AWS PartyRock, this portal serve
 1. **🚀 For Founders**: The 0-to-1 Founder Benchmark, automated grading, 6-dimension panel rubric, unlocking the $125k SAFE @ $2.5M cap term sheet and direct booking with Venture Partner James Sun.
 2. **🎓 For Schools & Academia**: Campus masterclasses, 0-to-1 entrepreneurship workshops, student hackathon tracks, and academic credits.
 3. **🏢 For Enterprise Intensives**: 48-hour AI innovation bootcamps, rapid proof-of-concept sprints, and corporate venture acceleration.
-4. **💼 For Careers (Frontline Sales)**: 15%–25% commission on closed studio AI deals, high-velocity business development fellowships, and client discovery roles.
+4. **💼 For Experienced Founders & Commercial Operators**: Commercial EIR engagements, 15%–25% deal origination revenue share on closed enterprise AI contracts, and founding commercial co-founder pathways.
 5. **🤝 For Ecosystem Partners**: Syndicate co-investors, Block 71 network partners, corporate sponsors, legal and banking rails.
 
 ---
