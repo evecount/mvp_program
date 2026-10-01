@@ -1,0 +1,73 @@
+rules_version = '2';
+
+// Mamba MVP — application pipeline.
+//
+// The public site may only CREATE an application. Nobody can read, list, edit
+// or delete one from a browser; reviewers read them in the Firebase console
+// (or a future admin tool using the Admin SDK, which bypasses these rules).
+//
+// The field list mirrors js/application-questions.js. If you add or rename a
+// question there, add it to `fields()` here, or submissions will be rejected.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /mvp_applications/{applicationId} {
+      allow read, update, delete: if false;
+      allow create: if isValidApplication(request.resource.data);
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function questionIds() {
+      return ['q01','q02','q03','q04','q05','q06','q07','q08','q09',
+              'q10','q11','q12','q13','q14','q15','q16','q17','q18'];
+    }
+
+    function fields() {
+      return ['fullName','email','phone','linkedin','startupName','website',
+              'applicantType','stage','intake',
+              'howHeard','consent','status','cohort','schemaVersion','createdAt']
+             .concat(questionIds());
+    }
+
+    function str(d, key, minLen, maxLen) {
+      return d[key] is string && d[key].size() >= minLen && d[key].size() <= maxLen;
+    }
+
+    function answer(d, key) {
+      return str(d, key, 40, 1500);
+    }
+
+    function isValidApplication(d) {
+      return d.keys().hasOnly(fields())
+        && d.keys().hasAll(fields())
+        && str(d, 'fullName', 1, 200)
+        && str(d, 'email', 3, 320) && d.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && str(d, 'phone', 1, 32)
+        && str(d, 'linkedin', 0, 500)
+        && str(d, 'startupName', 1, 120)
+        && str(d, 'website', 0, 500)
+        && d.applicantType in ['Working professional', 'SME owner', 'Aspiring founder', 'Startup founder']
+        && d.stage in ['Industry insight, no product yet', 'An idea I have started validating',
+                       'An early prototype', 'Launched, with users or revenue']
+        && d.intake in ['1-month accelerated sprint', '3-month full venture build', 'Not sure yet']
+        && str(d, 'howHeard', 0, 64)
+        && d.consent == true
+        && d.status == 'pending'
+        && d.cohort == '2026 Intake'
+        && d.schemaVersion == 1
+        && d.createdAt == request.time
+        && answer(d, 'q01') && answer(d, 'q02') && answer(d, 'q03')
+        && answer(d, 'q04') && str(d, 'q05', 40, 800) && answer(d, 'q06')
+        && answer(d, 'q07') && answer(d, 'q08') && answer(d, 'q09')
+        && d.q10 in ['Full-time: 40+ hours a week', '25–40 hours a week',
+                     '10–25 hours a week', 'Under 10 hours a week']
+        && answer(d, 'q11') && answer(d, 'q12') && answer(d, 'q13')
+        && answer(d, 'q14') && answer(d, 'q15') && answer(d, 'q16')
+        && answer(d, 'q17') && answer(d, 'q18');
+    }
+  }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 580" width="100%" height="100%" fill="none">
+  <g stroke="#6D14A8" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main 45-degree diagonal stroke traversing through center -->
+    <line x1="26" y1="26" x2="554" y2="554" />
+    
+    <!-- Left vertical stroke bending down-right -->
+    <polyline points="26,554 26,192 198,364" />
+    
+    <!-- Right diagonal stroke bending straight down -->
+    <polyline points="382,216 554,26 554,388" />
+  </g>
+</svg>
