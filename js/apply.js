@@ -4,20 +4,36 @@
  * Renders js/application-questions.js one step at a time, validates each step
  * before moving on, keeps a draft in this browser, and files the finished
  * application as one document in the Firestore collection `mvp_applications`.
- * firestore.rules enforces the same field list and limits on the way in.
+ * firestore.rules enforces the same field list and limits on the way in, and
+ * the Cloud Function in functions/ scores it and mails the dossier.
+ *
+ * Questions tagged with `tracks` only show for those tracks; a step with no
+ * question for the chosen track is skipped.
  */
 const APP = window.MVP_APPLICATION;
 const COLLECTION = "mvp_applications";
-const DRAFT_KEY = "mamba-mvp.application-draft";
+const DRAFT_KEY = "mamba-mvp.application-draft.v2";
 const FIREBASE_VERSION = "10.14.1";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* Interview questions (q01–q18) take the shared defaults; contact fields don't. */
-const steps = APP.steps.map((step) => ({
+/* Options arrive as plain strings or as { value, label, hint }. */
+const allSteps = APP.steps.map((step) => ({
   ...step,
-  fields: step.fields.map((f) => (/^q\d+$/.test(f.id) ? { ...APP.questionDefaults, ...f } : { kind: "text", ...f })),
+  fields: step.fields.map((f) => ({
+    ...f,
+    options: f.options?.map((o) => (typeof o === "string" ? { value: o, label: o } : o)),
+  })),
 }));
-const allFields = steps.flatMap((s) => s.fields);
+const allFields = allSteps.flatMap((s) => s.fields);
+
+const shows = (f) => !f.tracks || f.tracks.includes(data.track);
+const visibleFields = (step) => step.fields.filter(shows);
+/* Recomputed on every read: changing the track changes which steps exist. */
+let steps = [];
+function refreshSteps() {
+  steps = allSteps.filter((s) => visibleFields(s).length);
+  stepIndex = Math.min(stepIndex, steps.length - 1);
+}
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -46,7 +62,7 @@ function loadDraft() {
     const parsed = raw ? JSON.parse(raw) : null;
     if (parsed && typeof parsed.data === "object") {
       data = parsed.data;
-      stepIndex = Math.min(Math.max(0, parsed.step | 0), steps.length - 1);
+      stepIndex = Math.max(0, parsed.step | 0);
     }
   } catch {
     /* No storage (private mode etc.) — the form still works, it just won't resume. */
@@ -99,8 +115,8 @@ function renderField(f) {
     input = el("select", { class: "form-select", id: f.id, name: f.id });
     input.append(el("option", { value: "", text: "Select one" }));
     for (const opt of f.options) {
-      const o = el("option", { value: opt, text: opt });
-      if (opt === value) o.selected = true;
+      const o = el("option", { value: opt.value, text: opt.label });
+      if (opt.value === value) o.selected = true;
       input.append(o);
     }
   } else if (f.kind === "textarea") {
@@ -125,7 +141,8 @@ function renderField(f) {
       ? el("span", { class: "apply-counter", id: `count-${f.id}`, text: counterText(f, value) })
       : null;
 
-  const full = f.kind === "textarea" || f.kind === "checkbox" || /^q\d+$/.test(f.id);
+  const full = f.kind === "textarea" || f.kind === "checkbox" || f.kind === "select";
+  const chosen = f.options?.find((o) => o.value === value);
   return el(
     "div",
     { class: `apply-field${full ? " apply-field--full" : ""}`, "data-field": f.id },
@@ -135,8 +152,11 @@ function renderField(f) {
       el("label", { class: "form-label", for: f.id, text: f.label + (f.required ? " *" : "") }),
       counter,
     ),
-    f.hint ? el("p", { class: "apply-hint", text: `What the panel looks for: ${f.hint}` }) : null,
+    f.hint ? el("p", { class: "apply-hint", text: f.hint }) : null,
     input,
+    f.options?.some((o) => o.hint)
+      ? el("p", { class: "apply-hint", id: `opt-hint-${f.id}`, text: chosen?.hint || "" })
+      : null,
     el("p", { class: "apply-field-error", id: errId, hidden: true }),
   );
 }
@@ -148,6 +168,7 @@ function counterText(f, value) {
 }
 
 function render() {
+  refreshSteps();
   const step = steps[stepIndex];
   const last = stepIndex === steps.length - 1;
 
@@ -155,7 +176,7 @@ function render() {
     ...[
       el("h2", { class: "apply-step-title", text: step.title, tabindex: "-1" }),
       step.intro ? el("p", { class: "apply-step-intro", text: step.intro }) : null,
-      el("div", { class: "apply-grid" }, ...step.fields.map(renderField)),
+      el("div", { class: "apply-grid" }, ...visibleFields(step).map(renderField)),
       last ? honeypot() : null,
     ].filter(Boolean),
   );
@@ -189,7 +210,7 @@ function validateField(f, value) {
   if (f.max && v.length > f.max) return `Keep this under ${f.max} characters.`;
   if (f.kind === "email" && !EMAIL_RE.test(v)) return "That doesn't look like an email address.";
   if (f.kind === "url" && !/^https?:\/\/\S+\.\S+/.test(v)) return "Use a full link starting with https://";
-  if (f.kind === "select" && !f.options.includes(v)) return "Choose one of the listed answers.";
+  if (f.kind === "select" && !f.options.some((o) => o.value === v)) return "Choose one of the listed answers.";
   if (f.min && f.kind !== "select" && v.length < f.min) return `A little more here, please (at least ${f.min} characters).`;
   return "";
 }
@@ -211,7 +232,7 @@ function showFieldError(id, message) {
 
 function validateStep(index) {
   let first = null;
-  for (const f of steps[index].fields) {
+  for (const f of visibleFields(steps[index])) {
     const message = validateField(f, readValue(f));
     showFieldError(f.id, message);
     if (message && !first) first = f.id;
@@ -263,6 +284,9 @@ els.form.addEventListener("change", (e) => {
   if (!f) return;
   data[f.id] = readValue(f);
   showFieldError(f.id, validateField(f, data[f.id]));
+  const hint = $(`opt-hint-${f.id}`);
+  if (hint) hint.textContent = f.options.find((o) => o.value === data[f.id])?.hint || "";
+  if (f.id === "track") refreshSteps();
   saveDraft();
 });
 
@@ -288,10 +312,12 @@ els.form.addEventListener("submit", async (e) => {
 
 /* ── Submission ────────────────────────────────────────────────────── */
 
+/* Every field is sent (the rules require the full shape); a question the
+   chosen track never saw goes as "". */
 function buildRecord() {
   const record = {};
   for (const f of allFields) {
-    const v = data[f.id];
+    const v = shows(f) ? data[f.id] : "";
     record[f.id] = f.kind === "checkbox" ? Boolean(v) : String(v ?? "").trim();
   }
   record.email = record.email.toLowerCase();
@@ -325,7 +351,7 @@ async function submit() {
   // Re-check every step: a draft restored from an older version of the form
   // may be missing an answer on a step the applicant already passed.
   for (let i = 0; i < steps.length; i++) {
-    const missing = steps[i].fields.find((f) => validateField(f, data[f.id]));
+    const missing = visibleFields(steps[i]).find((f) => validateField(f, data[f.id]));
     if (missing) {
       goTo(i);
       validateStep(i);
@@ -353,8 +379,7 @@ async function submit() {
     await firestore.addDoc(firestore.collection(db, COLLECTION), {
       ...buildRecord(),
       status: "pending",
-      cohort: APP.cohort.label,
-      schemaVersion: 1,
+      schemaVersion: APP.schemaVersion,
       createdAt: firestore.serverTimestamp(),
     });
     finish();
@@ -371,7 +396,7 @@ async function submit() {
 
 function finish() {
   const first = String(data.fullName || "").trim().split(/\s+/)[0];
-  els.doneCopy.textContent = `Thanks${first ? `, ${first}` : ""}. Your application for ${data.startupName || "your venture"} is with the Mamba MVP team. We'll reply to ${data.email}.`;
+  els.doneCopy.textContent = `Thanks${first ? `, ${first}` : ""}. Your application for ${data.ideaTitle || "the program"} is with the Mamba MVP team. We'll reply to ${data.email}.`;
   clearDraft();
   data = {};
   stepIndex = 0;
