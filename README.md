@@ -37,15 +37,13 @@ This is separate from Cybrdeck's systems. It runs on the free Spark plan, with n
 
 **One-time setup**
 
-1. Create a project at https://console.firebase.google.com (e.g. `mamba-mvp`).
+1. Create a project at https://console.firebase.google.com (this repo uses `mambaventureprogram`).
 2. **Build → Firestore Database → Create database** (production mode, region `asia-southeast1`).
 3. **Project settings → Your apps → Web app**. Register it, then paste the config object into `js/firebase-config.js`.
-4. Deploy the security rules:
+4. Deploy the security rules, either by pasting `firestore.rules` into **Firestore → Rules → Publish**, or:
    ```bash
-   npm i -g firebase-tools
-   firebase login
-   firebase use --add            # pick the project
-   firebase deploy --only firestore:rules
+   npx firebase-tools login
+   npx firebase-tools deploy --only firestore:rules   # project comes from .firebaserc
    ```
 5. Optional: under **Authentication → Settings → Authorized domains**, make sure `evecount.github.io` is listed.
 
