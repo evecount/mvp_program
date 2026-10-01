@@ -60,6 +60,7 @@ class SoundEngine {
   }
 
   warning() {
+    if (!this.enabled) return;
     this.playTone(400, "sawtooth", 0.2, 0.05);
     setTimeout(() => this.playTone(350, "sawtooth", 0.25, 0.05), 180);
   }
