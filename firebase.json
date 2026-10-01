@@ -10,12 +10,18 @@
       "firestore.rules",
       "README.md",
       "**/.*",
+      "**/.*/**",
       "**/node_modules/**"
     ],
     "headers": [
       {
         "source": "**/*.@(css|js)",
-        "headers": [{ "key": "Cache-Control", "value": "public, max-age=300" }]
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=300"
+          }
+        ]
       }
     ]
   }
