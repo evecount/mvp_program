@@ -1,12 +1,11 @@
 # Mamba Venture Program (MVP)
 
-[![Deploy to GitHub Pages](https://github.com/evecount/mvp_program/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/evecount/mvp_program/actions/workflows/deploy-pages.yml)
 
 **Build a venture that sells.** The Mamba Venture Program helps working professionals, SME owners and aspiring
 founders turn industry insight into a working product: validate the problem, build the MVP and test demand.
 Run by **Cybrdeck × Mamba Partners**, with **SG Innovation** (powered by Dtmatrix and Keppel) as ecosystem partner.
 
-**Live site:** https://evecount.github.io/mvp_program/
+**Live site:** https://mambaventureprogram.web.app
 
 ## Site structure
 
@@ -45,7 +44,6 @@ This is separate from Cybrdeck's systems. It runs on the free Spark plan, with n
    npx firebase-tools login
    npx firebase-tools deploy --only firestore:rules   # project comes from .firebaserc
    ```
-5. Optional: under **Authentication → Settings → Authorized domains**, make sure `evecount.github.io` is listed.
 
 **Reviewing applications:** Firebase console → Firestore → `mvp_applications`. Each document holds the contact
 details, stage and intake, the 18 partner-interview answers (`q01`–`q18`), `status: "pending"` and `createdAt`.
@@ -55,7 +53,14 @@ dropdown's options, update `firestore.rules` to match and redeploy the rules. Ot
 
 ## Deployment
 
-Pushing to `main` deploys to GitHub Pages through `.github/workflows/deploy-pages.yml`.
+The site is hosted on Firebase Hosting at https://mambaventureprogram.web.app. Deploy from the repo root:
+
+```bash
+npx firebase-tools login                 # once
+npx firebase-tools deploy --only hosting
+```
+
+Use `--only hosting,firestore:rules` to publish rule changes in the same step.
 
 ## License
 
