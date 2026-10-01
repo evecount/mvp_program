@@ -39,19 +39,26 @@ It is the same form and pipeline as cybrdeck.com's Venture Program (`/venture-pr
 2. The Cloud Function `onApplicationFiled` (region `asia-southeast1`) picks it up and:
    - re-validates it against the question catalogue (an invalid write gets `rejected` and no email)
    - scores it on the seven readiness axes and screens it against the EnterpriseSG / EDB grants
-   - builds the dossier PDF: the application as written, then the internal assessment with the 3D readiness radar
+   - has **One** review that score: One (on Qwen, via Alibaba Model Studio) reads the de-identified application and
+     may move each axis by at most 15 points, each move with a cited reason. If One is unavailable, the rule-based
+     score stands. The email lists what One moved and why.
+   - builds the dossier PDF from the blended score: the application as written, then the internal assessment with
+     the 3D readiness radar
    - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached, and sends the applicant a receipt
      (at most one receipt per address per day)
-   - writes the score back onto the document (`assessment`, `grantMatches`, `processedAt`, any mail error)
+   - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `grantMatches`,
+     `processedAt`, any mail error)
 
 **Where the logic comes from:** `functions/src/mamba/` is copied from `cybrdeck-website/src/lib/mamba/`
-(`questionnaire.ts`, `program.ts`, `assessment.ts`, `dossierPdf.ts`, `application.ts`, `confirmationEmail.ts`). Keep
-them in step by copying over the newer files. Not ported: the AI review passes and Google Drive filing. The
+(`questionnaire.ts`, `program.ts`, `assessment.ts`, `dossierPdf.ts`, `application.ts`, `confirmationEmail.ts`,
+`oneAssessment.ts`, `deidentify.ts`, and a Qwen-only `modelLegs.ts`). Keep them in step by copying over the newer
+files. Not ported: the drafted interview questions and Google Drive filing. The
 confirmation email's "change something" line says to reply, since MVP has no revision link.
 
 **Email settings:** `functions/.env` holds the SMTP host, port, sender (`ben@evecount.com`, the same Gmail mailbox
-as cybrdeck.com) and the reviewer list. The password is a Secret Manager secret, set with
-`firebase functions:secrets:set SMTP_PASSWORD`.
+as cybrdeck.com), the reviewer list and One's Model Studio endpoint. The SMTP password and the Model Studio key are
+Secret Manager secrets (`SMTP_PASSWORD`, `DASHSCOPE_API_KEY`, copied from the cybrdeck project), set with
+`firebase functions:secrets:set <NAME>`.
 
 **Reviewing applications:** the emailed PDF, or Firebase console → Firestore → `mvp_applications`.
 

@@ -7,14 +7,19 @@
  *
  *   1. validate it against the catalogue (a forged write is marked, not mailed)
  *   2. score it on the seven readiness axes and screen it against the grants
- *   3. build the dossier PDF — the application as written, then the private
- *      assessment with the 3D readiness radar
- *   4. mail the reviewers with the PDF attached, and send the applicant a receipt
+ *   3. have One review the rule-based score: it reads the de-identified
+ *      application and may move each axis by at most 15 points, with a reason
+ *   4. build the dossier PDF from the blended score — the application as
+ *      written, then the private assessment with the 3D readiness radar
+ *   5. mail the reviewers with the PDF attached, and send the applicant a receipt
  *
  * The modules under ./mamba are copied from cybrdeck-website/src/lib/mamba so
- * the score, the radar and the PDF match what cybrdeck.com produces. What is
- * left out: the model passes (One's review, the drafted interview questions)
- * and Drive filing — the PDF travels as an attachment instead.
+ * the score, One's review, the radar and the PDF match what cybrdeck.com
+ * produces. What is left out: the drafted interview questions and Drive
+ * filing — the PDF travels as an attachment instead.
+ *
+ * One's review is best-effort, as on cybrdeck.com: if Qwen is slow or down,
+ * the rule-based score stands and the email says so.
  *
  * Every mail failure is recorded on the document rather than thrown: a retry
  * would re-score and re-mail an application that is already safely stored.
@@ -31,6 +36,8 @@ import { QUESTION_IDS } from './mamba/questionnaire';
 import { dossierFilename, matchGrants, scoreApplication } from './mamba/assessment';
 import { buildDossierPdf, pdfText } from './mamba/dossierPdf';
 import { buildConfirmationEmail } from './mamba/confirmationEmail';
+import { blendAssessment, reviewAssessmentWithOne } from './mamba/oneAssessment';
+import { redactAnswers } from './mamba/deidentify';
 
 initializeApp();
 const db = getFirestore();
@@ -41,6 +48,8 @@ const SMTP_HOST = defineString('SMTP_HOST', { default: 'smtp.gmail.com' });
 const SMTP_PORT = defineString('SMTP_PORT', { default: '587' });
 const SMTP_USER = defineString('SMTP_USER');
 const SMTP_PASSWORD = defineSecret('SMTP_PASSWORD');
+/** Alibaba Model Studio key One's review runs on (DASHSCOPE_BASE_URL is in .env). */
+const DASHSCOPE_API_KEY = defineSecret('DASHSCOPE_API_KEY');
 /** Comma-separated. Everyone here gets the dossier PDF. */
 const REVIEWER_EMAILS = defineString('REVIEWER_EMAILS');
 
@@ -80,9 +89,10 @@ export const onApplicationFiled = onDocumentCreated(
   {
     document: `${COLLECTION}/{applicationId}`,
     region: 'asia-southeast1',
-    secrets: [SMTP_PASSWORD],
+    secrets: [SMTP_PASSWORD, DASHSCOPE_API_KEY],
     memory: '512MiB',
-    timeoutSeconds: 120,
+    // One's review alone may take its full 40s budget.
+    timeoutSeconds: 180,
   },
   async (event) => {
     const snap = event.data;
@@ -102,8 +112,24 @@ export const onApplicationFiled = onDocumentCreated(
     const stored = { ...record, trackLabel };
 
     const answers = submission.answers;
-    const assessment = scoreApplication(answers, submission.track);
+    const baseline = scoreApplication(answers, submission.track);
     const grants = matchGrants(answers, submission.track);
+
+    const oneOutcome = await reviewAssessmentWithOne({
+      record: stored,
+      answers,
+      track: submission.track,
+      assessment: baseline,
+      redactedAnswers: redactAnswers(stored, answers, QUESTION_IDS),
+    }).catch((err: Error) => ({ ok: false as const, reason: `One's review threw: ${err?.message ?? err}` }));
+    const oneReview = oneOutcome.ok ? oneOutcome.result : null;
+    if (!oneOutcome.ok) logger.warn("[mvp] One's review unavailable", { id: ref.id, reason: oneOutcome.reason });
+    const assessment = oneReview ? blendAssessment(baseline, oneReview) : baseline;
+    const moved = baseline.axes.flatMap((b) => {
+      const adj = oneReview?.axes[b.axis];
+      return adj ? [{ axis: b, adj }] : [];
+    });
+    const pct = (n: number) => Math.round(n * 100);
     const filename = dossierFilename(
       pdfText(answers.ideaTitle),
       pdfText(submission.fullName) || 'Untitled application',
@@ -120,7 +146,7 @@ export const onApplicationFiled = onDocumentCreated(
         from,
         to: REVIEWER_EMAILS.value(),
         replyTo: submission.email,
-        subject: `MVP application: ${name} — ${idea} (${assessment.bandLabel}, ${Math.round(assessment.overall * 100)})`,
+        subject: `MVP application: ${name} — ${idea} (${assessment.bandLabel}, ${pct(assessment.overall)})`,
         text: [
           'A new Mamba Venture Program application came in through the MVP site.',
           '',
@@ -131,9 +157,22 @@ export const onApplicationFiled = onDocumentCreated(
           `Intake:    ${submission.intake}`,
           `Idea:      ${idea}`,
           '',
-          `Readiness: ${Math.round(assessment.overall * 100)} / 100 — ${assessment.bandLabel}`,
+          `Readiness: ${pct(assessment.overall)} / 100 — ${assessment.bandLabel}${oneReview && moved.length ? ' (after One\'s review)' : ''}`,
           `Grant liability risk: ${assessment.grantRisk}`,
-          ...assessment.axes.map((a) => `  ${a.label.padEnd(24)} ${Math.round(a.score * 100)}`),
+          ...assessment.axes.map((a) => `  ${a.label.padEnd(24)} ${pct(a.score)}`),
+          '',
+          ...(oneReview
+            ? [
+                `One's review (${oneReview.model}): rule-based ${pct(baseline.overall)} -> ${pct(assessment.overall)}`,
+                ...(moved.length
+                  ? moved.map(
+                      ({ axis, adj }) =>
+                        `  ${axis.label}: ${pct(axis.score)} -> ${pct(Math.min(1, Math.max(0, axis.score + adj.adjust)))}. ${adj.reason}`,
+                    )
+                  : ['  Left every axis at the rule-based reading.']),
+                ...(oneReview.summary ? ['', `One's read: ${oneReview.summary}`] : []),
+              ]
+            : [`One's review: unavailable (${oneOutcome.ok ? '' : oneOutcome.reason}). The score is the rule-based reading.`]),
           '',
           'The attached dossier has the full application, the readiness radar and the grant screen.',
           `Firestore: mvp_applications/${ref.id}`,
@@ -180,6 +219,17 @@ export const onApplicationFiled = onDocumentCreated(
           verdict: m.verdict,
           gap: m.gap ?? null,
         })),
+        assessmentReviewedByOne: moved.length > 0,
+        oneAssessment: oneReview
+          ? { summary: oneReview.summary, axes: oneReview.axes, model: oneReview.model, generatedAt: oneReview.generatedAt }
+          : null,
+        oneAssessmentReason: oneOutcome.ok ? null : oneOutcome.reason,
+        baselineAssessment: {
+          overall: baseline.overall,
+          band: baseline.band,
+          bandLabel: baseline.bandLabel,
+          axes: baseline.axes,
+        },
         dossierName: filename,
         reviewerMailError: reviewerError,
         ...(receiptError ? { receiptError } : { receiptSentAt: FieldValue.serverTimestamp() }),
