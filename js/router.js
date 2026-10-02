@@ -26,9 +26,6 @@
       chip.setAttribute("role", "tab");
       chip.setAttribute("aria-selected", String(on));
     });
-    document.querySelectorAll(".header-nav-item").forEach((a) =>
-      a.classList.toggle("active", a.getAttribute("href") === `#${sectionId}` && sectionId !== "section-founders"),
-    );
     return sectionId;
   }
 

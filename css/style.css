@@ -247,44 +247,93 @@ body {
   50% { opacity: 0.6; }
 }
 
-/* Header Audience Nav Links */
-.header-nav-links {
+/* Header live banner: the next info session and cohort start */
+.live-banner {
   display: flex;
   align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.live-item {
+  display: inline-flex;
+  align-items: center;
   gap: 8px;
-}
-
-.header-nav-item {
-  text-decoration: none;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-secondary);
   padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  border: 1.5px solid transparent;
-  transition: all 0.15s ease;
+  background: #ffffff;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-neo-sm);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  text-decoration: none;
 }
 
-.header-nav-item:hover {
-  color: var(--text-primary);
+.live-item--event {
   background: var(--bg-tint-orange);
   border-color: var(--accent-orange);
+  box-shadow: 2px 2px 0px var(--accent-orange);
 }
 
-.header-nav-item.active {
-  color: #ffffff;
+a.live-item:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px var(--accent-orange);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   background: var(--accent-orange);
-  border-color: var(--border-strong);
-  box-shadow: 2px 2px 0px var(--border-strong);
+  box-shadow: 0 0 6px var(--accent-orange);
+  animation: pulse 1.8s infinite;
+  flex-shrink: 0;
 }
 
-body.exam-mode .header-nav-links {
+.live-kicker {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.68rem;
+  color: var(--accent-orange-hover);
+}
+
+.live-text {
+  font-weight: 600;
+}
+
+.live-cta {
+  font-weight: 800;
+  color: var(--accent-orange-hover);
+}
+
+body.exam-mode .live-banner {
   display: none !important;
 }
 
+/* Narrow screens: the banner drops to its own row under the logo and button. */
 @media (max-width: 960px) {
-  .header-nav-links {
+  .studio-header {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .live-banner {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .live-item {
+    font-size: 0.72rem;
+    padding: 5px 10px;
+  }
+  /* One row on phones: while an event is upcoming, it takes the slot. */
+  .live-banner:has(.live-item--event:not([hidden])) .live-item:not(.live-item--event) {
     display: none;
   }
 }
@@ -364,7 +413,7 @@ body.exam-mode .header-nav-links {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-neo);
   padding: 44px 48px;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 36px;
   position: relative;
   overflow: hidden;
@@ -375,7 +424,7 @@ body.exam-mode .header-nav-links {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
   margin-bottom: 36px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1.5px solid rgba(15, 23, 42, 0.25);
   padding-bottom: 28px;
 }
 
@@ -391,13 +440,13 @@ body.exam-mode .header-nav-links {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
 }
 
 .pillar-text {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -413,7 +462,7 @@ body.exam-mode .header-nav-links {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: var(--text-primary);
   text-transform: uppercase;
 }
 
@@ -423,7 +472,7 @@ body.exam-mode .header-nav-links {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text-primary);
 }
 
 /* Secondary Portal Intro Box */
