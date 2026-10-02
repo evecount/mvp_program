@@ -13,13 +13,16 @@
  *      written, then the private assessment with the 3D readiness radar
  *   5. mail the reviewers with the PDF attached, and send the applicant a receipt
  *
- * The modules under ./mamba are copied from cybrdeck-website/src/lib/mamba so
- * the score, One's review, the radar and the PDF match what cybrdeck.com
- * produces. What is left out: the drafted interview questions and Drive
- * filing — the PDF travels as an attachment instead.
+ *      alongside 3, the same model drafts 3–5 follow-up interview questions, each
+ *      grounded in answers the applicant actually gave (an annotation, never a score)
  *
- * One's review is best-effort, as on cybrdeck.com: if Qwen is slow or down,
- * the rule-based score stands and the email says so.
+ * The modules under ./mamba are copied from cybrdeck-website/src/lib/mamba so
+ * the score, One's review, the drafted questions, the radar and the PDF match
+ * what cybrdeck.com produces. What is left out: Drive filing — the PDF travels
+ * as an attachment instead.
+ *
+ * Both model passes are best-effort, as on cybrdeck.com: if Qwen is slow or
+ * down, the rule-based score and interview sheet stand and the email says so.
  *
  * Every mail failure is recorded on the document rather than thrown: a retry
  * would re-score and re-mail an application that is already safely stored.
@@ -33,11 +36,12 @@ import nodemailer from 'nodemailer';
 import { parseApplicationSubmission } from './mamba/application';
 import { MAMBA_TRACKS } from './mamba/program';
 import { QUESTION_IDS } from './mamba/questionnaire';
-import { dossierFilename, matchGrants, scoreApplication } from './mamba/assessment';
+import { dossierFilename, interviewSheet, matchGrants, scoreApplication } from './mamba/assessment';
 import { buildDossierPdf, pdfText } from './mamba/dossierPdf';
 import { buildConfirmationEmail } from './mamba/confirmationEmail';
 import { blendAssessment, reviewAssessmentWithOne } from './mamba/oneAssessment';
 import { redactAnswers } from './mamba/deidentify';
+import { draftInterviewQuestions } from './mamba/interviewDraft';
 
 initializeApp();
 const db = getFirestore();
@@ -115,13 +119,30 @@ export const onApplicationFiled = onDocumentCreated(
     const baseline = scoreApplication(answers, submission.track);
     const grants = matchGrants(answers, submission.track);
 
-    const oneOutcome = await reviewAssessmentWithOne({
-      record: stored,
-      answers,
-      track: submission.track,
-      assessment: baseline,
-      redactedAnswers: redactAnswers(stored, answers, QUESTION_IDS),
-    }).catch((err: Error) => ({ ok: false as const, reason: `One's review threw: ${err?.message ?? err}` }));
+    /* Same shape and order as cybrdeck's dossier-build.ts: the two model
+       passes read the same redacted answers concurrently, the review given a
+       short head start delay so the two calls don't land on the shared Qwen
+       workspace in the same instant. */
+    const flatGrants = grants.map((m) => ({ id: m.program.id, name: m.program.name, verdict: m.verdict, gap: m.gap ?? null }));
+    const redactedAnswers = redactAnswers(stored, answers, QUESTION_IDS);
+    const [draftOutcome, oneOutcome] = await Promise.all([
+      draftInterviewQuestions({
+        record: stored,
+        answers,
+        track: submission.track,
+        assessment: baseline,
+        grants: flatGrants,
+        deterministic: interviewSheet(answers, submission.track, flatGrants),
+        redactedAnswers,
+      }).catch((err: Error) => ({ ok: false as const, reason: `drafting threw: ${err?.message ?? err}` })),
+      new Promise((resolve) => setTimeout(resolve, 300))
+        .then(() =>
+          reviewAssessmentWithOne({ record: stored, answers, track: submission.track, assessment: baseline, redactedAnswers }),
+        )
+        .catch((err: Error) => ({ ok: false as const, reason: `One's review threw: ${err?.message ?? err}` })),
+    ]);
+    const draft = draftOutcome.ok ? draftOutcome.draft : null;
+    if (!draftOutcome.ok) logger.warn('[mvp] interview draft unavailable', { id: ref.id, reason: draftOutcome.reason });
     const oneReview = oneOutcome.ok ? oneOutcome.result : null;
     if (!oneOutcome.ok) logger.warn("[mvp] One's review unavailable", { id: ref.id, reason: oneOutcome.reason });
     const assessment = oneReview ? blendAssessment(baseline, oneReview) : baseline;
@@ -134,7 +155,7 @@ export const onApplicationFiled = onDocumentCreated(
       pdfText(answers.ideaTitle),
       pdfText(submission.fullName) || 'Untitled application',
     );
-    const pdf = Buffer.from(buildDossierPdf({ record: stored, answers, assessment, grants, draft: null }));
+    const pdf = Buffer.from(buildDossierPdf({ record: stored, answers, assessment, grants, draft }));
 
     const mail = transport();
     const from = `"Mamba Venture Program" <${SMTP_USER.value()}>`;
@@ -173,6 +194,10 @@ export const onApplicationFiled = onDocumentCreated(
                 ...(oneReview.summary ? ['', `One's read: ${oneReview.summary}`] : []),
               ]
             : [`One's review: unavailable (${oneOutcome.ok ? '' : oneOutcome.reason}). The score is the rule-based reading.`]),
+          '',
+          draft
+            ? `Interview: ${draft.questions.length} model-drafted follow-up questions are on the dossier's interview page.`
+            : `Interview: no drafted questions (${draftOutcome.ok ? '' : draftOutcome.reason}); the rule-based sheet is in the dossier.`,
           '',
           'The attached dossier has the full application, the readiness radar and the grant screen.',
           `Firestore: mvp_applications/${ref.id}`,
@@ -224,6 +249,10 @@ export const onApplicationFiled = onDocumentCreated(
           ? { summary: oneReview.summary, axes: oneReview.axes, model: oneReview.model, generatedAt: oneReview.generatedAt }
           : null,
         oneAssessmentReason: oneOutcome.ok ? null : oneOutcome.reason,
+        interviewDraft: draft
+          ? { questions: draft.questions, model: draft.model, generatedAt: draft.generatedAt, dropped: draft.dropped }
+          : null,
+        draftReason: draftOutcome.ok ? null : draftOutcome.reason,
         baselineAssessment: {
           overall: baseline.overall,
           band: baseline.band,
