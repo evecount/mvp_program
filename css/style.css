@@ -2945,3 +2945,111 @@ body[data-screen="screen-apply"] .header-apply-btn { visibility: hidden; }
   .brand-lockup { gap: 6px; }
 }
 @media (max-width: 760px) { .hero-secondary-row { justify-content: center; } }
+
+/* Meet the Mentors */
+.mentor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.mentor-card {
+  background: #fdfefe;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 2px 2px 0px var(--border-strong);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.mentor-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--border-strong);
+  border-color: var(--accent-orange);
+}
+
+.mentor-card--soon {
+  border-style: dashed;
+  box-shadow: none;
+  background: transparent;
+}
+
+.mentor-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.mentor-avatar--initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-orange);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.5rem;
+}
+
+.mentor-card--soon .mentor-avatar--initials {
+  background: var(--bg-tint-orange);
+}
+
+.mentor-name {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.mentor-role {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--accent-orange-hover);
+}
+
+.mentor-bio {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.mentor-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mentor-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+}
+
+.mentor-link {
+  margin-top: auto;
+  padding-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.mentor-link:hover {
+  color: var(--accent-orange-hover);
+}
