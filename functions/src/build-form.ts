@@ -92,7 +92,7 @@ const steps: Array<{ id: string; title: string; intro?: string; fields: Field[] 
   {
     id: 'track',
     title: 'Your track and intake',
-    intro: cohort ? `${cohort.label} for both the 1-month and 3-month tracks begins ${cohort.startsLabel}.` : undefined,
+    intro: cohort ? `The next cohort begins ${cohort.startsLabel}, for both the 1-month and 3-month tracks.` : undefined,
     fields: [
       {
         id: 'track', label: 'Which track are you applying for?', kind: 'select', required: true,
