@@ -313,8 +313,16 @@ body.exam-mode .live-banner {
   display: none !important;
 }
 
+/* Short of a wide screen there is room for one item: while an event is
+   upcoming, it takes the slot and the cohort pill waits. */
+@media (max-width: 1360px) {
+  .live-banner:has(.live-item--event:not([hidden])) .live-item:not(.live-item--event) {
+    display: none;
+  }
+}
+
 /* Narrow screens: the banner drops to its own row under the logo and button. */
-@media (max-width: 960px) {
+@media (max-width: 1120px) {
   .studio-header {
     flex-wrap: wrap;
     row-gap: 10px;
@@ -331,10 +339,6 @@ body.exam-mode .live-banner {
   .live-item {
     font-size: 0.72rem;
     padding: 5px 10px;
-  }
-  /* One row on phones: while an event is upcoming, it takes the slot. */
-  .live-banner:has(.live-item--event:not([hidden])) .live-item:not(.live-item--event) {
-    display: none;
   }
 }
 
