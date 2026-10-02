@@ -86,14 +86,15 @@ export const COHORTS: ReadonlyArray<{
   /** Four-digit year, for the small caption and the mobile badge. */
   year: string;
 }> = [
+  // MVP's calendar, not cybrdeck.com's (its Cohort #1 began 5 Oct 2026).
   {
-    label: 'Cohort #1',
+    label: 'The January 2027 cohort',
     n: 1,
-    starts: '2026-10-05',
-    startsLabel: '5 Oct 2026',
-    day: '5',
-    month: 'October',
-    year: '2026',
+    starts: '2027-01-26',
+    startsLabel: '26 Jan 2027',
+    day: '26',
+    month: 'January',
+    year: '2027',
   },
 ];
 
