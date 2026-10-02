@@ -11,15 +11,19 @@
  *      application and may move each axis by at most 15 points, with a reason
  *   4. build the dossier PDF from the blended score — the application as
  *      written, then the private assessment with the 3D readiness radar
- *   5. mail the reviewers with the PDF attached, and send the applicant a receipt
+ *   5. file the PDF in the Mamba shared drive (DRIVE_FOLDER_ID)
+ *   6. mail the reviewers with the PDF attached and a link to the Drive copy,
+ *      and send the applicant a receipt
  *
  *      alongside 3, the same model drafts 3–5 follow-up interview questions, each
  *      grounded in answers the applicant actually gave (an annotation, never a score)
  *
  * The modules under ./mamba are copied from cybrdeck-website/src/lib/mamba so
  * the score, One's review, the drafted questions, the radar and the PDF match
- * what cybrdeck.com produces. What is left out: Drive filing — the PDF travels
- * as an attachment instead.
+ * what cybrdeck.com produces.
+ *
+ * Drive filing is best-effort too: a failed upload is recorded as `driveError`
+ * and the reviewers still get the PDF as an attachment.
  *
  * Both model passes are best-effort, as on cybrdeck.com: if Qwen is slow or
  * down, the rule-based score and interview sheet stand and the email says so.
@@ -42,6 +46,7 @@ import { buildConfirmationEmail } from './mamba/confirmationEmail';
 import { blendAssessment, reviewAssessmentWithOne } from './mamba/oneAssessment';
 import { redactAnswers } from './mamba/deidentify';
 import { draftInterviewQuestions } from './mamba/interviewDraft';
+import { fileDossier } from './mamba/drive';
 
 initializeApp();
 const db = getFirestore();
@@ -56,6 +61,8 @@ const SMTP_PASSWORD = defineSecret('SMTP_PASSWORD');
 const DASHSCOPE_API_KEY = defineSecret('DASHSCOPE_API_KEY');
 /** Comma-separated. Everyone here gets the dossier PDF. */
 const REVIEWER_EMAILS = defineString('REVIEWER_EMAILS');
+/** The Mamba shared drive (or a folder in it) the dossier PDFs are filed in. */
+const DRIVE_FOLDER_ID = defineString('DRIVE_FOLDER_ID');
 
 /** One receipt per address per day: the form is public, and the receipt goes to
  *  whatever address was typed, so this keeps it from being used to mail-bomb. */
@@ -157,6 +164,15 @@ export const onApplicationFiled = onDocumentCreated(
     );
     const pdf = Buffer.from(buildDossierPdf({ record: stored, answers, assessment, grants, draft }));
 
+    let driveFileId: string | null = null;
+    let driveError: string | null = null;
+    try {
+      driveFileId = await fileDossier(pdf, filename, DRIVE_FOLDER_ID.value());
+    } catch (err) {
+      driveError = (err as Error)?.message || String(err);
+      logger.error('[mvp] Drive filing failed', { id: ref.id, error: driveError });
+    }
+
     const mail = transport();
     const from = `"Mamba Venture Program" <${SMTP_USER.value()}>`;
     const name = submission.fullName || 'Applicant';
@@ -200,6 +216,9 @@ export const onApplicationFiled = onDocumentCreated(
             : `Interview: no drafted questions (${draftOutcome.ok ? '' : draftOutcome.reason}); the rule-based sheet is in the dossier.`,
           '',
           'The attached dossier has the full application, the readiness radar and the grant screen.',
+          driveFileId
+            ? `Drive copy: https://drive.google.com/file/d/${driveFileId}/view`
+            : `Drive copy: not filed (${driveError})`,
           `Firestore: mvp_applications/${ref.id}`,
         ].join('\n'),
         attachments: [{ filename, content: pdf, contentType: 'application/pdf' }],
@@ -260,6 +279,9 @@ export const onApplicationFiled = onDocumentCreated(
           axes: baseline.axes,
         },
         dossierName: filename,
+        driveFileId,
+        driveFolderId: driveFileId ? DRIVE_FOLDER_ID.value() : null,
+        driveError,
         reviewerMailError: reviewerError,
         ...(receiptError ? { receiptError } : { receiptSentAt: FieldValue.serverTimestamp() }),
         processedAt: FieldValue.serverTimestamp(),

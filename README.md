@@ -47,15 +47,19 @@ It is the same form and pipeline as cybrdeck.com's Venture Program (`/venture-pr
      change a score.
    - builds the dossier PDF from the blended score: the application as written, then the internal assessment with
      the 3D readiness radar
-   - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached, and sends the applicant a receipt
+   - files the PDF in the Mamba shared drive (`DRIVE_FOLDER_ID`). The function's service account,
+     `54659970421-compute@developer.gserviceaccount.com`, must be a Content manager on that drive. A failed upload is
+     recorded as `driveError` and doesn't stop the emails
+   - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached and a link to the Drive copy, and sends the
+     applicant a receipt
      (at most one receipt per address per day)
-   - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `interviewDraft`, `grantMatches`,
+   - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `interviewDraft`, `driveFileId`, `grantMatches`,
      `processedAt`, any mail error)
 
 **Where the logic comes from:** `functions/src/mamba/` is copied from `cybrdeck-website/src/lib/mamba/`
 (`questionnaire.ts`, `program.ts`, `assessment.ts`, `dossierPdf.ts`, `application.ts`, `confirmationEmail.ts`,
 `oneAssessment.ts`, `interviewDraft.ts`, `deidentify.ts`, and a Qwen-only `modelLegs.ts`). Keep them in step by
-copying over the newer files. Not ported: Google Drive filing. The
+copying over the newer files. Drive filing (`drive.ts`) is a create-only version of cybrdeck's `fileDossier`. The
 confirmation email's "change something" line says to reply, since MVP has no revision link.
 
 **Email settings:** `functions/.env` holds the SMTP host, port, sender (`ben@evecount.com`, the same Gmail mailbox
