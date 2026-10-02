@@ -50,7 +50,7 @@ It is the same form and pipeline as cybrdeck.com's Venture Program (`/venture-pr
    - files the PDF in the Mamba shared drive (`DRIVE_FOLDER_ID`). The function's service account,
      `54659970421-compute@developer.gserviceaccount.com`, must be a Content manager on that drive. A failed upload is
      recorded as `driveError` and doesn't stop the emails
-   - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached and a link to the Drive copy, and sends the
+   - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached (no Drive link, so Gmail shows one PDF), and sends the
      applicant a receipt
      (at most one receipt per address per day)
    - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `interviewDraft`, `driveFileId`, `grantMatches`,

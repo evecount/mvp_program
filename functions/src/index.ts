@@ -12,8 +12,7 @@
  *   4. build the dossier PDF from the blended score — the application as
  *      written, then the private assessment with the 3D readiness radar
  *   5. file the PDF in the Mamba shared drive (DRIVE_FOLDER_ID)
- *   6. mail the reviewers with the PDF attached and a link to the Drive copy,
- *      and send the applicant a receipt
+ *   6. mail the reviewers with the PDF attached, and send the applicant a receipt
  *
  *      alongside 3, the same model drafts 3–5 follow-up interview questions, each
  *      grounded in answers the applicant actually gave (an annotation, never a score)
@@ -216,9 +215,9 @@ export const onApplicationFiled = onDocumentCreated(
             : `Interview: no drafted questions (${draftOutcome.ok ? '' : draftOutcome.reason}); the rule-based sheet is in the dossier.`,
           '',
           'The attached dossier has the full application, the readiness radar and the grant screen.',
-          driveFileId
-            ? `Drive copy: https://drive.google.com/file/d/${driveFileId}/view`
-            : `Drive copy: not filed (${driveError})`,
+          // No Drive link here: Gmail renders it as a second PDF card beside the
+          // attachment, and not every reviewer is a member of the shared drive.
+          driveFileId ? 'A copy is filed in the Mamba shared drive.' : `Not filed in the shared drive (${driveError}).`,
           `Firestore: mvp_applications/${ref.id}`,
         ].join('\n'),
         attachments: [{ filename, content: pdf, contentType: 'application/pdf' }],

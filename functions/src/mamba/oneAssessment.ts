@@ -243,7 +243,10 @@ export type OneAssessmentOutcome =
  * needs the same ~30-34s here it needs for the drafting pass, and the
  * previous 30s left it timing out with nothing rather than answering.
  */
-export const ONE_ASSESSMENT_BUDGET_MS = 40_000;
+// MVP: 90s, not cybrdeck's 40s. That budget was sized to fit a 60s request
+// limit; this runs in a Cloud Function allowed 180s, and Qwen alone has been
+// measured past 40s here, which cost the dossier its drafted questions.
+export const ONE_ASSESSMENT_BUDGET_MS = 90_000;
 
 /**
  * Review the baseline. Never throws: this runs inside the best-effort
