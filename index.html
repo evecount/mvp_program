@@ -475,8 +475,9 @@
 
       <!-- ====================================================================
            SCREEN: Apply to Join — Mamba Venture Program application
-           Same questionnaire and backend as cybrdeck.com/venture-program/register
-           (catalogue generated into js/apply-catalogue.js; logic in js/apply.js)
+           Same questionnaire and scoring as cybrdeck.com/venture-program/register
+           (catalogue generated into js/application-questions.js by functions/src/build-form.ts;
+           form logic in js/apply.js; scoring, dossier PDF and email in functions/src/index.ts)
            ==================================================================== -->
       <section class="screen" id="screen-apply" aria-labelledby="apply-title">
         <div class="apply-shell">
@@ -485,10 +486,10 @@
           <header class="apply-intro">
             <h1 class="apply-title" id="apply-title">Apply to MVP</h1>
             <p class="apply-lede">
-              Tell us what you want to build. These are the questions our partners ask in the interview, so answer
-              them the way you would in the room: specific, honest and in your own words. Evidence beats polish.
+              Tell us what you are bringing and what you have already done about it. Answer the way you would in
+              the room with our partners: specific, honest and in your own words. Evidence beats polish.
             </p>
-            <p class="apply-meta">About 15 minutes &middot; 8 short steps &middot; Progress saves on this device</p>
+            <p class="apply-meta">About 20 minutes &middot; up to 10 short steps &middot; Progress saves on this device</p>
           </header>
 
           <div class="apply-card" id="apply-card">
