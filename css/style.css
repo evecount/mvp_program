@@ -413,7 +413,7 @@ body.exam-mode .live-banner {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-neo);
   padding: 44px 48px;
-  color: #ffffff;
+  color: var(--text-primary);
   margin-bottom: 36px;
   position: relative;
   overflow: hidden;
@@ -424,7 +424,7 @@ body.exam-mode .live-banner {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
   margin-bottom: 36px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1.5px solid rgba(15, 23, 42, 0.25);
   padding-bottom: 28px;
 }
 
@@ -440,13 +440,13 @@ body.exam-mode .live-banner {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
 }
 
 .pillar-text {
   font-size: 0.95rem;
   line-height: 1.5;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -462,7 +462,7 @@ body.exam-mode .live-banner {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: var(--text-primary);
   text-transform: uppercase;
 }
 
@@ -472,7 +472,7 @@ body.exam-mode .live-banner {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--text-primary);
 }
 
 /* Secondary Portal Intro Box */
