@@ -42,17 +42,20 @@ It is the same form and pipeline as cybrdeck.com's Venture Program (`/venture-pr
    - has **One** review that score: One (on Qwen, via Alibaba Model Studio) reads the de-identified application and
      may move each axis by at most 15 points, each move with a cited reason. If One is unavailable, the rule-based
      score stands. The email lists what One moved and why.
+   - has the same model draft 3–5 follow-up interview questions, each citing the answers it came from (ungrounded
+     or yes/no questions are discarded). They go on the PDF's interview page, labelled as model-written, and never
+     change a score.
    - builds the dossier PDF from the blended score: the application as written, then the internal assessment with
      the 3D readiness radar
    - emails the reviewers (`REVIEWER_EMAILS`) with the PDF attached, and sends the applicant a receipt
      (at most one receipt per address per day)
-   - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `grantMatches`,
+   - writes the score back onto the document (`assessment`, `baselineAssessment`, `oneAssessment`, `interviewDraft`, `grantMatches`,
      `processedAt`, any mail error)
 
 **Where the logic comes from:** `functions/src/mamba/` is copied from `cybrdeck-website/src/lib/mamba/`
 (`questionnaire.ts`, `program.ts`, `assessment.ts`, `dossierPdf.ts`, `application.ts`, `confirmationEmail.ts`,
-`oneAssessment.ts`, `deidentify.ts`, and a Qwen-only `modelLegs.ts`). Keep them in step by copying over the newer
-files. Not ported: the drafted interview questions and Google Drive filing. The
+`oneAssessment.ts`, `interviewDraft.ts`, `deidentify.ts`, and a Qwen-only `modelLegs.ts`). Keep them in step by
+copying over the newer files. Not ported: Google Drive filing. The
 confirmation email's "change something" line says to reply, since MVP has no revision link.
 
 **Email settings:** `functions/.env` holds the SMTP host, port, sender (`ben@evecount.com`, the same Gmail mailbox
