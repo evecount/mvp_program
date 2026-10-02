@@ -322,7 +322,10 @@ export type DraftOutcome =
  * have to fit inside the same 60s, and losing an annotation is acceptable
  * where losing a dossier is not.
  */
-export const DRAFT_BUDGET_MS = 40_000;
+// MVP: 90s, not cybrdeck's 40s. That budget was sized to fit a 60s request
+// limit; this runs in a Cloud Function allowed 180s, and Qwen alone has been
+// measured past 40s here, which cost the dossier its drafted questions.
+export const DRAFT_BUDGET_MS = 90_000;
 
 /**
  * Draft the questions.
