@@ -86,7 +86,7 @@ a { color: inherit; text-decoration: none; }
 .pill .i { width: 16px; height: 16px; transition: transform 0.31s var(--spring-press); }
 .pill:hover .i { transform: translate(2px, -2px); }
 .pill:active { transform: scale(0.96); transition-duration: 0.1s; }
-.pill--lg { min-height: 54px; padding: 0 26px; font-size: 1.02rem; }
+.pill--lg { min-height: 46px; padding: 0 22px; font-size: .96rem; }
 /* Obsidian pill, lit. A simulated light source sits above and to the left:
    the lacquer reflects it as a gloss cap, a hard specular line runs along the
    top curve where the light catches, and the hero's orange bounces back off
@@ -95,24 +95,24 @@ a { color: inherit; text-decoration: none; }
 @property --lx { syntax: "<percentage>"; inherits: true; initial-value: 26%; }
 .pill--black {
   position: relative; isolation: isolate; overflow: hidden; color: #fff; --lx: 26%;
-  background: linear-gradient(180deg, #303036 0%, #16161a 47%, #0a0a0c 53%, #141417 100%);
+  background: linear-gradient(180deg, #1f1f23 0%, #0e0e10 62%, #0b0b0d 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, .06),
-    0 1px 1px rgba(0, 0, 0, .35),
-    0 14px 28px -14px rgba(0, 0, 0, .75);
+    inset 0 0 0 1px rgba(255, 255, 255, .05),
+    0 1px 2px rgba(0, 0, 0, .28),
+    0 6px 14px -8px rgba(0, 0, 0, .5);
   transition: transform .31s var(--spring-press), --lx .7s var(--spring-sheet);
 }
 /* Gloss cap: the environment's reflection in the upper half of the lacquer. */
 .pill--black::before {
   content: ""; position: absolute; z-index: -1; left: 6px; right: 6px; top: 2px; height: 48%; border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.02) 85%, rgba(255,255,255,0));
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 80%);
   transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
 }
 /* Softbox: the light source itself, mirrored in the lacquer as a soft-edged
    window that slides with --lx. */
 .pill--black::after {
-  content: ""; position: absolute; z-index: -1; top: 2.5px; height: 20%; width: 64%; left: calc(var(--lx) - 32%); border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,0));
+  content: ""; position: absolute; z-index: -1; top: 1.5px; height: 14%; width: 56%; left: calc(var(--lx) - 28%); border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0));
   -webkit-mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
   mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
   transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
@@ -120,17 +120,17 @@ a { color: inherit; text-decoration: none; }
 /* Specular + bounce: a 1px ring masked out of two light sources, so the light
    follows the pill's own curvature. */
 .pill-shine {
-  position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; padding: 1.5px;
+  position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; padding: 1px;
   background:
-    radial-gradient(50% 120% at var(--lx) 0%, #fff, rgba(255,255,255,.5) 40%, rgba(255,255,255,.08) 100%),
-    radial-gradient(60% 120% at calc(100% - var(--lx)) 100%, #ff9a66, rgba(252,103,54,.35) 50%, rgba(252,103,54,0) 100%);
+    radial-gradient(45% 110% at var(--lx) 0%, rgba(255,255,255,.62), rgba(255,255,255,.18) 45%, rgba(255,255,255,.04) 100%),
+    radial-gradient(50% 110% at calc(100% - var(--lx)) 100%, rgba(255,154,102,.45), rgba(252,103,54,0) 100%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
   transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
 }
 /* Out of focus until it is in the light. */
 .js .pill--black:not(.lit)::before, .js .pill--black:not(.lit)::after, .js .pill--black:not(.lit) .pill-shine { filter: blur(6px); opacity: .2; }
-.pill--black:hover, .pill--black:focus-visible { background: linear-gradient(180deg, #36363d 0%, #18181c 47%, #0a0a0c 53%, #17171a 100%); }
+.pill--black:hover, .pill--black:focus-visible { background: linear-gradient(180deg, #26262b 0%, #111114 62%, #0c0c0e 100%); }
 
 /* The header CTA folds into an orb once you are reading, and stretches back
    into the pill on hover, focus or scrolling up; the label column collapses
@@ -145,7 +145,10 @@ a { color: inherit; text-decoration: none; }
 
 .pill--orange { background: var(--orange); color: var(--ink); }
 .pill--orange:hover { background: #ff7a4d; }
-.pill--glass { color: var(--ink); background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08) 46%, rgba(255,255,255,.18)); border-color: rgba(255,255,255,.55); }
+.pill--glass { color: var(--ink); background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 1px 2px rgba(80,20,0,.08);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2); backdrop-filter: blur(8px) saturate(1.2); }
+.pill--glass:hover { background: rgba(255,255,255,.22); }
 
 /* ── Announcement strip ───────────────────────────────────────────────── */
 .strip {
