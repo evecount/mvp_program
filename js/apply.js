@@ -40,7 +40,7 @@ const els = {
   card: $("apply-card"),
   form: $("apply-form"),
   body: $("apply-step-body"),
-  fill: $("apply-progress-fill"),
+  bar: $("apply-progress-bar"),
   count: $("apply-step-count"),
   name: $("apply-step-name"),
   prev: $("apply-prev"),
@@ -111,7 +111,23 @@ function renderField(f) {
     );
   }
 
-  if (f.kind === "select") {
+  if (asChoices(f)) {
+    input = el("div", { class: "apply-choices", id: f.id, role: "radiogroup", tabindex: "-1", "aria-labelledby": `label-${f.id}` });
+    f.options.forEach((opt, i) => {
+      const radio = el("input", { type: "radio", name: f.id, id: `${f.id}--${i}`, value: opt.value });
+      radio.checked = opt.value === value;
+      input.append(
+        el(
+          "label",
+          { class: "apply-choice", for: `${f.id}--${i}` },
+          radio,
+          el("span", { class: "apply-choice-text" },
+            el("span", { class: "apply-choice-label", text: opt.label }),
+            opt.hint ? el("span", { class: "apply-choice-hint", text: opt.hint }) : null),
+        ),
+      );
+    });
+  } else if (f.kind === "select") {
     input = el("select", { class: "form-select", id: f.id, name: f.id });
     input.append(el("option", { value: "", text: "Select one" }));
     for (const opt of f.options) {
@@ -149,17 +165,23 @@ function renderField(f) {
     el(
       "div",
       { class: "apply-label-row" },
-      el("label", { class: "form-label", for: f.id, text: f.label + (f.required ? " *" : "") }),
+      asChoices(f)
+        ? el("span", { class: "form-label", id: `label-${f.id}`, text: f.label + (f.required ? " *" : "") })
+        : el("label", { class: "form-label", for: f.id, text: f.label + (f.required ? " *" : "") }),
       counter,
     ),
     f.hint ? el("p", { class: "apply-hint", text: f.hint }) : null,
     input,
-    f.options?.some((o) => o.hint)
+    f.options?.some((o) => o.hint) && !asChoices(f)
       ? el("p", { class: "apply-hint", id: `opt-hint-${f.id}`, text: chosen?.hint || "" })
       : null,
     el("p", { class: "apply-field-error", id: errId, hidden: true }),
   );
 }
+
+/* Short option lists show as tappable cards, so every answer is visible at
+   once; long lists stay a dropdown. */
+const asChoices = (f) => f.kind === "select" && f.options.length <= 6;
 
 function counterText(f, value) {
   const n = String(value || "").trim().length;
@@ -181,11 +203,16 @@ function render() {
     ].filter(Boolean),
   );
 
-  els.fill.style.width = `${((stepIndex + 1) / steps.length) * 100}%`;
-  els.count.textContent = `Step ${stepIndex + 1} of ${steps.length}`;
+  els.bar.replaceChildren(
+    ...steps.map((_, i) =>
+      el("span", { class: `apply-seg${i < stepIndex ? " is-done" : i === stepIndex ? " is-current" : ""}` }),
+    ),
+  );
+  const pad = (n) => String(n).padStart(2, "0");
+  els.count.textContent = `Step ${pad(stepIndex + 1)} / ${pad(steps.length)}`;
   els.name.textContent = step.title;
   els.prev.hidden = stepIndex === 0;
-  els.next.textContent = last ? "Submit application" : "Continue";
+  els.next.textContent = last ? "Submit application" : "Continue →";
   hideBanner();
 }
 
@@ -200,8 +227,12 @@ function honeypot() {
 function readValue(f) {
   const node = $(f.id);
   if (!node) return data[f.id];
+  if (asChoices(f)) return node.querySelector("input:checked")?.value ?? "";
   return f.kind === "checkbox" ? node.checked : node.value;
 }
+
+/* Radios carry the field id as their name; everything else as its id. */
+const fieldFor = (target) => allFields.find((x) => x.id === (target.type === "radio" ? target.name : target.id));
 
 function validateField(f, value) {
   if (f.kind === "checkbox") return f.required && !value ? "Please confirm to submit." : "";
@@ -244,7 +275,8 @@ function focusField(id) {
   const node = $(id);
   if (!node) return;
   node.scrollIntoView({ behavior: "smooth", block: "center" });
-  setTimeout(() => node.focus({ preventScroll: true }), 300);
+  const target = node.getAttribute("role") === "radiogroup" ? node.querySelector("input:checked, input") : node;
+  setTimeout(() => target.focus({ preventScroll: true }), 300);
 }
 
 function showBanner(message) {
@@ -292,7 +324,7 @@ function goTo(index) {
 }
 
 els.form.addEventListener("input", (e) => {
-  const f = allFields.find((x) => x.id === e.target.id);
+  const f = fieldFor(e.target);
   if (!f) return;
   data[f.id] = readValue(f);
   if (f.kind === "textarea") {
@@ -304,7 +336,7 @@ els.form.addEventListener("input", (e) => {
 });
 
 els.form.addEventListener("change", (e) => {
-  const f = allFields.find((x) => x.id === e.target.id);
+  const f = fieldFor(e.target);
   if (!f) return;
   data[f.id] = readValue(f);
   showFieldError(f.id, validateField(f, data[f.id]));

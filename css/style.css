@@ -2793,7 +2793,7 @@ body[data-screen="screen-apply"] .header-apply-btn { visibility: hidden; }
 .apply-field textarea.form-input { resize: vertical; min-height: 120px; line-height: 1.55; }
 .apply-field .form-input.is-invalid,
 .apply-field .form-select.is-invalid { border-color: var(--accent-rose); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15); }
-.apply-field-error { font-size: 0.8rem; font-weight: 600; color: var(--accent-rose); }
+.apply-field-error { font-size: 0.8rem; font-weight: 600; color: #b91c1c; }
 .apply-consent { align-items: flex-start; line-height: 1.5; }
 .apply-consent input { margin-top: 2px; flex-shrink: 0; }
 .apply-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -3198,4 +3198,148 @@ html { caret-color: var(--accent-orange-text); accent-color: var(--accent-orange
   .btn-primary:hover, .header-apply-btn:hover, .audience-card:hover, .mentor-card:hover { transform: none; }
   .live-dot { animation: none; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+
+/* ==========================================================================
+   Application form, editorial
+   Same voice as the landing page: the orange banner up top, display-type
+   step titles, numbered mono step labels, neo-brutalist controls.
+   ========================================================================== */
+.apply-intro.deck-hero-banner { margin-bottom: 28px; }
+.apply-intro .deck-huge-title { font-size: clamp(2.3rem, 6vw, 3.4rem); }
+@media (min-width: 761px) {
+  .apply-intro .deck-pillars-row { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+}
+
+/* Segmented progress: one block per step. */
+.apply-progress-bar {
+  display: flex;
+  gap: 5px;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+}
+.apply-progress-bar .apply-seg {
+  display: block;
+  flex: 1;
+  width: auto;
+  height: 10px;
+  border: 2px solid var(--border-strong);
+  border-radius: 999px;
+  background: #ffffff;
+  transition: background-color 0.38s var(--spring-morph), transform 0.38s var(--spring-morph);
+}
+.apply-progress-bar .apply-seg.is-done { background: var(--accent-orange); }
+.apply-progress-bar .apply-seg.is-current { background: var(--text-primary); transform: scaleY(1.2); }
+.apply-progress-meta { margin-top: 12px; }
+#apply-step-count {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-orange-text);
+}
+#apply-step-name { display: none; }
+
+.apply-step-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.apply-step-intro {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding-bottom: 22px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid var(--border-strong);
+}
+.apply-step-title + .apply-grid { padding-top: 22px; border-top: 2px solid var(--border-strong); }
+.apply-grid { margin-top: 22px; row-gap: 26px; }
+
+/* Questions read as prompts, not form labels. */
+.apply-field .form-label {
+  font-family: var(--font-heading);
+  font-size: 1.04rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+.apply-hint { font-size: 0.86rem; color: var(--text-secondary); }
+
+/* Choice cards for short option lists. */
+.apply-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+  outline: none;
+}
+.apply-choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 2px 2px 0 var(--border-strong);
+  cursor: pointer;
+  transition: transform 0.31s var(--spring-press), box-shadow 0.2s var(--ease-out-expo),
+              background-color 0.2s var(--ease-out-expo);
+}
+.apply-choice:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--border-strong); }
+.apply-choice:active { transform: translate(1px, 1px) scale(0.98); box-shadow: 0 0 0 var(--border-strong); transition-duration: 0.1s; }
+.apply-choice input {
+  appearance: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  background: #ffffff;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.apply-choice input::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  transform: scale(0);
+  transition: transform 0.31s var(--spring-press);
+}
+.apply-choice input:checked::after { transform: scale(1); }
+.apply-choice input:focus-visible { outline: none; }
+.apply-choice:has(input:focus-visible) { outline: 3px solid var(--accent-orange-text); outline-offset: 3px; }
+.apply-choice:has(input:checked) {
+  background: var(--accent-orange-light);
+  box-shadow: 3px 3px 0 var(--accent-orange);
+}
+.apply-choice-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.apply-choice-label { font-weight: 600; font-size: 0.95rem; line-height: 1.35; color: var(--text-primary); }
+.apply-choice-hint { font-size: 0.8rem; line-height: 1.4; color: var(--text-secondary); }
+.apply-choices.is-invalid .apply-choice { border-color: var(--accent-rose); }
+
+.apply-error-banner { border-width: 2px; box-shadow: 2px 2px 0 var(--accent-rose); }
+
+.apply-done h2 { text-transform: uppercase; letter-spacing: -0.02em; }
+
+@media (max-width: 600px) {
+  .apply-choices { grid-template-columns: 1fr; }
+  .apply-progress-bar .apply-seg { height: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .apply-choice:hover, .apply-choice:active { transform: none; }
+  .apply-progress-bar .apply-seg.is-current { transform: none; }
 }
