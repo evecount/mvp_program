@@ -60,6 +60,42 @@
     const dx = portrait ? W - dw * 0.86 : Math.max(W - dw + W * 0.04, W * 0.34), dy = portrait ? H * 0.02 : 0;
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
     g.drawImage(study, dx, dy, dw, dh);
+    // Extend the range leftward from the study itself: its lower ranges,
+    // mirrored and flattened into foothills, continue past its left edge and
+    // fade into the orange; the seam is cross-faded so no edge shows.
+    if (dx > 4) {
+      const seam = Math.min(120, dw * 0.12);
+      g.save();
+      g.globalCompositeOperation = "destination-out";
+      const cut = g.createLinearGradient(dx, 0, dx + seam, 0);
+      cut.addColorStop(0, "rgba(0,0,0,1)"); cut.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = cut; g.fillRect(dx - 1, 0, seam + 1, H);
+      g.restore();
+      const ext = document.createElement("canvas");
+      ext.width = W * dpr; ext.height = H * dpr;
+      const e = ext.getContext("2d");
+      e.setTransform(dpr, 0, 0, dpr, 0, 0);
+      e.imageSmoothingQuality = "high";
+      // Lower 55% of the sheet (the second ridge, forest and valley), squashed.
+      const sy = study.naturalHeight * 0.45, sh = study.naturalHeight * 0.55, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
+      e.save(); e.translate(dx + seam, 0); e.scale(-1, 1);
+      e.drawImage(study, 0, sy, study.naturalWidth, sh, 0, ey, dw, eh);
+      e.drawImage(study, 0, sy, study.naturalWidth, sh, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
+      e.restore();
+      // One mask: full at the seam and fading out well before the left gutter,
+      // times a feather on the slice's top so the foothills rise out of nothing.
+      // (destination-in clears outside what it draws, so each pass spans the canvas.)
+      const fade = e.createLinearGradient(dx + seam, 0, Math.max(0, dx - W * 0.42), 0);
+      fade.addColorStop(0, "rgba(0,0,0,1)"); fade.addColorStop(0.18, "rgba(0,0,0,.85)"); fade.addColorStop(1, "rgba(0,0,0,0)");
+      const rise = e.createLinearGradient(0, ey, 0, ey + eh * 0.45);
+      rise.addColorStop(0, "rgba(0,0,0,0)"); rise.addColorStop(1, "rgba(0,0,0,.82)");
+      e.globalCompositeOperation = "destination-in";
+      e.fillStyle = fade; e.fillRect(0, 0, W, H);
+      e.fillStyle = rise; e.fillRect(0, 0, W, H);
+      e.globalCompositeOperation = "source-over";
+      e.clearRect(dx + seam, 0, W, H);
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
+    }
     // Copy stays legible: feathered clearings around the small text and buttons.
     g.globalCompositeOperation = "destination-out";
     g.filter = "blur(14px)";
