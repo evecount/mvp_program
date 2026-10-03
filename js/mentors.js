@@ -16,6 +16,22 @@
  */
 const MENTORS = [
   { name: "James Sun", role: "Venture Partner", org: "Mamba Partners" },
+  {
+    name: "Benjamin Lim",
+    role: "Co-Founder",
+    org: "Cybrdeck",
+    photo: "assets/mentors/benjamin-lim.jpg",
+    bio: "Leads the technical side: what gets built, how it is built, and where innovation can give a venture its edge.",
+    focus: ["Engineering", "Product builds", "Innovation"],
+  },
+  {
+    name: "Gwendalynn Lim",
+    role: "Co-Founder",
+    org: "Cybrdeck",
+    photo: "assets/mentors/gwendalynn-lim.jpg",
+    bio: "Leads communications and social media, and how a venture tells its story to the people it needs to reach.",
+    focus: ["Communications", "Social media", "Innovation"],
+  },
 ];
 
 (function () {
