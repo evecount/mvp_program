@@ -25,7 +25,7 @@
   const noise = (x, s) => { const i = Math.floor(x), f = x - i, u = f * f * (3 - 2 * f); return hash(i + s * 57) * (1 - u) + hash(i + 1 + s * 57) * u; };
   const ridged = (x, s) => {
     let a = 0.55, f = 1, sum = 0, norm = 0;
-    for (let o = 0; o < 5; o++) { sum += a * (1 - Math.abs(noise(x * f, s + o) * 2 - 1)) ** 2; norm += a; a *= 0.5; f *= 2.07; }
+    for (let o = 0; o < 7; o++) { sum += a * (1 - Math.abs(noise(x * f, s + o) * 2 - 1)) ** 2; norm += a; a *= 0.5; f *= 2.07; }
     return sum / norm;
   };
 
@@ -34,11 +34,13 @@
   let W = 0, H = 0, dpr = 1, frags = [];
   const INK = "#0c0c0e";
   const LAYERS = [
+    { base: 0.42, amp: 0.4, freq: 1 / 380, seed: 2, a: 0.22, lw: 0.5, step: 7.5 },
     { base: 0.5, amp: 0.46, freq: 1 / 330, seed: 3, a: 0.32, lw: 0.6, step: 7 },
     { base: 0.6, amp: 0.48, freq: 1 / 270, seed: 7, a: 0.46, lw: 0.7, step: 6 },
     { base: 0.7, amp: 0.5, freq: 1 / 220, seed: 11, a: 0.62, lw: 0.85, step: 5 },
     { base: 0.8, amp: 0.46, freq: 1 / 190, seed: 17, a: 0.8, lw: 1, step: 4.2 },
-    { base: 0.95, amp: 0.36, freq: 1 / 160, seed: 23, a: 1, lw: 1.2, step: 3.6 },
+    { base: 0.88, amp: 0.4, freq: 1 / 175, seed: 19, a: 0.9, lw: 1.1, step: 3.9 },
+    { base: 0.97, amp: 0.34, freq: 1 / 150, seed: 23, a: 1, lw: 1.2, step: 3.6 },
   ];
   const draw = () => {
     const r = cv.getBoundingClientRect();
@@ -93,6 +95,42 @@
           if (on && y < H) { pen ? g.lineTo(x, y) : g.moveTo(x, y); pen = true; } else pen = false;
         }
         g.stroke();
+      }
+      // Arêtes: from each peak, rocky spurs wander down the face, shaded on
+      // their lee side, so the ranges read as rock rather than paper cut-outs.
+      const scale = 0.55 + li * 0.08;
+      for (let i = 3; i < ys.length - 3; i++) {
+        if (!(ys[i] < ys[i - 1] && ys[i] <= ys[i + 1] && ys[i] < ys[i - 3] - 1.5 && ys[i] < ys[i + 3] - 1.5)) continue;
+        const px = i * 2 - 2, py = ys[i];
+        [-1, 1].forEach((side) => {
+          if (hash(px * 0.13 + side + li * 3) > 0.82) return;
+          let x = px, y = py;
+          const pts = [[x, y]], len = (H - py) * (0.3 + 0.5 * hash(px * 0.7 + side)), lean = side * (0.3 + 0.55 * hash(px * 1.3 + side * 2));
+          for (let d = 0; d < len; d += 2.5) {
+            x += lean * 2.5 + (noise(d * 0.06 + px * 0.01, 91 + li) - 0.5) * 3;
+            y = Math.max(y + 2.5, Y(x) + 1.5);
+            pts.push([x, y]);
+          }
+          g.lineWidth = L.lw * 0.85; g.beginPath(); pts.forEach(([a, b], k) => (k ? g.lineTo(a, b) : g.moveTo(a, b))); g.stroke();
+          g.lineWidth = L.lw * 0.55;
+          for (let k = 2; k < pts.length; k += 2) {
+            const [a, b] = pts[k], hk = hash(a * 0.91 + b * 0.37 + li);
+            if (hk > (side > 0 ? 0.85 : 0.45)) continue;
+            const l = (4 + 10 * hash(a * 1.7 + b)) * scale;
+            g.beginPath(); g.moveTo(a + 0.8, b + 0.5); g.lineTo(a + l * 0.5, b + l * 0.9); g.stroke();
+          }
+        });
+      }
+      // Rock texture: short cracks and stipple, thickest where the face is in shadow.
+      g.lineWidth = L.lw * 0.5;
+      const marks = Math.round(W * (0.6 + li * 0.25));
+      for (let n = 0; n < marks; n++) {
+        const x = hash(n * 3.17 + li * 13) * W, top = Y(x), depth = H - top;
+        const y = top + 3 + hash(n * 5.3 + li) * depth * 0.55;
+        const slope = (Y(x + 6) - Y(x - 6)) / 12;
+        if (hash(n * 7.1 + li * 5) > 0.25 + Math.max(0, slope) * 1.2) continue;
+        const l = (1.5 + hash(n * 2.9) * 4) * scale, a = -0.35 + hash(n * 4.1) * 0.7 + slope * 0.5;
+        g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
       }
     });
     // Pines along the base: erase a silhouette, then branch strokes.
