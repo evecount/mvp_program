@@ -93,6 +93,18 @@
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   update();
 
+  /* Lit pills: each comes into focus as it enters the light (the viewport);
+     on hover the simulated light source follows the pointer along the top. */
+  document.querySelectorAll(".pill--black").forEach((b) => {
+    if (io) new IntersectionObserver(([e], o) => { if (e.isIntersecting) { setTimeout(() => b.classList.add("lit"), 250); o.disconnect(); } }, { threshold: 0.6 }).observe(b);
+    else b.classList.add("lit");
+    b.addEventListener("pointermove", (e) => {
+      const r = b.getBoundingClientRect();
+      b.style.setProperty("--lx", `${Math.round(Math.min(Math.max((e.clientX - r.left) / r.width, 0.08), 0.92) * 100)}%`);
+    });
+    b.addEventListener("pointerleave", () => b.style.removeProperty("--lx"));
+  });
+
   /* Header CTA: pill -> orb while reading down, orb -> pill on the way back.
      Each fold gets one jelly squash (the shape overshoots, then settles). */
   const cta = document.getElementById("nav-cta");

@@ -87,25 +87,50 @@ a { color: inherit; text-decoration: none; }
 .pill:hover .i { transform: translate(2px, -2px); }
 .pill:active { transform: scale(0.96); transition-duration: 0.1s; }
 .pill--lg { min-height: 54px; padding: 0 26px; font-size: 1.02rem; }
-/* Obsidian pill (after macOS 26's Search-to-Siri orb): smoked glass with a
-   light ribbon inside. Hover sends the ribbon one wave along on a spring. */
+/* Obsidian pill, lit. A simulated light source sits above and to the left:
+   the lacquer reflects it as a gloss cap, a hard specular line runs along the
+   top curve where the light catches, and the hero's orange bounces back off
+   the lower rim. Coming into view, the reflections pull into focus like a
+   lens; on hover the light source tracks the pointer. */
+@property --lx { syntax: "<percentage>"; inherits: true; initial-value: 26%; }
 .pill--black {
-  position: relative; isolation: isolate; overflow: hidden; color: #fff;
-  background:
-    radial-gradient(90% 120% at 50% 125%, rgba(252, 103, 54, .28) 0%, rgba(252, 103, 54, 0) 62%),
-    linear-gradient(180deg, #2a2a2f 0%, #0c0c0e 54%, #161619 100%);
+  position: relative; isolation: isolate; overflow: hidden; color: #fff; --lx: 26%;
+  background: linear-gradient(180deg, #303036 0%, #16161a 47%, #0a0a0c 53%, #141417 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .3),
-    inset 0 -1px 0 rgba(255, 255, 255, .12),
-    inset 0 0 0 1px rgba(255, 255, 255, .07),
-    0 12px 26px -14px rgba(0, 0, 0, .7);
+    inset 0 0 0 1px rgba(255, 255, 255, .06),
+    0 1px 1px rgba(0, 0, 0, .35),
+    0 14px 28px -14px rgba(0, 0, 0, .75);
+  transition: transform .31s var(--spring-press), --lx .7s var(--spring-sheet);
 }
-.pill-ribbon {
-  position: absolute; inset: 0; z-index: -1; pointer-events: none; mix-blend-mode: screen; opacity: .7;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='a' x='-10%' y='-60%' width='120%' height='220%'%3E%3CfeGaussianBlur stdDeviation='3.2'/%3E%3C/filter%3E%3Cfilter id='b' x='-10%' y='-60%' width='120%' height='220%'%3E%3CfeGaussianBlur stdDeviation='1'/%3E%3C/filter%3E%3C/defs%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cpath d='M0 25C25 15 50 15 100 25S175 35 200 25' stroke='%23fc6736' stroke-width='9' filter='url(%23a)'/%3E%3Cpath d='M0 27C25 17 50 17 100 27S175 37 200 27' stroke='%238fb8ff' stroke-width='1.6' opacity='.55' filter='url(%23b)'/%3E%3Cpath d='M0 25C25 15 50 15 100 25S175 35 200 25' stroke='%23ffb27a' stroke-width='3' filter='url(%23b)'/%3E%3Cpath d='M0 25C25 15 50 15 100 25S175 35 200 25' stroke='%23fff' stroke-width='.9' opacity='.9'/%3E%3C/g%3E%3C/svg%3E") 0 62% / 200% 100% repeat-x;
-  transition: opacity .4s var(--ease-out-expo), background-position .7s var(--spring-sheet);
+/* Gloss cap: the environment's reflection in the upper half of the lacquer. */
+.pill--black::before {
+  content: ""; position: absolute; z-index: -1; left: 6px; right: 6px; top: 2px; height: 48%; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.02) 85%, rgba(255,255,255,0));
+  transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
 }
-.pill--black:hover .pill-ribbon, .pill--black:focus-visible .pill-ribbon { opacity: 1; background-position: -100% 62%; }
+/* Softbox: the light source itself, mirrored in the lacquer as a soft-edged
+   window that slides with --lx. */
+.pill--black::after {
+  content: ""; position: absolute; z-index: -1; top: 2.5px; height: 20%; width: 64%; left: calc(var(--lx) - 32%); border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,0));
+  -webkit-mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
+  mask: linear-gradient(90deg, transparent, #000 35%, #000 65%, transparent);
+  transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
+}
+/* Specular + bounce: a 1px ring masked out of two light sources, so the light
+   follows the pill's own curvature. */
+.pill-shine {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; padding: 1.5px;
+  background:
+    radial-gradient(50% 120% at var(--lx) 0%, #fff, rgba(255,255,255,.5) 40%, rgba(255,255,255,.08) 100%),
+    radial-gradient(60% 120% at calc(100% - var(--lx)) 100%, #ff9a66, rgba(252,103,54,.35) 50%, rgba(252,103,54,0) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
+}
+/* Out of focus until it is in the light. */
+.js .pill--black:not(.lit)::before, .js .pill--black:not(.lit)::after, .js .pill--black:not(.lit) .pill-shine { filter: blur(6px); opacity: .2; }
+.pill--black:hover, .pill--black:focus-visible { background: linear-gradient(180deg, #36363d 0%, #18181c 47%, #0a0a0c 53%, #17171a 100%); }
 
 /* The header CTA folds into an orb once you are reading, and stretches back
    into the pill on hover, focus or scrolling up; the label column collapses
@@ -115,7 +140,7 @@ a { color: inherit; text-decoration: none; }
 .pill-label > span { overflow: hidden; min-width: 0; }
 .pill--orb.is-orb:not(:hover):not(:focus-visible) { padding-inline: 14px; gap: 0; }
 .pill--orb.is-orb:not(:hover):not(:focus-visible) .pill-label { grid-template-columns: 0fr; opacity: 0; }
-.pill--orb.is-orb:not(:hover):not(:focus-visible) .pill-ribbon { background-size: 260% 120%; }
+
 .pill--orange { background: var(--orange); color: var(--ink); }
 .pill--orange:hover { background: #ff7a4d; }
 .pill--glass { color: var(--ink); background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08) 46%, rgba(255,255,255,.18)); border-color: rgba(255,255,255,.55); }
@@ -157,7 +182,7 @@ a { color: inherit; text-decoration: none; }
 .nav[data-on="dark"] .nav-brand { background: rgba(255,255,255,.9); }
 /* Black on black disappears: over the dark stage the CTA turns orange. */
 .nav[data-on="dark"] > .pill--black { background: var(--orange); color: var(--ink); }
-.nav[data-on="dark"] > .pill--black .pill-ribbon { opacity: 0; }
+.nav[data-on="dark"] > .pill--black::before, .nav[data-on="dark"] > .pill--black::after, .nav[data-on="dark"] > .pill--black .pill-shine { opacity: 0; }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 .hero, .closer {
