@@ -345,6 +345,7 @@ a { color: inherit; text-decoration: none; }
 .fact:last-child { border-right: 0; }
 .fact-num { font-size: clamp(4rem, 9vw, 8rem); margin: 18px 0 10px; font-weight: 700; }
 .fact-unit { color: var(--ink-2); max-width: 24ch; font-size: .95rem; }
+.fact-rsvp { margin-top: 18px; min-height: 40px; padding: 0 18px; font-size: .9rem; }
 
 /* ── Audiences: black stage ───────────────────────────────────────────── */
 .audiences { position: relative; isolation: isolate; overflow: hidden; padding: clamp(80px, 11vw, 140px) var(--gutter); background: var(--ink); color: #fff; }

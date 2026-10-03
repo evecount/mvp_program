@@ -64,9 +64,9 @@
   </svg>
 
   <!-- Announcement strip -->
-  <a class="strip" href="https://luma.com/vetnk204" target="_blank" rel="noopener">
+  <a class="strip" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">
     <span class="strip-dot" aria-hidden="true"></span>
-    <span><b>Info session #2</b> · 16 Oct, 2pm · Aspire</span>
+    <span data-info="strip"><b>Info session #2</b> · 16 Oct, 2pm · Aspire</span>
     <span class="strip-sep" aria-hidden="true">/</span>
     <span class="strip-muted">Next cohort starts 26 Jan 2027</span>
     <span class="strip-cta">RSVP <svg class="i"><use href="#i-arrow"/></svg></span>
@@ -156,7 +156,7 @@
       <div class="fact reveal"><p class="mono label">Sprint</p><p class="fact-num display">1</p><p class="fact-unit">month to test the problem and define your MVP</p></div>
       <div class="fact reveal"><p class="mono label">Venture build</p><p class="fact-num display">3</p><p class="fact-unit">months to build, test with users and get commercially ready</p></div>
       <div class="fact reveal"><p class="mono label">Next cohort</p><p class="fact-num display">26.01</p><p class="fact-unit">2027, both tracks start together</p></div>
-      <div class="fact reveal"><p class="mono label">Info session</p><p class="fact-num display">16.10</p><p class="fact-unit">2pm at Aspire. RSVP on Luma</p></div>
+      <div class="fact reveal" data-info="fact"><p class="mono label">Info session</p><p class="fact-num display" data-info="date">16.10</p><p class="fact-unit" data-info="detail">2pm at Aspire</p><a class="pill pill--black fact-rsvp" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link"><span class="pill-shine" aria-hidden="true"></span>RSVP on Luma <svg class="i"><use href="#i-arrow"/></svg></a></div>
     </section>
 
     <!-- 5. Audiences: black stage, liquid glass segmented control, new icons -->
@@ -324,7 +324,7 @@
       <h2 class="display closer-title" id="closer-title">Apply to MVP</h2>
       <div class="hero-ctas">
         <a class="pill pill--black pill--lg" href="../#apply"><span class="pill-shine" aria-hidden="true"></span>Start your application <svg class="i"><use href="#i-arrow"/></svg></a>
-        <a class="pill pill--glass pill--lg glass" href="https://luma.com/vetnk204" target="_blank" rel="noopener">RSVP for the info session</a>
+        <a class="pill pill--glass pill--lg glass" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">RSVP for the info session</a>
       </div>
     </section>
   </main>
@@ -339,5 +339,6 @@
   <script src="hero.js"></script>
   <script src="ink.js"></script>
   <script src="stones.js"></script>
+  <script src="info-session.js"></script>
 </body>
 </html>

@@ -33,6 +33,7 @@
 import { initializeApp } from 'firebase-admin/app';
 import { FieldValue, getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { onRequest } from 'firebase-functions/v2/https';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 import nodemailer from 'nodemailer';
@@ -46,6 +47,7 @@ import { blendAssessment, reviewAssessmentWithOne } from './mamba/oneAssessment'
 import { redactAnswers } from './mamba/deidentify';
 import { draftInterviewQuestions } from './mamba/interviewDraft';
 import { fileDossier } from './mamba/drive';
+import { fetchNextInfoSession, type InfoSession } from './mamba/luma';
 
 initializeApp();
 const db = getFirestore();
@@ -287,5 +289,33 @@ export const onApplicationFiled = onDocumentCreated(
       },
       { merge: true },
     );
+  },
+);
+
+
+/* ── Next info session (Luma) ───────────────────────────────────────────
+   Served at /api/next-info-session through a Hosting rewrite. The site fills
+   its info-session date, time and RSVP link from this, so publishing the next
+   session on Luma updates the site with no code change. Cached in memory and
+   at the CDN; a Luma outage serves the last good answer if there is one. */
+let infoCache: { at: number; next: InfoSession | null } | null = null;
+
+export const nextInfoSession = onRequest(
+  { region: 'asia-southeast1', memory: '256MiB', maxInstances: 5, cors: true },
+  async (_req, res) => {
+    const fresh = infoCache && Date.now() - infoCache.at < 10 * 60 * 1000;
+    if (!fresh) {
+      try {
+        infoCache = { at: Date.now(), next: await fetchNextInfoSession() };
+      } catch (err) {
+        logger.warn('Luma feed unavailable', { error: String(err) });
+        if (!infoCache) {
+          res.set('Cache-Control', 'no-store').status(502).json({ next: null });
+          return;
+        }
+      }
+    }
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=900');
+    res.json({ next: infoCache!.next });
   },
 );
