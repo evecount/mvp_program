@@ -23,6 +23,8 @@ import {
   MAMBA_TRACKS,
   REFERRAL_OPTIONS,
   currentCohort,
+  COHORTS,
+  cohortClosesAt,
 } from './mamba/program';
 import { QUESTION_SECTIONS, getQuestion, type Question } from './mamba/questionnaire';
 
@@ -173,7 +175,9 @@ window.MVP_APPLICATION = ${JSON.stringify({ schemaVersion: SCHEMA_VERSION, steps
 const fields = steps.flatMap((s) => s.fields);
 const stringFields = fields.filter((f) => f.kind !== 'checkbox');
 const required = ['fullName', 'phone', 'email', 'track', 'intake', 'currentSituation', 'motivation'];
-const allKeys = [...fields.map((f) => f.id), 'status', 'schemaVersion', 'createdAt'];
+const allKeys = [...fields.map((f) => f.id), 'cohort', 'status', 'schemaVersion', 'createdAt'];
+/* An application must name a cohort whose applications are still open (72h before it starts). */
+const openGate = COHORTS.map((c) => `(d.cohort == '${c.starts}' && request.time < timestamp.value(${cohortClosesAt(c)}))`).join('\n              || ');
 const q = (s: string) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 const list = (xs: readonly string[], indent: string) => {
   const lines: string[] = [];
@@ -229,6 +233,7 @@ service cloud.firestore {
         && d.track in ${list(MAMBA_TRACKS.map((t) => t.id), '                      ')}
         && d.intake in ${list(MAMBA_INTAKE_TRACKS, '                       ')}
         && d.consent == true
+        && (${openGate})
         && d.status == 'pending'
         && d.schemaVersion == ${SCHEMA_VERSION}
         && d.createdAt == request.time
@@ -241,4 +246,13 @@ ${stringFields.filter((f) => f.kind === 'select' && f.id !== 'track' && f.id !==
 `,
 );
 
-console.log(`wrote ${steps.length} steps, ${fields.length} fields`);
+writeFileSync(
+  join(ROOT, 'js', 'cohorts.js'),
+  `/* ${banner('this file')}
+ * The cohort calendar: the site's countdown and the application form read it;
+ * the Firestore rules and the Cloud Function enforce the same deadlines. */
+window.MVP_COHORTS = ${JSON.stringify(COHORTS.map((c) => ({ n: c.n, starts: c.starts, startsAt: c.startsAt, startsLabel: c.startsLabel, closesAt: cohortClosesAt(c) })), null, 2)};
+`,
+);
+
+console.log(`wrote ${steps.length} steps, ${fields.length} fields, ${COHORTS.length} cohorts`);

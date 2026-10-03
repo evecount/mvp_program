@@ -31,7 +31,8 @@ service cloud.firestore {
               'github', 'availability', 'weekPlan', 'runway', 'dependents', 'employerAware',
               'setback', 'milestoneContract', 'accountableTo', 'wrongAssumption', 'failureMode',
               'firstThirtyDays', 'worthwhileIfNotFunded', 'grantIntent', 'priorPublicFunding',
-              'motivation', 'howHeard', 'consent', 'status', 'schemaVersion', 'createdAt'];
+              'motivation', 'howHeard', 'consent', 'cohort', 'status', 'schemaVersion',
+              'createdAt'];
     }
 
     // Inline size checks rather than a helper: a helper call per field pushes
@@ -45,6 +46,7 @@ service cloud.firestore {
         && d.track in ['employee', 'founder', 'transition', 'cybrdeck-engineer']
         && d.intake in ['1 Month', '3 Month']
         && d.consent == true
+        && ((d.cohort == '2027-01-26' && request.time < timestamp.value(1800666000000)))
         && d.status == 'pending'
         && d.schemaVersion == 2
         && d.createdAt == request.time
