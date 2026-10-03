@@ -64,43 +64,37 @@
     // mirrored and flattened into foothills, continue past its left edge and
     // fade into the orange; the seam is cross-faded so no edge shows.
     if (dx > 4) {
-      // Organic masks (no ruler-straight fades): every boundary wanders with
-      // fractal noise, drawn at quarter resolution and smoothed up.
-      const fbm = (v, sd) => noise(v, sd) * 0.6 + noise(v * 2.3, sd + 3) * 0.28 + noise(v * 5.1, sd + 7) * 0.12;
-      const ss = (t) => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
-      const zone = Math.min(W * 0.2, dw * 0.28);
-      // The drawing's own left edge dissolves over a wide, wandering band.
-      const keep = (x, y) => ss((x - dx - (fbm(y / 70, 51) - 0.3) * zone * 0.7) / zone);
-      const sh0 = study.naturalHeight * 0.45, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
-      // The foothills fade out leftward and rise out of nothing at the top.
-      const ext = (x, y) => {
-        const left = dx - W * 0.4 + (fbm(y / 90, 61) - 0.5) * W * 0.12;
-        const top = ey + (fbm(x / 110, 71) - 0.5) * eh * 0.35;
-        return ss((x - left) / (dx - left + zone * 0.4)) * ss((y - top) / (eh * 0.42)) * 0.82;
+      // Radial fades only, so no boundary is a straight line. The drawing keeps
+      // a disc centred on its right side; its left edge dissolves along an arc.
+      const kx = dx + dw, ky = dy + dh * 0.55, kr = dw * 1.02;
+      const keepGrad = (c) => {
+        const k = c.createRadialGradient(kx, ky, 0, kx, ky, kr);
+        k.addColorStop(0, "rgba(0,0,0,1)"); k.addColorStop(0.8, "rgba(0,0,0,1)"); k.addColorStop(1, "rgba(0,0,0,0)");
+        return k;
       };
-      const mask = (fn) => {
-        const q = 4, mw = Math.ceil(W / q), mh = Math.ceil(H / q), m = document.createElement("canvas");
-        m.width = mw; m.height = mh;
-        const mc = m.getContext("2d"), im = mc.createImageData(mw, mh);
-        for (let y = 0; y < mh; y++) for (let x = 0; x < mw; x++) im.data[(y * mw + x) * 4 + 3] = Math.round(fn(x * q, y * q) * 255);
-        mc.putImageData(im, 0, 0);
-        return m;
-      };
-      g.save(); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.globalCompositeOperation = "destination-in";
-      g.drawImage(mask(keep), 0, 0, W, H); g.restore();
-      const xc = document.createElement("canvas");
-      xc.width = W * dpr; xc.height = H * dpr;
-      const e = xc.getContext("2d");
+      g.save(); g.globalCompositeOperation = "destination-in"; g.fillStyle = keepGrad(g); g.fillRect(0, 0, W, H); g.restore();
+      // Foothills: the study's lower ranges, mirrored and flattened, under an
+      // elliptical fade anchored at the foot of the arc.
+      const sy = study.naturalHeight * 0.45, sh = study.naturalHeight * 0.55, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
+      const ext = document.createElement("canvas");
+      ext.width = W * dpr; ext.height = H * dpr;
+      const e = ext.getContext("2d");
       e.setTransform(dpr, 0, 0, dpr, 0, 0); e.imageSmoothingQuality = "high";
-      const anchor = dx + zone;
-      e.save(); e.translate(anchor, 0); e.scale(-1, 1);
-      e.drawImage(study, 0, sh0, study.naturalWidth, study.naturalHeight - sh0, 0, ey, dw, eh);
-      e.drawImage(study, 0, sh0, study.naturalWidth, study.naturalHeight - sh0, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
+      const ax = kx - kr * 0.85;
+      e.save(); e.translate(ax + dw * 0.1, 0); e.scale(-1, 1);
+      e.drawImage(study, 0, sy, study.naturalWidth, sh, 0, ey, dw, eh);
+      e.drawImage(study, 0, sy, study.naturalWidth, sh, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
       e.restore();
-      // Complement of the drawing's edge, so the two cross-fade with no seam.
-      e.globalCompositeOperation = "destination-in";
-      e.drawImage(mask((x, y) => ext(x, y) * (1 - keep(x, y))), 0, 0, W, H);
-      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(xc, 0, 0); g.restore();
+      const rx = Math.max(W * 0.42, ax * 0.9), ry = eh * 0.78;
+      e.save(); e.globalCompositeOperation = "destination-in";
+      e.translate(ax, H); e.scale(1, ry / rx);
+      const oval = e.createRadialGradient(0, 0, 0, 0, 0, rx);
+      oval.addColorStop(0, "rgba(0,0,0,.85)"); oval.addColorStop(0.45, "rgba(0,0,0,.7)"); oval.addColorStop(1, "rgba(0,0,0,0)");
+      e.fillStyle = oval; e.fillRect(-W * 2, -H * 4 * (rx / ry), W * 4, H * 8 * (rx / ry));
+      e.restore();
+      // Complement of the drawing's disc, so the two meet along the same arc.
+      e.save(); e.globalCompositeOperation = "destination-out"; e.fillStyle = keepGrad(e); e.fillRect(0, 0, W, H); e.restore();
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
     }
     // Copy stays legible: feathered clearings around the small text and buttons.
     g.globalCompositeOperation = "destination-out";
