@@ -64,37 +64,43 @@
     // mirrored and flattened into foothills, continue past its left edge and
     // fade into the orange; the seam is cross-faded so no edge shows.
     if (dx > 4) {
-      const seam = Math.min(120, dw * 0.12);
-      g.save();
-      g.globalCompositeOperation = "destination-out";
-      const cut = g.createLinearGradient(dx, 0, dx + seam, 0);
-      cut.addColorStop(0, "rgba(0,0,0,1)"); cut.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = cut; g.fillRect(dx - 1, 0, seam + 1, H);
-      g.restore();
-      const ext = document.createElement("canvas");
-      ext.width = W * dpr; ext.height = H * dpr;
-      const e = ext.getContext("2d");
-      e.setTransform(dpr, 0, 0, dpr, 0, 0);
-      e.imageSmoothingQuality = "high";
-      // Lower 55% of the sheet (the second ridge, forest and valley), squashed.
-      const sy = study.naturalHeight * 0.45, sh = study.naturalHeight * 0.55, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
-      e.save(); e.translate(dx + seam, 0); e.scale(-1, 1);
-      e.drawImage(study, 0, sy, study.naturalWidth, sh, 0, ey, dw, eh);
-      e.drawImage(study, 0, sy, study.naturalWidth, sh, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
+      // Organic masks (no ruler-straight fades): every boundary wanders with
+      // fractal noise, drawn at quarter resolution and smoothed up.
+      const fbm = (v, sd) => noise(v, sd) * 0.6 + noise(v * 2.3, sd + 3) * 0.28 + noise(v * 5.1, sd + 7) * 0.12;
+      const ss = (t) => { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); };
+      const zone = Math.min(W * 0.2, dw * 0.28);
+      // The drawing's own left edge dissolves over a wide, wandering band.
+      const keep = (x, y) => ss((x - dx - (fbm(y / 70, 51) - 0.3) * zone * 0.7) / zone);
+      const sh0 = study.naturalHeight * 0.45, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
+      // The foothills fade out leftward and rise out of nothing at the top.
+      const ext = (x, y) => {
+        const left = dx - W * 0.4 + (fbm(y / 90, 61) - 0.5) * W * 0.12;
+        const top = ey + (fbm(x / 110, 71) - 0.5) * eh * 0.35;
+        return ss((x - left) / (dx - left + zone * 0.4)) * ss((y - top) / (eh * 0.42)) * 0.82;
+      };
+      const mask = (fn) => {
+        const q = 4, mw = Math.ceil(W / q), mh = Math.ceil(H / q), m = document.createElement("canvas");
+        m.width = mw; m.height = mh;
+        const mc = m.getContext("2d"), im = mc.createImageData(mw, mh);
+        for (let y = 0; y < mh; y++) for (let x = 0; x < mw; x++) im.data[(y * mw + x) * 4 + 3] = Math.round(fn(x * q, y * q) * 255);
+        mc.putImageData(im, 0, 0);
+        return m;
+      };
+      g.save(); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.globalCompositeOperation = "destination-in";
+      g.drawImage(mask(keep), 0, 0, W, H); g.restore();
+      const xc = document.createElement("canvas");
+      xc.width = W * dpr; xc.height = H * dpr;
+      const e = xc.getContext("2d");
+      e.setTransform(dpr, 0, 0, dpr, 0, 0); e.imageSmoothingQuality = "high";
+      const anchor = dx + zone;
+      e.save(); e.translate(anchor, 0); e.scale(-1, 1);
+      e.drawImage(study, 0, sh0, study.naturalWidth, study.naturalHeight - sh0, 0, ey, dw, eh);
+      e.drawImage(study, 0, sh0, study.naturalWidth, study.naturalHeight - sh0, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
       e.restore();
-      // One mask: full at the seam and fading out well before the left gutter,
-      // times a feather on the slice's top so the foothills rise out of nothing.
-      // (destination-in clears outside what it draws, so each pass spans the canvas.)
-      const fade = e.createLinearGradient(dx + seam, 0, Math.max(0, dx - W * 0.42), 0);
-      fade.addColorStop(0, "rgba(0,0,0,1)"); fade.addColorStop(0.18, "rgba(0,0,0,.85)"); fade.addColorStop(1, "rgba(0,0,0,0)");
-      const rise = e.createLinearGradient(0, ey, 0, ey + eh * 0.45);
-      rise.addColorStop(0, "rgba(0,0,0,0)"); rise.addColorStop(1, "rgba(0,0,0,.82)");
+      // Complement of the drawing's edge, so the two cross-fade with no seam.
       e.globalCompositeOperation = "destination-in";
-      e.fillStyle = fade; e.fillRect(0, 0, W, H);
-      e.fillStyle = rise; e.fillRect(0, 0, W, H);
-      e.globalCompositeOperation = "source-over";
-      e.clearRect(dx + seam, 0, W, H);
-      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
+      e.drawImage(mask((x, y) => ext(x, y) * (1 - keep(x, y))), 0, 0, W, H);
+      g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(xc, 0, 0); g.restore();
     }
     // Copy stays legible: feathered clearings around the small text and buttons.
     g.globalCompositeOperation = "destination-out";
