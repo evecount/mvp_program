@@ -105,36 +105,25 @@
     b.addEventListener("pointerleave", () => b.style.removeProperty("--lx"));
   });
 
-  /* Header CTA: pill -> orb while reading down, orb -> pill on the way back.
-     Each fold gets one jelly squash (the shape overshoots, then settles). */
+  /* Header CTA. No duplicates: it waits offstage while the hero's (or the
+     closer's) Apply button is on screen. When that leaves, it arrives as an
+     orb and stretches once into the full pill (the Search-to-Siri morph), and
+     from then on it simply stays a pill; it never folds while you read. */
   const cta = document.getElementById("nav-cta");
-  let lastY = scrollY;
-  const fold = (orb) => {
-    if (cta.classList.contains("is-orb") === orb) return;
-    cta.classList.toggle("is-orb", orb);
-    if (!reduced() && cta.animate && !cta.matches(":hover")) {
-      cta.animate(
-        [{ transform: "none" }, { transform: orb ? "scale(.9, 1.1)" : "scale(1.06, .92)", offset: 0.35 }, { transform: orb ? "scale(1.05, .96)" : "scale(.98, 1.03)", offset: 0.7 }, { transform: "none" }],
-        { duration: 380, easing: "ease-out" },
-      );
-    }
-  };
-  /* No duplicate CTAs: the header one waits offstage while the hero's Apply button is on screen, and arrives as an orb when it leaves. */
   const onStage = new Set();
+  let morph = 0;
   const stage = () => {
     const away = onStage.size === 0;
     if (away === !cta.classList.contains("is-hidden")) return;
-    cta.classList.toggle("is-hidden", !away);
-    if (away) cta.classList.add("is-orb");
+    clearTimeout(morph);
+    if (!away) { cta.classList.add("is-hidden"); return; }
+    if (reduced()) { cta.classList.remove("is-hidden", "is-orb"); return; }
+    cta.classList.add("is-orb");
+    cta.classList.remove("is-hidden");
+    morph = setTimeout(() => cta.classList.remove("is-orb"), 260);
   };
   if ("IntersectionObserver" in window) {
     const watch = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? onStage.add(e.target) : onStage.delete(e.target))); stage(); });
     document.querySelectorAll(".hero-ctas .pill--black").forEach((b) => watch.observe(b));
   } else cta.classList.remove("is-hidden");
-  addEventListener("scroll", () => {
-    const y = scrollY, dy = y - lastY;
-    if (Math.abs(dy) < 6) return;
-    if (!cta.classList.contains("is-hidden")) fold(dy > 0);
-    lastY = y;
-  }, { passive: true });
 })();
