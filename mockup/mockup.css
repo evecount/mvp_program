@@ -346,6 +346,7 @@ a { color: inherit; text-decoration: none; }
 .fact-num { font-size: clamp(2rem, 3.4vw, 3rem); margin: 14px 0 8px; font-weight: 700; }
 .fact-poster { display: block; width: min(100%, 180px); height: auto; margin: 14px 0 12px; box-shadow: 0 10px 24px -14px rgba(12,12,14,.45); }
 .fact-unit { color: var(--ink-2); max-width: 24ch; font-size: .95rem; }
+.fact-fee { margin-top: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: -.01em; }
 .fact-rsvp { margin-top: 18px; min-height: 40px; padding: 0 18px; font-size: .9rem; }
 
 /* ── Audiences: black stage ───────────────────────────────────────────── */

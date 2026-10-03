@@ -88,10 +88,10 @@ export const COHORTS: ReadonlyArray<{
   /** Four-digit year, for the small caption and the mobile badge. */
   year: string;
 }> = [
-  // MVP's calendar, not cybrdeck.com's (its Cohort #1 began 5 Oct 2026).
+  // Cohort #1 ran 5 Oct 2026 – 5 Jan 2027 (Mamba MVP Cohort 1 offer letter).
   {
     label: 'The January 2027 cohort',
-    n: 1,
+    n: 2,
     starts: '2027-01-26',
     startsAt: '2027-01-26T09:00:00+08:00',
     startsLabel: '26 Jan 2027',
