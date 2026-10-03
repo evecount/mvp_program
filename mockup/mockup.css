@@ -259,49 +259,59 @@ a { color: inherit; text-decoration: none; }
 .jstep-copy { color: var(--ink-2); max-width: 32ch; margin-top: 8px; }
 .jstep.on .step, .jstep.on .h3 { color: var(--orange-text); }
 
-/* Rocket scenes (scene.js): hairline line art, still at rest. Each step's
-   moment plays once when the column is lit; nothing loops or grows. */
+/* Rocket scenes (scene.js): pen-and-ink engraving with one spot colour,
+   matching the hero. Line work draws itself in once; each step's moment plays
+   once when the column is lit; nothing loops or grows. */
 .scene { position: relative; width: min(100%, 240px); aspect-ratio: 200 / 220; margin: 24px auto 20px; }
 .scene-svg, .scene-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 .scene-fx { pointer-events: none; }
-.ground { stroke: var(--ink); stroke-width: 1.4; }
-.pad { fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; }
-.rocket path, .rocket line, .rocket circle { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
-.r-body { fill: #fff; }
-.r-nose { fill: var(--orange); }
-.r-fin, .r-nozzle, .r-window { fill: var(--ink); }
-.gauge { fill: #fff; stroke: var(--ink); stroke-width: 1.8; }
-.fuel { fill: var(--orange); transform-box: fill-box; transform-origin: bottom; transform: scaleY(var(--f0)); transition: transform 1.3s var(--spring-sheet) .15s; }
+.scene-svg .ink { fill: none; stroke: var(--ink); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s cubic-bezier(.6,.04,.2,1) var(--dl, 0ms); }
+.scene-svg .ink.o { stroke-width: 1.45; }
+.scene-svg .ink.d { stroke-width: 1.05; }
+.scene-svg .ink.h { stroke-width: .62; }
+.scene-svg .ink.hi { stroke: var(--paper-2); stroke-width: 1.2; }
+.scene-svg .wash { opacity: 0; transition: opacity .7s var(--ease-out-expo) calc(var(--dl, 0ms) + 500ms); }
+.scene-svg .paper { fill: var(--paper-2); }
+.scene-svg .spot { fill: var(--orange); }
+.scene-svg .rivet { fill: var(--ink); }
+.journey.inked .scene-svg .ink { stroke-dashoffset: 0; }
+.journey.inked .scene-svg .wash { opacity: 1; }
+.fuel { fill: var(--orange); transform-box: fill-box; transform-origin: bottom; transform: scaleY(var(--f0)); transition: transform 1.4s var(--spring-sheet) .15s; }
 .jstep.on .fuel { transform: scaleY(var(--f1)); }
-.gantry path { fill: none; stroke: #9a958e; stroke-width: 1.3; }
-.gantry .arm { stroke: var(--ink); stroke-width: 2.2; transform-box: fill-box; transform-origin: left center; transition: transform .7s var(--spring-press) .9s; }
-.jstep.on .gantry .arm { transform: rotate(-58deg); }
-.flame { fill: var(--orange); transform-box: fill-box; transform-origin: top center; transform: scaleY(0); }
-.flame--core { fill: #ffd2b3; }
+.gantry .arm { transform-box: fill-box; transform-origin: left center; transition: transform .8s cubic-bezier(.5,0,.2,1.25) .95s; }
+.jstep.on .gantry .arm { transform: rotate(-62deg); }
+.flame { transform-box: fill-box; transform-origin: top center; transform: scaleY(0); fill: var(--orange); }
+.flame .flame-core { fill: #ffe0cc; }
+.jstep.burning .flame { transform: scaleY(1); transition: transform .25s cubic-bezier(.2,.9,.3,1.3); animation: flicker .09s steps(2) infinite alternate; }
+.jstep.landed .flame { transform: scaleY(0); transition: transform .5s var(--ease-out-expo); }
+@keyframes flicker { to { transform: scaleY(.86) scaleX(1.06); } }
 
-/* 01 fuel hose: flows only while lit */
-.hose { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
-.hose-flow { fill: none; stroke: var(--orange); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: .06 .1; opacity: 0; transition: opacity .3s; }
-.jstep.on .hose-flow { opacity: 1; animation: flow .7s linear infinite; }
-@keyframes flow { to { stroke-dashoffset: -.32; } }
+/* 01 fuel hose: a tube in ink with fuel pulsing through while lit */
+.hose { fill: none; stroke: var(--ink); stroke-width: 3.4; stroke-linecap: round; }
+.hose-in { fill: none; stroke: var(--paper-2); stroke-width: 1.8; stroke-linecap: round; }
+.hose-flow { fill: none; stroke: var(--orange); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: .08 .12; opacity: 0; transition: opacity .3s; }
+.jstep.on .hose-flow { opacity: 1; animation: flow .8s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -.4; } }
 
-/* 02 countdown + one vent of vapour */
-.count { font: 500 15px var(--mono); letter-spacing: .06em; fill: var(--muted); }
+/* 02 countdown: a dial that sweeps, and one vent of inked vapour */
+.count { font: 600 13px var(--mono); letter-spacing: .04em; fill: var(--ink); }
 .count.go { fill: var(--orange-text); font-weight: 700; }
-.vent { fill: #fff; stroke: #b9b3ab; stroke-width: 1; opacity: 0; transform-box: fill-box; transform-origin: center; }
-.jstep.on .vent { animation: vent 1.1s var(--ease-out-expo) 1s both; animation-delay: calc(1s + var(--d, 0ms)); }
-@keyframes vent { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: .9; } 100% { opacity: 0; transform: translate(-10px, -8px) scale(1.5); } }
+.dial-arc { fill: none; stroke: var(--orange); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset .5s cubic-bezier(.3,.7,.2,1); }
+.vent { opacity: 0; transform-box: fill-box; transform-origin: 80% 60%; }
+.vent-line { fill: none; stroke: var(--ink); stroke-width: .7; }
+.jstep.on .vent { animation: vent 1.5s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(1.05s + var(--d, 0ms)); }
+@keyframes vent { 0% { opacity: 0; transform: scale(.3); } 22% { opacity: 1; } 100% { opacity: 0; transform: translate(-12px, -10px) scale(1.45); } }
 
 /* 03 to the moon */
-.star { fill: var(--ink); opacity: .45; }
-.moon circle { fill: #f3efe8; stroke: var(--ink); stroke-width: 1.4; }
-.moon .crater { fill: #e2ddd5; stroke: #b9b3ab; stroke-width: .8; }
-.flag line { stroke: var(--ink); stroke-width: 1.2; }
-.flag path { fill: var(--orange); }
-.flag { transform-box: fill-box; transform-origin: bottom left; transform: scale(0); transition: transform .45s var(--spring-press); }
+.flag line { stroke: var(--ink); stroke-width: 1; }
+.flag path { fill: var(--orange); stroke: var(--ink); stroke-width: .7; stroke-linejoin: round; }
+.flag { transform-box: fill-box; transform-origin: bottom left; transform: scale(0); transition: transform .5s cubic-bezier(.3,1.4,.4,1) .35s; }
 .jstep.landed .flag { transform: none; }
-.jstep.on .ship .flame { transform: scaleY(1); transition: transform .3s var(--spring-press); }
-.jstep.landed .ship .flame { transform: scaleY(0); transition-duration: .4s; }
+.dust path { fill: none; stroke: var(--ink); stroke-width: .7; stroke-linecap: round; opacity: 0; }
+.jstep.landed .dust path { animation: dust .7s var(--ease-out-expo) both; }
+.jstep.landed .dust path:last-child { --x: 1; }
+@keyframes dust { 0% { opacity: 0; transform: none; } 30% { opacity: .9; } 100% { opacity: 0; transform: translateX(calc((var(--x, -1)) * 5px)) translateY(-2px); } }
 
 .journey-rail { display: none; }
 
@@ -436,7 +446,8 @@ a { color: inherit; text-decoration: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .js .hero-title .line > span, .js .reveal { transform: none; opacity: 1; }
-  .jstep.on .hose-flow, .jstep.on .vent { animation: none; }
+  .jstep.on .hose-flow, .jstep.on .vent, .jstep.burning .flame { animation: none; }
+  .journey .scene-svg .ink { stroke-dashoffset: 0; } .journey .scene-svg .wash { opacity: 1; }
   .journey-track { height: auto; }
   .journey-sticky { position: static; height: auto; }
   .journey-grid .jstep { grid-area: auto; opacity: 1; transform: none; pointer-events: auto; padding: 24px 0; }
