@@ -128,6 +128,11 @@ a { color: inherit; text-decoration: none; }
   -webkit-mask-composite: xor; mask-composite: exclude;
   transition: filter .9s var(--spring-sheet), opacity .9s var(--spring-sheet);
 }
+/* Rim light (rim.js, after Cybrdeck's ContourGlassButton `rim`) replaces the
+   lacquer reflections: the light lives on the edge, the face stays dark glass. */
+.pill--black { overflow: visible; }
+.pill--black::before, .pill--black::after, .pill--black .pill-shine { display: none; }
+.rim-fx { position: absolute; left: -30px; top: -30px; width: calc(100% + 60px); height: calc(100% + 60px); z-index: -1; pointer-events: none; }
 /* Out of focus until it is in the light. */
 .js .pill--black:not(.lit)::before, .js .pill--black:not(.lit)::after, .js .pill--black:not(.lit) .pill-shine { filter: blur(6px); opacity: .2; }
 .pill--black:hover, .pill--black:focus-visible { background: linear-gradient(180deg, #26262b 0%, #111114 62%, #0c0c0e 100%); }
