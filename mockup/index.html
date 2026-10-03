@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>MVP redesign — mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mockup.css">
+</head>
+<body>
+  <!-- Liquid glass lens (cybrdeck-liquid-glass): one displacement map, a filter per size tier. -->
+  <svg class="lens-defs" aria-hidden="true" width="0" height="0">
+    <defs>
+      <filter id="cd-lens-default" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-a" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="cd-lens-xl" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-b" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="15" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Section icons: one authored family, 24px grid, 1.75 stroke, round joins. -->
+  <svg class="icon-sprite" aria-hidden="true" width="0" height="0">
+    <symbol id="i-founders" viewBox="0 0 24 24">
+      <path d="M12 2.8c3.2 2.1 4.7 5.7 4.4 9.8L14.2 16H9.8l-2.2-3.4C7.3 8.5 8.8 4.9 12 2.8z"/>
+      <circle cx="12" cy="8.8" r="1.7"/>
+      <path d="M7.7 12.2 5 14.6l.9 3.4 3.3-2M16.3 12.2 19 14.6l-.9 3.4-3.3-2"/>
+      <path d="M10.4 18.4c.4 1.4.9 2.5 1.6 2.8.7-.3 1.2-1.4 1.6-2.8"/>
+    </symbol>
+    <symbol id="i-schools" viewBox="0 0 24 24">
+      <path d="M2 9.2 12 4.4l10 4.8-10 4.8z"/>
+      <path d="M6.2 11.3v4.6c0 1.5 2.6 3 5.8 3s5.8-1.5 5.8-3v-4.6"/>
+      <path d="M22 9.2v5.4"/>
+    </symbol>
+    <symbol id="i-enterprise" viewBox="0 0 24 24">
+      <path d="M4.5 21V4.2c0-.7.5-1.2 1.2-1.2h7.6c.7 0 1.2.5 1.2 1.2V21"/>
+      <path d="M14.5 9h3.8c.7 0 1.2.5 1.2 1.2V21"/>
+      <path d="M8 7h1.6M11 7h.1M8 11h1.6M11 11h.1M8 15h1.6M11 15h.1"/>
+      <path d="M2.5 21h19"/>
+    </symbol>
+    <symbol id="i-operators" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="m15.8 8.2-2.1 5.5-5.5 2.1 2.1-5.5z"/>
+      <path d="M12 2.8v1.8M12 19.4v1.8M2.8 12h1.8M19.4 12h1.8"/>
+    </symbol>
+    <symbol id="i-partners" viewBox="0 0 24 24">
+      <circle cx="8.8" cy="12" r="5.6"/>
+      <circle cx="15.2" cy="12" r="5.6"/>
+    </symbol>
+    <symbol id="i-mentors" viewBox="0 0 24 24">
+      <circle cx="11" cy="13" r="8.2"/>
+      <circle cx="11" cy="13" r="4.6"/>
+      <circle cx="11" cy="13" r="1.2"/>
+      <path d="m11 13 8.4-8.4M16.6 4.6h2.8v2.8"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8.5 7H17v8.5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+  </svg>
+
+  <!-- Announcement strip -->
+  <a class="strip" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">
+    <span class="strip-dot" aria-hidden="true"></span>
+    <span data-info="strip"><b>Info session #2</b> · 16 Oct, 2pm · Aspire</span>
+    <span class="strip-sep" aria-hidden="true">/</span>
+    <span class="strip-muted">Next cohort starts 26 Jan 2027</span>
+    <span class="strip-cta">RSVP <svg class="i"><use href="#i-arrow"/></svg></span>
+  </a>
+
+  <!-- Floating glass header -->
+  <header class="nav" id="nav">
+    <a class="nav-brand" href="#top" aria-label="Mamba Venture Program home">
+      <img src="../assets/brand/cybrdeck-logo.png" alt="Cybrdeck" class="nav-cybrdeck" width="886" height="197">
+      <span class="nav-x" aria-hidden="true">×</span>
+      <img src="../assets/brand/mamba-emblem.svg" alt="" class="nav-mamba" width="24" height="24">
+      <span class="nav-mamba-word">Mamba<br><small>Partners</small></span>
+    </a>
+    <nav class="nav-glass glass" aria-label="Primary">
+      <a href="#journey">How it works</a>
+      <a href="#audiences">Who it's for</a>
+      <a href="#mentors">Mentors</a>
+      <a href="#partners">Partners</a>
+    </nav>
+    <a class="pill pill--black pill--orb is-hidden" href="#apply" id="nav-cta"><span class="pill-shine" aria-hidden="true"></span><span class="pill-label"><span>Apply to MVP</span></span><svg class="i"><use href="#i-arrow"/></svg></a>
+  </header>
+
+  <main id="top">
+    <!-- 1. Hero: the one authored moment -->
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hero-field" aria-hidden="true"></canvas>
+      <div class="hero-grain" aria-hidden="true"></div>
+      <canvas class="hero-ink" aria-hidden="true"></canvas>
+      <p class="hero-kicker mono">Mamba Venture Program · Singapore</p>
+      <h1 class="hero-title display" id="hero-title" aria-label="Build a venture that scales">
+        <span class="line"><span>Build a venture</span></span>
+        <span class="line"><span>that scales</span></span>
+      </h1>
+      <div class="hero-foot">
+        <p class="hero-lede">Validate the problem. Build the MVP. Test demand.</p>
+        <div class="hero-ctas">
+          <a class="pill pill--black pill--lg" href="#apply"><span class="pill-shine" aria-hidden="true"></span>Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="pill pill--glass pill--lg glass" href="#journey">How it works</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Two-tone statement -->
+    <section class="statement" id="statement">
+      <p class="statement-text reveal"><strong>MVP is a stepping stone, not a competing accelerator.</strong> Build, test and gather evidence with engineers, operators and investors beside you, before your next accelerator or funding application.</p>
+      <div class="stones" aria-hidden="true"></div>
+    </section>
+
+    <!-- 3. Journey. Desktop: hairline columns whose one rocket, fuelled and
+         flown to the moon, plays on hover/focus (our own line-art assets). Mobile: the
+         section pins and scrolling steps through 01 -> 02 -> 03. -->
+    <section class="journey" id="journey" aria-labelledby="journey-title">
+      <div class="section-head">
+        <p class="mono label">How MVP works</p>
+        <h2 class="display h2" id="journey-title">Three steps in</h2>
+      </div>
+      <div class="journey-track" id="journey-track">
+        <div class="journey-sticky">
+          <ol class="journey-grid">
+            <li class="jstep" tabindex="0" data-step="0">
+              <p class="mono step">Step 01 · Fuel up</p>
+              <h3 class="display h3">Share your idea</h3>
+              <div class="scene" data-scene="0" aria-hidden="true"></div>
+              <p class="jstep-copy">Apply with the problem you know first-hand. An industry insight, an idea or an early prototype is enough.</p>
+            </li>
+            <li class="jstep" tabindex="0" data-step="1">
+              <p class="mono step">Step 02 · Countdown</p>
+              <h3 class="display h3">Discuss your stage</h3>
+              <div class="scene" data-scene="1" aria-hidden="true"></div>
+              <p class="jstep-copy">We read every application and talk with shortlisted applicants about where the venture really is.</p>
+            </li>
+            <li class="jstep" tabindex="0" data-step="2">
+              <p class="mono step">Step 03 · Liftoff</p>
+              <h3 class="display h3">To the moon</h3>
+              <div class="scene" data-scene="2" aria-hidden="true"></div>
+              <p class="jstep-copy">Launch something that works and sells, with mentors and the Singapore support rails behind you.</p>
+            </li>
+          </ol>
+          <div class="journey-rail" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Facts band: real program facts only, no invented metrics -->
+    <section class="facts" aria-label="Program facts">
+      <div class="fact reveal"><p class="mono label">Sprint</p><p class="fact-num display">1</p><p class="fact-unit">month to test the problem and define your MVP</p></div>
+      <div class="fact reveal"><p class="mono label">Venture build</p><p class="fact-num display">3</p><p class="fact-unit">months to build, test with users and get commercially ready</p></div>
+      <div class="fact reveal"><p class="mono label">Next cohort</p><p class="fact-num display">26.01</p><p class="fact-unit">2027, both tracks start together</p></div>
+      <div class="fact reveal" data-info="fact"><p class="mono label">Info session</p><p class="fact-num display" data-info="date">16.10</p><p class="fact-unit" data-info="detail">2pm at Aspire</p><a class="pill pill--black fact-rsvp" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link"><span class="pill-shine" aria-hidden="true"></span>RSVP on Luma <svg class="i"><use href="#i-arrow"/></svg></a></div>
+    </section>
+
+    <!-- 5. Audiences: black stage, liquid glass segmented control, new icons -->
+    <section class="audiences" id="audiences" aria-labelledby="aud-title">
+      <div class="aud-glow" aria-hidden="true"></div>
+      <div class="section-head section-head--dark">
+        <p class="mono label">Who it's for</p>
+        <h2 class="display h2" id="aud-title">Find your way in</h2>
+      </div>
+
+      <div class="seg-wrap">
+        <div class="seg glass" role="tablist" aria-label="Audiences" id="seg">
+          <span class="seg-indicator" aria-hidden="true"></span>
+          <button role="tab" aria-selected="true" aria-controls="p-founders" id="t-founders"><svg class="i"><use href="#i-founders"/></svg>Founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-schools" id="t-schools" tabindex="-1"><svg class="i"><use href="#i-schools"/></svg>Schools</button>
+          <button role="tab" aria-selected="false" aria-controls="p-enterprise" id="t-enterprise" tabindex="-1"><svg class="i"><use href="#i-enterprise"/></svg>Enterprise</button>
+          <button role="tab" aria-selected="false" aria-controls="p-operators" id="t-operators" tabindex="-1"><svg class="i"><use href="#i-operators"/></svg>Experienced founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-partners" id="t-partners" tabindex="-1"><svg class="i"><use href="#i-partners"/></svg>Partners</button>
+          <button role="tab" aria-selected="false" aria-controls="p-mentors" id="t-mentors" tabindex="-1"><svg class="i"><use href="#i-mentors"/></svg>Meet the mentors</button>
+        </div>
+      </div>
+
+      <div class="panels">
+        <article class="panel" role="tabpanel" id="p-founders" aria-labelledby="t-founders">
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-founders"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Founders</h3>
+              <p class="panel-desc">Working professionals, SME owners and aspiring founders with industry insight, an idea or an early prototype.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><p class="mono step">1-month sprint</p><h4>Test the problem</h4><p>Test the problem, define your MVP and decide what to build next.</p></div>
+            <div><p class="mono step">3-month build</p><h4>Build the MVP</h4><p>Develop the MVP, test with users and work toward commercial readiness.</p></div>
+            <div><p class="mono step">Both tracks</p><h4>Shared support</h4><p>Workspace, engineering guidance, commercial support, investor sessions and ecosystem connections.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#apply">Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-schools" aria-labelledby="t-schools" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-schools"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Schools</h3>
+              <p class="panel-desc">Hands-on venture masterclasses, AWS generative AI labs and hackathon incubation tracks across NUS, NTU, SMU, polytechnics and regional universities.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Campus guest masterclasses</h4><p>Practical, code-driven 2-hour workshops on moving from theoretical models to fast, shippable AI prototypes.</p></div>
+            <div><h4>Hackathon incubation tracks</h4><p>Co-designed problem statements, mentored finalists, and fast-track admission into MVP for winning builds.</p></div>
+            <div><h4>Venture engineering syllabus</h4><p>Modules on customer discovery (The Mom Test), Default Alive math and post-money SAFE cap tables.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Inquire for a university workshop <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-enterprise" aria-labelledby="t-enterprise" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-enterprise"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Enterprise</h3>
+              <p class="panel-desc">Compressed sprints that take corporate innovation units and engineering teams from idea to a tested AI workflow on their own data.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>48-hour AI workflow sprints</h4><p>Co-build a working agentic workflow tailored to your internal operations in 48 hours.</p></div>
+            <div><h4>Venture client acceleration</h4><p>Match your operational bottlenecks with MVP cohort startups for paid, rapid pilots.</p></div>
+            <div><h4>Executive AI risk & governance</h4><p>Briefings for CIOs, CISOs and business leaders on containment, compliance and platform risk.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Book an enterprise briefing <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-operators" aria-labelledby="t-operators" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-operators"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Experienced founders</h3>
+              <p class="panel-desc">Founded before, navigated procurement or closed B2B deals? Bring the distribution instincts; we bring engineering rails and early-stage ventures.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Commercial EIR</h4><p>Shape go-to-market, discovery and pilots with technical founders, without running engineering sprints yourself.</p></div>
+            <div><h4>Deal origination</h4><p>Earn origination on enterprise contracts you open, paid on customer milestones.</p></div>
+            <div><h4>Co-founder runway</h4><p>Test traction and team chemistry in studio sprints before stepping in as a commercial co-founder.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Connect as a commercial partner <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-partners" aria-labelledby="t-partners" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-partners"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Partners</h3>
+              <p class="panel-desc">Capital, domain expertise, banking rails and corporate distribution: the coalition that powers each cohort.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Angels & co-investors</h4><p>Co-invest in qualified cohort graduates on standard post-money SAFEs, with follow-on rights.</p></div>
+            <div><h4>Domain advisors</h4><p>Engineering leads, former founders and commercial experts giving founders 1-on-1 guidance.</p></div>
+            <div><h4>System partners</h4><p>Legal structuring, SME banking, cloud credits and compliance for the venture stack.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Join the ecosystem <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+
+        <article class="panel" role="tabpanel" id="p-mentors" aria-labelledby="t-mentors" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-mentors"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Meet the mentors</h3>
+              <p class="panel-desc">Matched to each venture's bottleneck: the market, the product or the first customer.</p>
+            </div>
+          </div>
+          <a class="pill pill--orange" href="#mentors">See the mentors <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. Mentors -->
+    <section class="mentors" id="mentors" aria-labelledby="mentors-title">
+      <div class="section-head">
+        <p class="mono label">Meet the mentors</p>
+        <h2 class="display h2" id="mentors-title">You won't build alone</h2>
+      </div>
+      <div class="mentor-row">
+        <figure class="mentor reveal">
+          <img src="../assets/mentors/james-sun.jpg" alt="James Sun" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">James Sun</p>
+            <p class="mono mentor-role">Venture Partner, Mamba Partners</p>
+            <p class="mentor-focus">Go-to-market · Marketing · Sales</p>
+          </figcaption>
+        </figure>
+        <figure class="mentor reveal">
+          <img src="../assets/mentors/benjamin-lim.jpg" alt="Benjamin Lim" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">Benjamin Lim</p>
+            <p class="mono mentor-role">Co-Founder, Cybrdeck</p>
+            <p class="mentor-focus">Engineering · Product builds · Innovation</p>
+          </figcaption>
+        </figure>
+        <figure class="mentor reveal">
+          <img src="../assets/mentors/gwendalynn-lim.jpg" alt="Gwendalynn Lim" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">Gwendalynn Lim</p>
+            <p class="mono mentor-role">Co-Founder, Cybrdeck</p>
+            <p class="mentor-focus">Communications · Social media · Innovation</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 7. Partners: logos in a hairline grid -->
+    <section class="partners" id="partners" aria-label="Run by">
+      <p class="mono label">Run by</p>
+      <div class="partner-grid">
+        <div class="reveal"><img src="../assets/brand/cybrdeck-logo.png" alt="Cybrdeck" width="886" height="197" class="logo-cybrdeck"><p class="mono step">Program lead</p><p>Turn your idea or prototype into a credible, testable MVP.</p></div>
+        <div class="reveal"><span class="logo-mamba"><img src="../assets/brand/mamba-emblem.svg" alt="" width="36" height="36"><b>Mamba</b> Partners</span><p class="mono step">Program lead</p><p>Test your business model, validate demand and build a path to revenue.</p></div>
+        <div class="reveal"><img src="../assets/brand/sg-innovation.png" alt="SG Innovation" width="469" height="99" class="logo-sgi"><p class="mono step">Ecosystem partner</p><p>Navigate grants, connect with partners and explore routes to market.</p></div>
+      </div>
+    </section>
+
+    <!-- 8. Closing CTA -->
+    <section class="closer" id="apply" aria-labelledby="closer-title">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <p class="mono hero-kicker">January 2027 cohort · Applications open</p>
+      <h2 class="display closer-title" id="closer-title">Apply to MVP</h2>
+      <div class="hero-ctas">
+        <a class="pill pill--black pill--lg" href="../#apply"><span class="pill-shine" aria-hidden="true"></span>Start your application <svg class="i"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--glass pill--lg glass" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">RSVP for the info session</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="mono">© 2026 Mamba Venture Program · Cybrdeck × Mamba Partners × SG Innovation</p>
+    <p class="mono foot-note">Mockup. Not the live site.</p>
+  </footer>
+
+  <script src="mockup.js"></script>
+  <script src="scene.js"></script>
+  <script src="hero.js"></script>
+  <script src="ink.js"></script>
+  <script src="stones.js"></script>
+  <script src="info-session.js"></script>
+  <script src="rim.js"></script>
+</body>
+</html>

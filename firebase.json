@@ -14,6 +14,9 @@
       "**/.*/**",
       "**/node_modules/**"
     ],
+    "rewrites": [
+      { "source": "/api/next-info-session", "function": { "functionId": "nextInfoSession", "region": "asia-southeast1" } }
+    ],
     "headers": [
       {
         "source": "**/*.@(css|js)",
