@@ -66,10 +66,10 @@
     if (dx > 4) {
       // Radial fades only, so no boundary is a straight line. The drawing keeps
       // a disc centred on its right side; its left edge dissolves along an arc.
-      const kx = dx + dw, ky = dy + dh * 0.55, kr = dw * 1.02;
+      const kx = dx + dw, ky = dy + dh * 0.55, kr = dw * 0.97;
       const keepGrad = (c) => {
         const k = c.createRadialGradient(kx, ky, 0, kx, ky, kr);
-        k.addColorStop(0, "rgba(0,0,0,1)"); k.addColorStop(0.8, "rgba(0,0,0,1)"); k.addColorStop(1, "rgba(0,0,0,0)");
+        k.addColorStop(0, "rgba(0,0,0,1)"); k.addColorStop(0.42, "rgba(0,0,0,1)"); k.addColorStop(0.6, "rgba(0,0,0,.8)"); k.addColorStop(0.76, "rgba(0,0,0,.42)"); k.addColorStop(0.9, "rgba(0,0,0,.12)"); k.addColorStop(1, "rgba(0,0,0,0)");
         return k;
       };
       g.save(); g.globalCompositeOperation = "destination-in"; g.fillStyle = keepGrad(g); g.fillRect(0, 0, W, H); g.restore();
@@ -85,11 +85,11 @@
       e.drawImage(study, 0, sy, study.naturalWidth, sh, 0, ey, dw, eh);
       e.drawImage(study, 0, sy, study.naturalWidth, sh, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
       e.restore();
-      const rx = Math.max(W * 0.42, ax * 0.9), ry = eh * 0.78;
+      const rx = Math.max(W * 0.55, ax * 1.05), ry = eh * 0.78;
       e.save(); e.globalCompositeOperation = "destination-in";
       e.translate(ax, H); e.scale(1, ry / rx);
       const oval = e.createRadialGradient(0, 0, 0, 0, 0, rx);
-      oval.addColorStop(0, "rgba(0,0,0,.85)"); oval.addColorStop(0.45, "rgba(0,0,0,.7)"); oval.addColorStop(1, "rgba(0,0,0,0)");
+      oval.addColorStop(0, "rgba(0,0,0,.8)"); oval.addColorStop(0.3, "rgba(0,0,0,.66)"); oval.addColorStop(0.6, "rgba(0,0,0,.34)"); oval.addColorStop(0.82, "rgba(0,0,0,.1)"); oval.addColorStop(1, "rgba(0,0,0,0)");
       e.fillStyle = oval; e.fillRect(-W * 2, -H * 4 * (rx / ry), W * 4, H * 8 * (rx / ry));
       e.restore();
       // Complement of the drawing's disc, so the two meet along the same arc.
