@@ -242,6 +242,29 @@ a { color: inherit; text-decoration: none; }
 .statement { padding: clamp(80px, 12vw, 160px) var(--gutter); background: var(--paper); }
 .statement-text { max-width: 30ch; font-size: clamp(1.6rem, 3.4vw, 2.9rem); font-weight: 500; line-height: 1.18; letter-spacing: -0.015em; color: var(--muted); }
 .statement-text strong { color: var(--ink); font-weight: 500; }
+/* Stepping stones (stones.js): engraved, beside the statement, rising to the
+   upper right. Each stone lifts and ripples once under the pointer. */
+.statement { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: center; gap: 24px 48px; }
+.stones svg { display: block; width: 100%; height: auto; overflow: visible; }
+.stones .ink { fill: none; stroke: var(--ink); stroke-width: 1; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s cubic-bezier(.6,.04,.2,1) var(--dl, 0ms); }
+.stones .ink.o { stroke-width: 1.4; }
+.stones .ink.h { stroke-width: .7; }
+.stones .ink.water { stroke-width: .65; opacity: .55; transition-duration: 2s; }
+.stones .wash { fill: var(--paper); opacity: 0; transition: opacity .6s var(--ease-out-expo) calc(var(--dl, 0ms) + 400ms); }
+.inked .stones .ink { stroke-dashoffset: 0; }
+.inked .stones .wash { opacity: 1; }
+.stone { cursor: default; }
+.stone-hit { fill: transparent; }
+.stone-body { transition: transform .5s cubic-bezier(.3,1.35,.45,1); }
+.stone.hover .stone-body { transform: translateY(-5px); }
+.stone-shadow { fill: var(--ink); opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity .4s var(--ease-out-expo), transform .5s cubic-bezier(.3,1.35,.45,1); }
+.stone.hover .stone-shadow { opacity: .08; transform: scale(.9); }
+.ripple { fill: none; stroke: var(--ink); stroke-width: .7; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.stone.stepped .ripple { animation: ripple 1.4s cubic-bezier(.2,.7,.2,1) both; }
+.stone.stepped .ripple--2 { animation-delay: .22s; }
+@keyframes ripple { 0% { opacity: .7; transform: scale(.9); } 100% { opacity: 0; transform: scale(1.6); } }
+@media (max-width: 900px) { .statement { grid-template-columns: 1fr; } .stones { max-width: 420px; justify-self: end; width: 86%; } }
 
 /* ── Section heads ────────────────────────────────────────────────────── */
 .section-head { display: grid; grid-template-columns: minmax(160px, 1fr) 2fr; gap: 24px; align-items: start; margin-bottom: clamp(40px, 6vw, 72px); }
