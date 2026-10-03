@@ -174,20 +174,57 @@ a { color: inherit; text-decoration: none; }
 .jstep-copy { color: var(--ink-2); max-width: 32ch; margin-top: 8px; }
 .jstep.on .step, .jstep.on .h3 { color: var(--orange-text); }
 
-/* Rubik's cube scenes (iso.js). At rest: still. Lit: the stickers that
-   change flip over on the press spring, staggered. */
-.iso { position: relative; width: min(100%, 250px); aspect-ratio: 1 / 1; margin: 28px auto 24px; }
-.iso-svg, .iso-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.iso-fx { pointer-events: none; }
-.iso-svg { filter: drop-shadow(0 18px 22px rgba(12, 12, 14, 0.18)); transition: transform .6s var(--spring-sheet); }
-.jstep.on .iso-svg { transform: translateY(-6px); }
-.rc-body { fill: var(--ink); stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; }
-.rc-edge { fill: none; stroke: rgba(255, 255, 255, 0.22); stroke-width: 1; }
-.stk { transform-box: fill-box; transform-origin: center; }
-.slot .lit { transform: scale(0); }
-.slot .goes, .slot .lit { transition: transform .5s var(--spring-press); transition-delay: var(--d, 0ms); }
-.jstep.on .slot .goes { transform: scale(0); transition-duration: .22s; transition-timing-function: ease-in; }
-.jstep.on .slot .lit { transform: none; transition-delay: calc(var(--d, 0ms) + 120ms); }
+/* Rocket scenes (scene.js): hairline line art, still at rest. Each step's
+   moment plays when the column is lit. */
+.scene { position: relative; width: min(100%, 240px); aspect-ratio: 200 / 220; margin: 24px auto 20px; }
+.scene-svg, .scene-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.scene-fx { pointer-events: none; }
+.scene-svg * { vector-effect: non-scaling-stroke; }
+/* Draw-on lines use pathLength=1 dashes, which non-scaling strokes break. */
+.scene-svg .ink *, .scene-svg .speed * { vector-effect: none; }
+.ground { stroke: var(--ink); stroke-width: 1.4; }
+.rocket path, .rocket line, .rocket circle { stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.r-body { fill: #fff; }
+.r-nose { fill: var(--orange); }
+.r-fin, .r-nozzle, .r-window { fill: var(--ink); }
+.r-window { stroke: var(--ink); }
+.pad, .gantry path { fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-linejoin: round; }
+.gantry path:not(.arm) { stroke: #9a958e; }
+
+/* 01 blueprint */
+.bp-gridline { fill: none; stroke: #e6e1da; stroke-width: .6; }
+.draft path, .draft circle { fill: none; stroke: #8c877f; stroke-width: 1.2; stroke-dasharray: 4 4; transition: opacity .4s var(--ease-out-expo); }
+.ink path, .ink circle { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1s var(--ease-out-expo); transition-delay: var(--d, 0ms); }
+.bp-nose { fill: var(--orange); stroke: var(--ink); stroke-width: 1.7; opacity: 0; transition: opacity .5s var(--ease-out-expo) .55s; }
+.dim line { stroke: var(--orange-text); stroke-width: 1; }
+.dim text { font: 500 8px var(--mono); letter-spacing: .08em; fill: var(--orange-text); }
+.jstep.on .ink path, .jstep.on .ink circle { stroke-dashoffset: 0; }
+.jstep.on .draft path, .jstep.on .draft circle { opacity: .25; }
+.jstep.on .bp-nose { opacity: 1; }
+
+/* 02 on the pad */
+.gauge { fill: #fff; stroke: var(--ink); stroke-width: 1.4; }
+.fuel { fill: var(--orange); transform-box: fill-box; transform-origin: bottom; transform: scaleY(.15); transition: transform 1.1s var(--spring-sheet) .1s; }
+.arm { stroke: var(--ink) !important; stroke-width: 2.2 !important; transform-box: fill-box; transform-origin: left center; transition: transform .7s var(--spring-press) .35s; }
+.puff { fill: #fff; stroke: #b9b3ab; stroke-width: 1; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.jstep.on .fuel { transform: none; }
+.jstep.on .arm { transform: rotate(-58deg); }
+.jstep.on .puff { animation: puff 1.6s var(--ease-out-expo) infinite; animation-delay: var(--d, 0ms); }
+@keyframes puff { 0% { opacity: .9; transform: scale(.5); } 100% { opacity: 0; transform: scale(2.2) translateY(-4px); } }
+
+/* 03 liftoff */
+.ship { transition: transform 1.2s var(--spring-sheet); }
+.flame { fill: var(--orange); transform-box: fill-box; transform-origin: top center; transform: scaleY(.25); opacity: .6; transition: transform .5s var(--spring-press), opacity .3s; }
+.flame--core { fill: #ffd2b3; }
+.smoke circle { fill: #fff; stroke: #b9b3ab; stroke-width: 1; transform-box: fill-box; transform-origin: center; transform: scale(0); transition: transform .9s var(--spring-sheet); transition-delay: var(--d, 0ms); }
+.speed line { stroke: var(--ink); stroke-width: 1.2; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; transition: stroke-dashoffset .6s var(--ease-out-expo) .45s; }
+.jstep.on .ship { transform: translateY(-46px); }
+.jstep.on .flame { transform: none; opacity: 1; animation: flicker .18s ease-in-out infinite alternate; }
+.jstep.on .smoke circle { transform: none; }
+.jstep.on .speed line { stroke-dashoffset: 0; }
+@keyframes flicker { from { transform: scaleY(.88) scaleX(.94); } to { transform: scaleY(1.06) scaleX(1.03); } }
+
 .journey-rail { display: none; }
 
 /* ── Facts band ───────────────────────────────────────────────────────── */
@@ -296,7 +333,7 @@ a { color: inherit; text-decoration: none; }
   .jstep { grid-area: 1 / 1; border: 0; padding: 0; opacity: 0; transform: translateY(28px); pointer-events: none;
            transition: opacity .35s var(--ease-out-expo), transform .55s var(--spring-sheet); }
   .jstep.on, .journey-grid:not(:has(.on)) .jstep:first-child { opacity: 1; transform: none; pointer-events: auto; }
-  .iso { width: min(70vw, 260px); margin: 20px auto; }
+  .scene { width: min(66vw, 240px); margin: 16px auto; }
   .journey-rail { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
   .journey-rail span { width: 28px; height: 4px; border-radius: 2px; background: var(--hair); transition: background-color .3s var(--ease-out-expo); }
   .journey-rail span.on { background: var(--orange); }
@@ -321,7 +358,8 @@ a { color: inherit; text-decoration: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .js .hero-title .line > span, .js .reveal { transform: none; opacity: 1; }
-  .jstep.on .iso-svg { transform: none; }
+  .jstep.on .ship { transform: none; }
+  .jstep.on .flame, .jstep.on .puff { animation: none; }
   .journey-track { height: auto; }
   .journey-sticky { position: static; height: auto; }
   .journey-grid .jstep { grid-area: auto; opacity: 1; transform: none; pointer-events: auto; padding: 24px 0; }
