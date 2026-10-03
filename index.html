@@ -1,651 +1,353 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mamba Venture Program (MVP) | Build a venture that sells</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mamba Venture Program (MVP) | Build a venture that scales</title>
   <meta name="description" content="The Mamba Venture Program helps working professionals, SME owners and aspiring founders turn industry insight into a working product. 1-month sprint or 3-month venture build in Singapore.">
-  
-  <!-- Open Graph & LinkedIn Social Meta Tags -->
-  <meta property="og:title" content="Mamba Venture Program (MVP) — Build a venture that sells">
-  <meta property="og:description" content="Turn industry insight into a working product. 1-month sprint or 3-month venture build. Applications for the January 2027 intake are open.">
+  <meta property="og:title" content="Mamba Venture Program (MVP) — Build a venture that scales">
+  <meta property="og:description" content="Validate the problem. Build the MVP. Test demand. 1-month sprint or 3-month venture build. Applications for the January 2027 intake are open.">
   <meta property="og:url" content="https://mambaventureprogram.web.app/">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=1200&h=630&q=80">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Mamba Venture Program (MVP) — Build a venture that sells">
-  <meta name="twitter:description" content="Turn industry insight into a working product. 1-month sprint or 3-month venture build. Applications for the January 2027 intake are open.">
-
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="twitter:title" content="Mamba Venture Program (MVP) — Build a venture that scales">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- Old links to the form (/#apply) go to the application page. -->
+  <script>if (location.hash === "#apply") location.replace("apply.html#apply");</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="mockup/mockup.css">
 </head>
 <body>
-  <div class="grid-overlay"></div>
+  <!-- Liquid glass lens (cybrdeck-liquid-glass): one displacement map, a filter per size tier. -->
+  <svg class="lens-defs" aria-hidden="true" width="0" height="0">
+    <defs>
+      <filter id="cd-lens-default" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-a" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="cd-lens-xl" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-b" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="15" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
 
-  <div class="app-wrapper">
-    <!-- Top Studio Header Bar -->
-    <header class="studio-header">
-      <a href="#" class="brand-badge brand-lockup" aria-label="Mamba Venture Program home">
-        <img src="assets/brand/cybrdeck-logo.png" class="lockup-cybrdeck" alt="Cybrdeck" width="886" height="197">
-        <span class="lockup-x" aria-hidden="true">&times;</span>
-        <span class="lockup-mamba">
-          <img src="assets/brand/mamba-emblem.svg" alt="" width="26" height="26">
-          <span class="lockup-mamba-text"><strong>MAMBA</strong><small>PARTNERS</small></span>
-        </span>
-        <span class="lockup-divider" aria-hidden="true"></span>
-        <span class="lockup-program">Mamba Venture Program</span>
-      </a>
+  <!-- Section icons: one authored family, 24px grid, 1.75 stroke, round joins. -->
+  <svg class="icon-sprite" aria-hidden="true" width="0" height="0">
+    <symbol id="i-founders" viewBox="0 0 24 24">
+      <path d="M12 2.8c3.2 2.1 4.7 5.7 4.4 9.8L14.2 16H9.8l-2.2-3.4C7.3 8.5 8.8 4.9 12 2.8z"/>
+      <circle cx="12" cy="8.8" r="1.7"/>
+      <path d="M7.7 12.2 5 14.6l.9 3.4 3.3-2M16.3 12.2 19 14.6l-.9 3.4-3.3-2"/>
+      <path d="M10.4 18.4c.4 1.4.9 2.5 1.6 2.8.7-.3 1.2-1.4 1.6-2.8"/>
+    </symbol>
+    <symbol id="i-schools" viewBox="0 0 24 24">
+      <path d="M2 9.2 12 4.4l10 4.8-10 4.8z"/>
+      <path d="M6.2 11.3v4.6c0 1.5 2.6 3 5.8 3s5.8-1.5 5.8-3v-4.6"/>
+      <path d="M22 9.2v5.4"/>
+    </symbol>
+    <symbol id="i-enterprise" viewBox="0 0 24 24">
+      <path d="M4.5 21V4.2c0-.7.5-1.2 1.2-1.2h7.6c.7 0 1.2.5 1.2 1.2V21"/>
+      <path d="M14.5 9h3.8c.7 0 1.2.5 1.2 1.2V21"/>
+      <path d="M8 7h1.6M11 7h.1M8 11h1.6M11 11h.1M8 15h1.6M11 15h.1"/>
+      <path d="M2.5 21h19"/>
+    </symbol>
+    <symbol id="i-operators" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2"/>
+      <path d="m15.8 8.2-2.1 5.5-5.5 2.1 2.1-5.5z"/>
+      <path d="M12 2.8v1.8M12 19.4v1.8M2.8 12h1.8M19.4 12h1.8"/>
+    </symbol>
+    <symbol id="i-partners" viewBox="0 0 24 24">
+      <circle cx="8.8" cy="12" r="5.6"/>
+      <circle cx="15.2" cy="12" r="5.6"/>
+    </symbol>
+    <symbol id="i-mentors" viewBox="0 0 24 24">
+      <circle cx="11" cy="13" r="8.2"/>
+      <circle cx="11" cy="13" r="4.6"/>
+      <circle cx="11" cy="13" r="1.2"/>
+      <path d="m11 13 8.4-8.4M16.6 4.6h2.8v2.8"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8.5 7H17v8.5"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+  </svg>
 
-      <!-- Audience Navigation Links for Landing Page -->
-      <!-- Live banner: what's coming up next. Each item hides itself once its
-           data-until moment has passed (js/live-banner.js); edit dates here. -->
-      <div class="live-banner" id="live-banner" aria-label="Coming up">
-        <a class="live-item live-item--event" data-until="2026-10-16T16:00:00+08:00"
-           href="https://luma.com/vetnk204" target="_blank" rel="noopener">
-          <span class="live-dot" aria-hidden="true"></span>
-          <span class="live-kicker">Info session #2</span>
-          <span class="live-text">16 Oct, 2pm &middot; Aspire</span>
-          <span class="live-cta">RSVP &rarr;</span>
-        </a>
-        <span class="live-item" data-until="2027-01-26T23:59:59+08:00">
-          <span class="live-kicker">Next cohort</span>
-          <span class="live-text">Starts 26 Jan 2027</span>
-        </span>
+  <!-- Announcement strip -->
+  <a class="strip" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">
+    <span class="strip-dot" aria-hidden="true"></span>
+    <span data-info="strip"><b>Info session #2</b> · 16 Oct, 2pm · Aspire</span>
+    <span class="strip-sep" aria-hidden="true">/</span>
+    <span class="strip-muted">Next cohort starts 26 Jan 2027</span>
+    <span class="strip-cta">RSVP <svg class="i"><use href="#i-arrow"/></svg></span>
+  </a>
+
+  <!-- Floating glass header -->
+  <header class="nav" id="nav">
+    <a class="nav-brand" href="#top" aria-label="Mamba Venture Program home">
+      <img src="assets/brand/cybrdeck-logo.png" alt="Cybrdeck" class="nav-cybrdeck" width="886" height="197">
+      <span class="nav-x" aria-hidden="true">×</span>
+      <img src="assets/brand/mamba-emblem.svg" alt="" class="nav-mamba" width="24" height="24">
+      <span class="nav-mamba-word">Mamba<br><small>Partners</small></span>
+    </a>
+    <nav class="nav-glass glass" aria-label="Primary">
+      <a href="#journey">How it works</a>
+      <a href="#audiences">Who it's for</a>
+      <a href="#mentors">Mentors</a>
+      <a href="#partners">Partners</a>
+    </nav>
+    <a class="pill pill--black pill--orb is-hidden" href="apply.html#apply" id="nav-cta"><span class="pill-shine" aria-hidden="true"></span><span class="pill-label"><span>Apply to MVP</span></span><svg class="i"><use href="#i-arrow"/></svg></a>
+  </header>
+
+  <main id="top">
+    <!-- 1. Hero: the one authored moment -->
+    <section class="hero" aria-labelledby="hero-title">
+      <canvas class="hero-field" aria-hidden="true"></canvas>
+      <div class="hero-grain" aria-hidden="true"></div>
+      <canvas class="hero-ink" aria-hidden="true"></canvas>
+      <p class="hero-kicker mono">Mamba Venture Program · Singapore</p>
+      <h1 class="hero-title display" id="hero-title" aria-label="Build a venture that scales">
+        <span class="line"><span>Build a venture</span></span>
+        <span class="line"><span>that scales</span></span>
+      </h1>
+      <div class="hero-foot">
+        <p class="hero-lede"><span>Validate the problem.</span><span>Build the MVP.</span><span>Test demand.</span></p>
+        <div class="hero-ctas">
+          <a class="pill pill--black pill--lg" href="apply.html#apply"><span class="pill-shine" aria-hidden="true"></span>Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="pill pill--glass pill--lg glass" href="#journey">How it works</a>
+        </div>
       </div>
+    </section>
 
-      <!-- Action Controls -->
-      <div class="header-actions">
-        <a href="#apply" class="header-apply-btn" id="header-apply-btn">Apply to MVP</a>
-        <button type="button" class="icon-btn active" id="btn-toggle-sound" title="Sound effects on" aria-label="Sound effects" aria-pressed="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </button>
+    <!-- 2. Two-tone statement -->
+    <section class="statement" id="statement">
+      <p class="statement-text reveal"><strong>MVP is a stepping stone, not a competing accelerator.</strong> Build, test and gather evidence with engineers, operators and investors beside you, before your next accelerator or funding application.</p>
+      <div class="stones" aria-hidden="true"></div>
+    </section>
 
+    <!-- 3. Journey. Desktop: hairline columns whose one rocket, fuelled and
+         flown to the moon, plays on hover/focus (our own line-art assets). Mobile: the
+         section pins and scrolling steps through 01 -> 02 -> 03. -->
+    <section class="journey" id="journey" aria-labelledby="journey-title">
+      <div class="section-head">
+        <p class="mono label">How MVP works</p>
+        <h2 class="display h2" id="journey-title">Three steps in</h2>
       </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main class="main-content">
-
-      <!-- ====================================================================
-           SCREEN 1: Candidate Registration & Orientation
-           ==================================================================== -->
-      <section class="screen active" id="screen-orientation">
-        <!-- Slide Deck Hero Banner in #fc6736 (Venture Architecture) -->
-        <div class="deck-hero-banner">
-          <div class="deck-pillars-row">
-            <div class="deck-pillar-col">
-              <span class="pillar-number-title">01 / SPACE &amp; COMMUNITY</span>
-              <p class="pillar-text">A working base in Singapore, connected to a wider startup ecosystem.</p>
-            </div>
-            <div class="deck-pillar-col">
-              <span class="pillar-number-title">02 / BUILD &amp; VALIDATE</span>
-              <p class="pillar-text">Work with engineers and industry veterans to turn a real problem into a working MVP.</p>
-            </div>
-            <div class="deck-pillar-col">
-              <span class="pillar-number-title">03 / COMMERCIALIZE &amp; GROW</span>
-              <p class="pillar-text">Test demand, reach customers and prepare for relevant funding opportunities.</p>
-            </div>
-          </div>
-
-          <div class="deck-headline-group">
-            <h2 class="deck-huge-title">VENTURE ARCHITECTURE</h2>
-            <div class="deck-sub-tagline">BUILD ENTERPRISE AI THAT SELLS</div>
-          </div>
-        </div>
-
-        <div class="hero-portal">
-          <div class="hero-portal-inner">
-            <div class="hero-portal-content">
-              <div class="portal-eyebrow">
-                <span>●</span> <span id="hero-cohort-label">Jan 2027 intake · Applications open</span>
-              </div>
-              <h1 class="portal-title">
-                Build a venture <span class="glow">that sells</span>
-              </h1>
-              <p class="portal-desc">
-                The <strong>Mamba Venture Program (MVP)</strong> helps working professionals, SME owners and aspiring founders
-                turn industry insight into a working product: validate the problem, build the MVP and test demand.
-                Choose a <strong>1-month sprint</strong> or a <strong>3-month venture build</strong>.
-              </p>
-
-              <div class="hero-cta-row">
-                <a href="#apply" class="btn-primary btn-hero-apply">Apply to MVP &rarr;</a>
-                <a href="#section-founders" class="btn-secondary">How it works</a>
-              </div>
-
-              <div class="hero-secondary-row">
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fmambaventureprogram.web.app%2F" target="_blank" rel="noopener noreferrer" class="btn-linkedin">
-                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                  <span>Share on LinkedIn</span>
-                </a>
-              </div>
-            </div>
-
-            <!-- Lovable-Style Floating Mascot Card -->
-            <div class="hero-mascot-card" title="Mamba • Cohort 1 Mascot">
-              <div class="mascot-badge-pill">
-                <span class="mascot-live-dot"></span> JAN 2027 INTAKE
-              </div>
-              <div class="mascot-img-wrap">
-                <img src="assets/stickers/sticker_mascot.jpg" class="hero-mascot-sticker" alt="Mamba The Founder Snake Mascot">
-              </div>
-              <div class="mascot-meta">
-                <strong>Mamba The Builder</strong>
-                <span>0-to-1 Vibe Engineer</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Who runs the program (from the 2026 deck: Our Ecosystem) -->
-        <section class="ecosystem-strip" aria-labelledby="ecosystem-title">
-          <h2 class="ecosystem-title" id="ecosystem-title">Run by Cybrdeck &times; Mamba Partners, with SG Innovation</h2>
-          <div class="ecosystem-grid">
-            <div class="ecosystem-card">
-              <img src="assets/brand/cybrdeck-logo.png" alt="Cybrdeck" class="eco-logo eco-logo--cybrdeck">
-              <span class="eco-role">Program lead</span>
-              <p>Turn your idea or prototype into a credible, testable MVP.</p>
-            </div>
-            <div class="ecosystem-card">
-              <span class="eco-logo eco-logo--mamba"><img src="assets/brand/mamba-emblem.svg" alt=""><span><strong>MAMBA</strong><small>PARTNERS</small></span></span>
-              <span class="eco-role">Program lead</span>
-              <p>Test your business model, validate demand and build a path to revenue.</p>
-            </div>
-            <div class="ecosystem-card">
-              <img src="assets/brand/sg-innovation.png" alt="SG Innovation, powered by Dtmatrix and Keppel" class="eco-logo eco-logo--sgi">
-              <span class="eco-role">Ecosystem partner</span>
-              <p>Navigate grants, connect with partners and explore routes to market.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- Audience tabs: one audience visible at a time (js/router.js) -->
-        <div class="audience-nav-strip" role="tablist" aria-label="Who is this for">
-          <a href="#section-founders" class="audience-chip active"><img src="assets/stickers/sticker_rocket.jpg" class="chip-sticker" alt="">Founders</a>
-          <a href="#section-schools" class="audience-chip"><img src="assets/stickers/sticker_school.jpg" class="chip-sticker" alt="">Schools</a>
-          <a href="#section-enterprise" class="audience-chip"><img src="assets/stickers/sticker_enterprise.jpg" class="chip-sticker" alt="">Enterprise</a>
-          <a href="#section-careers" class="audience-chip"><img src="assets/stickers/sticker_operator.jpg" class="chip-sticker" alt="">Experienced Founders</a>
-          <a href="#section-mentors" class="audience-chip"><img src="assets/stickers/sticker_handshake.jpg" class="chip-sticker" alt="">Partners</a>
-          <a href="#section-meet-mentors" class="audience-chip"><img src="assets/stickers/sticker_target.jpg" class="chip-sticker" alt="">Meet the Mentors</a>
-        </div>
-
-        <!-- SECTION 1: Founders — how MVP works (from the 2026 deck) -->
-        <section class="audience-section audience-panel founders-panel" id="section-founders">
-          <div class="section-heading-box">
-            <h2 class="section-title">How MVP works</h2>
-            <p class="section-desc">A stepping stone, not a competing accelerator: build, test and gather evidence before your next accelerator or funding application.</p>
-          </div>
-
-          <ol class="journey-steps">
-            <li class="journey-step">
-              <span class="journey-num">01</span>
-              <img src="assets/stickers/sticker_rocket.jpg" class="rule-sticker" alt="">
-              <h3>Share your idea</h3>
-              <p>Apply with the problem you know first-hand. An industry insight, an idea or an early prototype is enough.</p>
-              <a href="#apply" class="btn-primary">Apply to MVP</a>
+      <div class="journey-track" id="journey-track">
+        <div class="journey-sticky">
+          <ol class="journey-grid">
+            <li class="jstep" tabindex="0" data-step="0">
+              <p class="mono step">Step 01 · Fuel up</p>
+              <h3 class="display h3">Share your idea</h3>
+              <div class="scene" data-scene="0" aria-hidden="true"></div>
+              <p class="jstep-copy">Apply with the problem you know first-hand. An industry insight, an idea or an early prototype is enough.</p>
             </li>
-            <li class="journey-step">
-              <span class="journey-num">02</span>
-              <img src="assets/stickers/sticker_handshake.jpg" class="rule-sticker" alt="">
-              <h3>Discuss your stage</h3>
-              <p>We read every application and talk with shortlisted applicants about where the venture really is.</p>
+            <li class="jstep" tabindex="0" data-step="1">
+              <p class="mono step">Step 02 · Countdown</p>
+              <h3 class="display h3">Discuss your stage</h3>
+              <div class="scene" data-scene="1" aria-hidden="true"></div>
+              <p class="jstep-copy">We read every application and talk with shortlisted applicants about where the venture really is.</p>
             </li>
-            <li class="journey-step">
-              <span class="journey-num">03</span>
-              <img src="assets/stickers/sticker_target.jpg" class="rule-sticker" alt="">
-              <h3>Explore the right track</h3>
-              <p>Join the intake that fits, and get pointed to the Singapore support rails relevant to your venture.</p>
+            <li class="jstep" tabindex="0" data-step="2">
+              <p class="mono step">Step 03 · Liftoff</p>
+              <h3 class="display h3">To the moon</h3>
+              <div class="scene" data-scene="2" aria-hidden="true"></div>
+              <p class="jstep-copy">Launch something that works and sells, with mentors and the Singapore support rails behind you.</p>
             </li>
           </ol>
-
-          <div class="intake-format">
-            <h3 class="intake-heading">January 2027 intake format</h3>
-            <div class="intake-grid">
-              <div class="intake-card">
-                <span class="intake-tag">1-month accelerated sprint</span>
-                <p>Test the problem, define your MVP and decide what to build next.</p>
-              </div>
-              <div class="intake-card">
-                <span class="intake-tag">3-month full venture build</span>
-                <p>Develop the MVP, test with users and work toward commercial readiness.</p>
-              </div>
-              <div class="intake-card intake-card--shared">
-                <span class="intake-tag">Shared support</span>
-                <p>Workspace, engineering guidance, commercial support, investor sessions and ecosystem connections.</p>
-              </div>
-            </div>
-            <p class="intake-footnote">Test early. Learn quickly. Change direction when the evidence says so.</p>
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             SECTION 2: Schools & Universities (Campus Venture Engineering)
-             ==================================================================== -->
-        <section class="audience-section audience-panel" id="section-schools" hidden>
-          <div class="section-badge-row">
-            <span class="audience-badge purple">ACADEMIA & VENTURE PEDAGOGY</span>
-            <span class="audience-tag">Singapore & Regional Campuses</span>
-          </div>
-          <div class="section-heading-with-sticker">
-            <div class="section-heading-box" style="margin-bottom: 0;">
-              <h2 class="section-title">We Go To Schools To Teach Venture Engineering</h2>
-              <p class="section-desc">
-                Bridging academic computer science with real-world venture monetization. We conduct hands-on venture masterclasses, AWS Generative AI labs, and hackathon incubation tracks across NUS, NTU, SMU, polytechnics, and regional universities.
-              </p>
-            </div>
-            <img src="assets/stickers/sticker_school.jpg" class="section-hero-sticker" alt="Schools & Universities">
-          </div>
-
-          <div class="audience-cards-grid">
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_school.jpg" class="card-sticker" alt="Campus Masterclasses"></div>
-              <h3>Campus Guest Masterclasses</h3>
-              <p>Practical, code-driven 2-hour workshops teaching students how to move beyond theoretical models into fast, shippable enterprise AI prototypes with real customer telemetry.</p>
-              <ul class="audience-feature-list">
-                <li>Hands-on AWS Bedrock & Claude streaming architectures</li>
-                <li>0-to-1 MVP scoping: ruthlessly trimming low-signal features</li>
-                <li>Live demonstration of prompt orchestration & tool routing</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_trophy.jpg" class="card-sticker" alt="Hackathon Incubation Tracks"></div>
-              <h3>Hackathon Incubation Tracks</h3>
-              <p>We co-design enterprise problem statements with university student clubs, mentor finalist teams, and award direct fast-track admission into Mamba MVP for winning builds.</p>
-              <ul class="audience-feature-list">
-                <li>Sponsored prize pools & dedicated cloud credit grants</li>
-                <li>Direct interview bypass for podium hackathon winners</li>
-                <li>Dedicated venture studio mentoring & office hours</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_termsheet.jpg" class="card-sticker" alt="Venture Engineering Syllabus"></div>
-              <h3>Venture Engineering Syllabus</h3>
-              <p>Open-source curriculum modules teaching empirical customer discovery (<em>The Mom Test</em>), Paul Graham's Default Alive math, and standard post-money SAFE cap table models.</p>
-              <ul class="audience-feature-list">
-                <li>Real-world case studies of pre-seed failure modes</li>
-                <li>Guest lectures by General Partners and EIRs</li>
-                <li>Fast-track review for student founders applying to Mamba MVP</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="audience-action-box">
-            <div class="action-text">
-              <strong>Are you a faculty member, professor, or student club lead?</strong>
-              <span>Partner with Mamba MVP to bring real venture engineering to your campus.</span>
-            </div>
-            <button type="button" class="btn-primary audience-inquire-btn" data-track="Schools & Academia" data-title="Request University Masterclass or Hackathon Partnership">
-              <img src="assets/stickers/sticker_school.jpg" class="chip-sticker" alt="">
-              <span>Inquire for University Workshop</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             SECTION 3: Enterprise Intensives & Executive Bootcamps
-             ==================================================================== -->
-        <section class="audience-section audience-panel" id="section-enterprise" hidden>
-          <div class="section-badge-row">
-            <span class="audience-badge cyan">CORPORATE VENTURE SPRINT</span>
-            <span class="audience-tag">48-Hour Rapid POC Rails</span>
-          </div>
-          <div class="section-heading-with-sticker">
-            <div class="section-heading-box" style="margin-bottom: 0;">
-              <h2 class="section-title">Enterprise Intensives & Executive AI Bootcamps</h2>
-              <p class="section-desc">
-                From Day-0 vibe to enterprise AI systems that monetize. We lead corporate innovation units and enterprise engineering teams through compressed 48-hour sprints to build and test high-ROI AI workflows on enterprise data.
-              </p>
-            </div>
-            <img src="assets/stickers/sticker_enterprise.jpg" class="section-hero-sticker" alt="Enterprise Intensives">
-          </div>
-
-          <div class="audience-cards-grid">
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_lightning.jpg" class="card-sticker" alt="48-Hour AI Workflow Sprints"></div>
-              <h3>48-Hour AI Workflow Sprints</h3>
-              <p>Stop talking in multi-month committee meetings. We co-build a working, production-grade agentic workflow tailored to your internal operations in 48 hours.</p>
-              <ul class="audience-feature-list">
-                <li>Automated invoice reconciliation, compliance, and OCR</li>
-                <li>Secure local/VPC execution with strict zero-data-retention</li>
-                <li>Working proof-of-concept ready for internal stakeholder demo</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_agent.jpg" class="card-sticker" alt="Venture Client Acceleration"></div>
-              <h3>Venture Client Acceleration</h3>
-              <p>Accelerate your procurement pipeline. We match specific enterprise operational bottlenecks directly with pre-vetted Mamba MVP cohort startups for paid, rapid pilot validation.</p>
-              <ul class="audience-feature-list">
-                <li>Turnkey legal pilots with 14-day contracting turnaround</li>
-                <li>Derisked technology evaluation backed by studio engineers</li>
-                <li>Direct equity co-investment option for corporate venture arms</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_shield.jpg" class="card-sticker" alt="Executive AI Risk & Governance"></div>
-              <h3>Executive AI Risk & Governance</h3>
-              <p>Intensive executive briefings for CIOs, CISOs, and business unit leaders on LLM hallucination containment, compliance moats, and avoiding platform 'sherlocking' traps.</p>
-              <ul class="audience-feature-list">
-                <li>Data sovereignty & proprietary IP assignment frameworks</li>
-                <li>Vendor diligence checklists: differentiating real tech from wrappers</li>
-                <li>Calculating true unit economics & inference gross margins</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="audience-action-box">
-            <div class="action-text">
-              <strong>Looking to accelerate corporate AI deployment or pilot new solutions?</strong>
-              <span>Schedule a dedicated venture briefing with our enterprise studio partners.</span>
-            </div>
-            <button type="button" class="btn-primary audience-inquire-btn" data-track="Enterprise Intensives" data-title="Schedule Enterprise Intensive or Corporate Sprint">
-              <img src="assets/stickers/sticker_enterprise.jpg" class="chip-sticker" alt="">
-              <span>Book Enterprise Intensive Briefing</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             SECTION 4: Experienced Founders & Commercial Operators
-             ==================================================================== -->
-        <section class="audience-section audience-panel" id="section-careers" hidden>
-          <div class="section-badge-row">
-            <span class="audience-badge emerald">EXPERIENCED FOUNDERS & OPERATORS</span>
-            <span class="audience-tag">Commercial EIRs • Deal Origination • Founding Equity</span>
-          </div>
-          <div class="section-heading-with-sticker">
-            <div class="section-heading-box" style="margin-bottom: 0;">
-              <h2 class="section-title">Are You an Experienced Founder or Commercial Operator?</h2>
-              <p class="section-desc">
-                Most pre-seed software fails not from weak engineering, but from a lack of senior distribution instincts. If you have founded a company, navigated procurement, or closed high-ticket B2B deals before, partner with Mamba MVP. We provide the full-stack engineering rails, pre-vetted AI software products, and pre-seed capital—you drive customer discovery, unlock enterprise accounts, and capture direct deal-by-deal cash origination and founding equity upside.
-              </p>
-            </div>
-            <img src="assets/stickers/sticker_operator.jpg" class="section-hero-sticker" alt="Commercial Operators & Founders">
-          </div>
-
-          <div class="audience-cards-grid">
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_operator.jpg" class="card-sticker" alt="Commercial EIR & Venture Builder"></div>
-              <h3>Commercial EIR & Venture Builder</h3>
-              <p>Partner with early-stage technical founders to architect enterprise go-to-market wedges, customer discovery, and pilot agreements. Steer commercial execution without having to manage engineering sprints from scratch.</p>
-              <ul class="audience-feature-list">
-                <li>Shape commercial product-market fit and enterprise pricing</li>
-                <li>Direct strategic collaboration with Venture Partner James Sun</li>
-                <li>Full engineering and rapid prototyping backed by studio developers</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_termsheet.jpg" class="card-sticker" alt="Deal Origination & Revenue Share"></div>
-              <h3>Deal Origination & Revenue Share</h3>
-              <p>Monetize your industry relationships and commercial acumen. Earn 15% to 25% direct cash origination on closed enterprise AI software contracts ($20k to $150k+ ACV), wired upon customer milestone settlement.</p>
-              <ul class="audience-feature-list">
-                <li>15% to 25% direct cash origination on closed annual enterprise ACV</li>
-                <li>Immediate, transparent milestone payout rails via corporate accounts</li>
-                <li>Carry allocations and advisory equity in breakout studio companies</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_rocket.jpg" class="card-sticker" alt="Commercial Co-Founder Runway"></div>
-              <h3>Commercial Co-Founder Runway</h3>
-              <p>Test-drive traction and team chemistry during our studio sprints before taking the full-time leap. Step in as Founding Commercial Co-Founder, Chief Commercial Officer (CCO), or CEO of breakout spin-outs.</p>
-              <ul class="audience-feature-list">
-                <li>Substantial founding equity grants (5%–20%) with institutional vesting</li>
-                <li>Exclusive co-investment allocation on studio terms alongside GPs</li>
-                <li>Direct pathway to Series Seed institutional syndicates at Demo Day</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="audience-action-box">
-            <div class="action-text">
-              <strong>Are you an experienced founder, commercial executive, or B2B operator?</strong>
-              <span>Explore Commercial EIR, Growth Partner, and Co-Founder engagements with our studio team.</span>
-            </div>
-            <button type="button" class="btn-primary audience-inquire-btn" data-track="Commercial EIR & Experienced Founders" data-title="Join as Commercial EIR, Growth Partner, or Co-Founder">
-              <img src="assets/stickers/sticker_operator.jpg" class="chip-sticker" alt="">
-              <span>Connect as Commercial Partner / EIR</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             SECTION 5: Mentors & Organisational System Partners
-             ==================================================================== -->
-        <section class="audience-section audience-panel" id="section-mentors" hidden>
-          <div class="section-badge-row">
-            <span class="audience-badge gold">VENTURE SYNDICATE & ECOSYSTEM</span>
-            <span class="audience-tag">Singapore & Global Institutional Hub</span>
-          </div>
-          <div class="section-heading-with-sticker">
-            <div class="section-heading-box" style="margin-bottom: 0;">
-              <h2 class="section-title">Mentors, Angels & Organisational System Partners</h2>
-              <p class="section-desc">
-                Building a venture ecosystem requires an orchestrated coalition of capital, domain expertise, banking rails, and corporate distribution. We partner with industry leaders to power Cohort 1.
-              </p>
-            </div>
-            <img src="assets/stickers/sticker_handshake.jpg" class="section-hero-sticker" alt="Venture Syndicate & Partners">
-          </div>
-
-          <div class="audience-cards-grid">
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_handshake.jpg" class="card-sticker" alt="Angel Syndicate & Co-Investors"></div>
-              <h3>Angel Syndicate & Co-Investors</h3>
-              <p>Co-invest alongside Mamba MVP in qualified cohort graduates with standardized Post-Money SAFEs, transparent diagnostic evaluation scores, and direct follow-on rights.</p>
-              <ul class="audience-feature-list">
-                <li>Pre-vetted dealflow evaluated through the 50-Question Diagnostic</li>
-                <li>Clean cap table hygiene and zero messy convertible note stacking</li>
-                <li>Private invitations to Cohort 1 Institutional Demo Day</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_target.jpg" class="card-sticker" alt="Domain Mentors & Advisors"></div>
-              <h3>Domain Mentors & Advisors</h3>
-              <p>Senior engineering leads, former enterprise founders, and commercial experts who provide tactical 1-on-1 guidance to our founders during the program.</p>
-              <ul class="audience-feature-list">
-                <li>Curated matching based on founder technical & market bottlenecks</li>
-                <li>Advisor equity pool grants (0.25% - 1.0%) with standard vesting</li>
-                <li>Bi-weekly sparring sessions with venture partner James Sun</li>
-              </ul>
-            </div>
-
-            <div class="audience-card">
-              <div class="card-sticker-box"><img src="assets/stickers/sticker_enterprise.jpg" class="card-sticker" alt="Organisational System Partners"></div>
-              <h3>Organisational System Partners</h3>
-              <p>Infrastructure providers powering our turnkey venture stack—from international legal structuring and SME banking rails to cloud credits and compliance.</p>
-              <ul class="audience-feature-list">
-                <li>Turnkey legal packs for Singapore and Delaware flips</li>
-                <li>Pre-approved corporate banking and credit card rails</li>
-                <li>Partner-tier cloud compute & foundation model credit rails (AWS Bedrock, Google Cloud, and OpenAI)</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="audience-action-box">
-            <div class="action-text">
-              <strong>Interested in mentoring, co-investing, or offering ecosystem rails?</strong>
-              <span>Connect directly with our Venture Architecture investment team.</span>
-            </div>
-            <button type="button" class="btn-primary audience-inquire-btn" data-track="Mentors & Ecosystem Partners" data-title="Join Mentor Network or Ecosystem Partnership">
-              <img src="assets/stickers/sticker_handshake.jpg" class="chip-sticker" alt="">
-              <span>Join Ecosystem Syndicate</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- ====================================================================
-             SECTION 6: Meet the Mentors — cards render from js/mentors.js
-             ==================================================================== -->
-        <section class="audience-section audience-panel" id="section-meet-mentors" hidden>
-          <div class="section-badge-row">
-            <span class="audience-badge purple">MEET THE MENTORS</span>
-            <span class="audience-tag">Operators • Founders • Investors</span>
-          </div>
-          <div class="section-heading-with-sticker">
-            <div class="section-heading-box" style="margin-bottom: 0;">
-              <h2 class="section-title">Meet the Mentors</h2>
-              <p class="section-desc">
-                The people founders work with during MVP. Mentors are matched to each venture's bottleneck,
-                whether that is the market, the product or the first customer, and meet the cohort through the program.
-              </p>
-            </div>
-            <img src="assets/stickers/sticker_target.jpg" class="section-hero-sticker" alt="Meet the Mentors">
-          </div>
-
-          <div class="mentor-grid" id="mentor-grid"></div>
-
-          <div class="audience-action-box">
-            <div class="action-text">
-              <strong>Want to mentor the next cohort?</strong>
-              <span>Tell us what you have built or backed, and where you can help founders most.</span>
-            </div>
-            <button type="button" class="btn-primary audience-inquire-btn" data-track="Mentor" data-title="Become a Mamba MVP Mentor">
-              <img src="assets/stickers/sticker_target.jpg" class="chip-sticker" alt="">
-              <span>Become a Mentor</span>
-            </button>
-          </div>
-        </section>
-      </section>
-
-      <!-- ====================================================================
-           SCREEN: Apply to Join — Mamba Venture Program application
-           Same questionnaire and scoring as cybrdeck.com/venture-program/register
-           (catalogue generated into js/application-questions.js by functions/src/build-form.ts;
-           form logic in js/apply.js; scoring, dossier PDF and email in functions/src/index.ts)
-           ==================================================================== -->
-      <section class="screen" id="screen-apply" aria-labelledby="apply-title">
-        <div class="apply-shell">
-          <a href="#" class="apply-back">&larr; Back to the program</a>
-
-          <!-- Same editorial banner as the landing hero (.deck-hero-banner). -->
-          <header class="apply-intro deck-hero-banner">
-            <div class="deck-pillars-row">
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">About 20 minutes</span>
-                <p class="pillar-text">Up to 10 short steps. Founders answer a few more about the venture.</p>
-              </div>
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">Saves as you go</span>
-                <p class="pillar-text">Your answers stay on this device, so you can stop and come back.</p>
-              </div>
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">Evidence beats polish</span>
-                <p class="pillar-text">Answer the way you would in the room with our partners: specific, honest, your own words.</p>
-              </div>
-            </div>
-            <div class="deck-headline-group">
-              <h1 class="deck-huge-title" id="apply-title">Apply to MVP</h1>
-              <div class="deck-sub-tagline">January 2027 cohort &middot; 1-month or 3-month track</div>
-            </div>
-          </header>
-
-          <div class="apply-card" id="apply-card">
-            <div class="apply-progress" aria-hidden="true">
-              <div class="apply-progress-bar" id="apply-progress-bar"></div>
-              <div class="apply-progress-meta">
-                <span id="apply-step-count">Step 1</span>
-                <span id="apply-step-name"></span>
-              </div>
-            </div>
-
-            <form id="apply-form" novalidate>
-              <div id="apply-step-body" aria-live="polite"></div>
-
-              <div class="apply-error-banner" id="apply-error-banner" role="alert" hidden></div>
-
-              <div class="apply-nav">
-                <button type="button" class="btn-secondary" id="apply-prev">Back</button>
-                <button type="submit" class="btn-primary" id="apply-next">Continue</button>
-              </div>
-            </form>
-          </div>
-
-          <div class="apply-card apply-done" id="apply-done" hidden tabindex="-1">
-            <img src="assets/stickers/sticker_rocket.jpg" alt="" class="apply-done-sticker">
-            <h2>Your application is in.</h2>
-            <p id="apply-done-copy"></p>
-            <ul class="apply-done-next">
-              <li><strong>A first read takes days, not weeks.</strong> If it looks like a match, we email you to arrange a conversation.</li>
-              <li><strong>Next, we discuss your stage.</strong> Shortlisted applicants meet the partners to find the right track.</li>
-            </ul>
-            <div class="apply-done-actions">
-              <a href="#" class="btn-secondary">Back to the program</a>
-            </div>
-          </div>
+          <div class="journey-rail" aria-hidden="true"><span></span><span></span><span></span></div>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
-  </div>
+    <!-- 4. Facts band: real program facts only, no invented metrics -->
+    <section class="facts" aria-label="Program facts">
+      <div class="fact reveal"><p class="mono label">Sprint</p><p class="fact-num display">1</p><p class="fact-unit">month to test the problem and define your MVP</p></div>
+      <div class="fact reveal"><p class="mono label">Venture build</p><p class="fact-num display">3</p><p class="fact-unit">months to build, test with users and get commercially ready</p></div>
+      <div class="fact reveal"><p class="mono label">Next cohort</p><p class="fact-num display">26.01</p><p class="fact-unit">2027, both tracks start together</p></div>
+      <div class="fact reveal" data-info="fact"><p class="mono label">Info session</p><p class="fact-num display" data-info="date">16.10</p><p class="fact-unit" data-info="detail">2pm at Aspire</p><a class="pill pill--black fact-rsvp" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link"><span class="pill-shine" aria-hidden="true"></span>RSVP on Luma <svg class="i"><use href="#i-arrow"/></svg></a></div>
+    </section>
 
-  <!-- Audience & Ecosystem Partner Inquiry Modal -->
-  <div class="modal-overlay" id="inquiry-modal" data-modal>
-    <div class="modal-card" style="max-width: 580px;" role="dialog" aria-modal="true" aria-labelledby="inquiry-modal-title" aria-describedby="inquiry-modal-sub">
-      <div class="modal-header">
-        <div>
-          <h3 id="inquiry-modal-title">Partner Inquiry</h3>
-          <p id="inquiry-modal-sub" style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Connect with Mamba MVP Venture Studio (Singapore)</p>
-        </div>
-        <button type="button" class="icon-btn" data-close-modal aria-label="Close" style="border-radius: 50%;">✕</button>
+    <!-- 5. Audiences: black stage, liquid glass segmented control, new icons -->
+    <section class="audiences" id="audiences" aria-labelledby="aud-title">
+      <div class="aud-glow" aria-hidden="true"></div>
+      <div class="section-head section-head--dark">
+        <p class="mono label">Who it's for</p>
+        <h2 class="display h2" id="aud-title">Find your way in</h2>
       </div>
 
-      <form id="inquiry-form" style="display: flex; flex-direction: column; gap: 14px;">
-        <div class="form-group">
-          <label class="form-label" for="inq-track">Program Track / Engagement Area</label>
-          <input type="text" class="form-input" id="inq-track" readonly style="background: #f8fafc; font-weight: 700; color: var(--accent-orange-text);">
+      <div class="seg-wrap">
+        <div class="seg glass" role="tablist" aria-label="Audiences" id="seg">
+          <span class="seg-indicator" aria-hidden="true"></span>
+          <button role="tab" aria-selected="true" aria-controls="p-founders" id="t-founders"><svg class="i"><use href="#i-founders"/></svg>Founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-schools" id="t-schools" tabindex="-1"><svg class="i"><use href="#i-schools"/></svg>Schools</button>
+          <button role="tab" aria-selected="false" aria-controls="p-enterprise" id="t-enterprise" tabindex="-1"><svg class="i"><use href="#i-enterprise"/></svg>Enterprise</button>
+          <button role="tab" aria-selected="false" aria-controls="p-operators" id="t-operators" tabindex="-1"><svg class="i"><use href="#i-operators"/></svg>Experienced founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-partners" id="t-partners" tabindex="-1"><svg class="i"><use href="#i-partners"/></svg>Partners</button>
+          <button role="tab" aria-selected="false" aria-controls="p-mentors" id="t-mentors" tabindex="-1"><svg class="i"><use href="#i-mentors"/></svg>Meet the mentors</button>
         </div>
+      </div>
 
-        <div class="form-grid" style="margin-bottom: 0;">
-          <div class="form-group">
-            <label class="form-label" for="inq-name">Your Full Name *</label>
-            <input type="text" class="form-input" id="inq-name" required placeholder="Alex Tan">
+      <div class="panels">
+        <article class="panel" role="tabpanel" id="p-founders" aria-labelledby="t-founders">
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-founders"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Founders</h3>
+              <p class="panel-desc">Working professionals, SME owners and aspiring founders with industry insight, an idea or an early prototype.</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="inq-email">Work / Academic Email *</label>
-            <input type="email" class="form-input" id="inq-email" required placeholder="alex@organization.com">
+          <div class="panel-cols">
+            <div><p class="mono step">1-month sprint</p><h4>Test the problem</h4><p>Test the problem, define your MVP and decide what to build next.</p></div>
+            <div><p class="mono step">3-month build</p><h4>Build the MVP</h4><p>Develop the MVP, test with users and work toward commercial readiness.</p></div>
+            <div><p class="mono step">Both tracks</p><h4>Shared support</h4><p>Workspace, engineering guidance, commercial support, investor sessions and ecosystem connections.</p></div>
           </div>
-        </div>
+          <a class="pill pill--orange" href="apply.html#apply">Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
 
-        <div class="form-group">
-          <label class="form-label" for="inq-org">Organization / Institution / University *</label>
-          <input type="text" class="form-input" id="inq-org" required placeholder="e.g. NUS / DBS / Grab / Enterprise Singapore">
-        </div>
+        <article class="panel" role="tabpanel" id="p-schools" aria-labelledby="t-schools" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-schools"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Schools</h3>
+              <p class="panel-desc">Hands-on venture masterclasses, AWS generative AI labs and hackathon incubation tracks across NUS, NTU, SMU, polytechnics and regional universities.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Campus guest masterclasses</h4><p>Practical, code-driven 2-hour workshops on moving from theoretical models to fast, shippable AI prototypes.</p></div>
+            <div><h4>Hackathon incubation tracks</h4><p>Co-designed problem statements, mentored finalists, and fast-track admission into MVP for winning builds.</p></div>
+            <div><h4>Venture engineering syllabus</h4><p>Modules on customer discovery (The Mom Test), Default Alive math and post-money SAFE cap tables.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Inquire for a university workshop <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
 
-        <div class="form-group">
-          <label class="form-label" for="inq-msg">Brief Message / Proposal</label>
-          <textarea class="form-input" id="inq-msg" rows="3" placeholder="Tell us about your campus workshop date, enterprise scope, sales track record, or syndicate interest..."></textarea>
-        </div>
+        <article class="panel" role="tabpanel" id="p-enterprise" aria-labelledby="t-enterprise" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-enterprise"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Enterprise</h3>
+              <p class="panel-desc">Compressed sprints that take corporate innovation units and engineering teams from idea to a tested AI workflow on their own data.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>48-hour AI workflow sprints</h4><p>Co-build a working agentic workflow tailored to your internal operations in 48 hours.</p></div>
+            <div><h4>Venture client acceleration</h4><p>Match your operational bottlenecks with MVP cohort startups for paid, rapid pilots.</p></div>
+            <div><h4>Executive AI risk & governance</h4><p>Briefings for CIOs, CISOs and business leaders on containment, compliance and platform risk.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Book an enterprise briefing <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
 
-        <div class="modal-actions" style="margin-top: 8px;">
-          <button type="button" class="btn-secondary" data-close-modal>Cancel</button>
-          <button type="submit" class="btn-primary">
-            <span>Submit Proposal ➔</span>
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+        <article class="panel" role="tabpanel" id="p-operators" aria-labelledby="t-operators" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-operators"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Experienced founders</h3>
+              <p class="panel-desc">Founded before, navigated procurement or closed B2B deals? Bring the distribution instincts; we bring engineering rails and early-stage ventures.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Commercial EIR</h4><p>Shape go-to-market, discovery and pilots with technical founders, without running engineering sprints yourself.</p></div>
+            <div><h4>Deal origination</h4><p>Earn origination on enterprise contracts you open, paid on customer milestones.</p></div>
+            <div><h4>Co-founder runway</h4><p>Test traction and team chemistry in studio sprints before stepping in as a commercial co-founder.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Connect as a commercial partner <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toast-container"></div>
+        <article class="panel" role="tabpanel" id="p-partners" aria-labelledby="t-partners" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-partners"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Partners</h3>
+              <p class="panel-desc">Capital, domain expertise, banking rails and corporate distribution: the coalition that powers each cohort.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><h4>Angels & co-investors</h4><p>Co-invest in qualified cohort graduates on standard post-money SAFEs, with follow-on rights.</p></div>
+            <div><h4>Domain advisors</h4><p>Engineering leads, former founders and commercial experts giving founders 1-on-1 guidance.</p></div>
+            <div><h4>System partners</h4><p>Legal structuring, SME banking, cloud credits and compliance for the venture stack.</p></div>
+          </div>
+          <a class="pill pill--orange" href="#">Join the ecosystem <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
 
-  <!-- Scripts -->
-  <script src="js/sound.js"></script>
-  <script src="js/confetti.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/router.js"></script>
-  <script src="js/live-banner.js"></script>
-  <script src="js/mentors.js"></script>
-  <script src="js/application-questions.js"></script>
-  <script src="js/firebase-config.js"></script>
-  <script type="module" src="js/apply.js"></script>
+        <article class="panel" role="tabpanel" id="p-mentors" aria-labelledby="t-mentors" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-mentors"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Meet the mentors</h3>
+              <p class="panel-desc">Matched to each venture's bottleneck: the market, the product or the first customer.</p>
+            </div>
+          </div>
+          <a class="pill pill--orange" href="#mentors">See the mentors <svg class="i"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. Mentors -->
+    <section class="mentors" id="mentors" aria-labelledby="mentors-title">
+      <div class="section-head">
+        <p class="mono label">Meet the mentors</p>
+        <h2 class="display h2" id="mentors-title">You won't build alone</h2>
+      </div>
+      <div class="mentor-row">
+        <figure class="mentor reveal">
+          <img src="assets/mentors/james-sun.jpg" alt="James Sun" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">James Sun</p>
+            <p class="mono mentor-role">Venture Partner, Mamba Partners</p>
+            <p class="mentor-focus">Go-to-market · Marketing · Sales</p>
+          </figcaption>
+        </figure>
+        <figure class="mentor reveal">
+          <img src="assets/mentors/benjamin-lim.jpg" alt="Benjamin Lim" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">Benjamin Lim</p>
+            <p class="mono mentor-role">Co-Founder, Cybrdeck</p>
+            <p class="mentor-focus">Engineering · Product builds · Innovation</p>
+          </figcaption>
+        </figure>
+        <figure class="mentor reveal">
+          <img src="assets/mentors/gwendalynn-lim.jpg" alt="Gwendalynn Lim" width="320" height="320" loading="lazy">
+          <figcaption>
+            <p class="mentor-name">Gwendalynn Lim</p>
+            <p class="mono mentor-role">Co-Founder, Cybrdeck</p>
+            <p class="mentor-focus">Communications · Social media · Innovation</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 7. Partners: logos in a hairline grid -->
+    <section class="partners" id="partners" aria-label="Run by">
+      <p class="mono label">Run by</p>
+      <div class="partner-grid">
+        <div class="reveal"><img src="assets/brand/cybrdeck-logo.png" alt="Cybrdeck" width="886" height="197" class="logo-cybrdeck"><p class="mono step">Program lead</p><p>Turn your idea or prototype into a credible, testable MVP.</p></div>
+        <div class="reveal"><span class="logo-mamba"><img src="assets/brand/mamba-emblem.svg" alt="" width="36" height="36"><b>Mamba</b> Partners</span><p class="mono step">Program lead</p><p>Test your business model, validate demand and build a path to revenue.</p></div>
+        <div class="reveal"><img src="assets/brand/sg-innovation.png" alt="SG Innovation" width="469" height="99" class="logo-sgi"><p class="mono step">Ecosystem partner</p><p>Navigate grants, connect with partners and explore routes to market.</p></div>
+      </div>
+    </section>
+
+    <!-- 8. Closing CTA -->
+    <section class="closer" id="apply" aria-labelledby="closer-title">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <p class="mono hero-kicker">January 2027 cohort · Applications open</p>
+      <h2 class="display closer-title" id="closer-title">Apply to MVP</h2>
+      <div class="hero-ctas">
+        <a class="pill pill--black pill--lg" href="apply.html#apply"><span class="pill-shine" aria-hidden="true"></span>Start your application <svg class="i"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--glass pill--lg glass" href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">RSVP for the info session</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="mono">© 2026 Mamba Venture Program · Cybrdeck × Mamba Partners × SG Innovation</p>
+    <p class="mono foot-note">Mockup. Not the live site.</p>
+  </footer>
+
+  <script src="mockup/mockup.js"></script>
+  <script src="mockup/scene.js"></script>
+  <script src="mockup/hero.js"></script>
+  <script src="mockup/ink.js"></script>
+  <script src="mockup/stones.js"></script>
+  <script src="mockup/info-session.js"></script>
+  <script src="mockup/rim.js"></script>
 </body>
 </html>
