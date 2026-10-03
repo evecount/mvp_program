@@ -6,6 +6,7 @@
 class SiteApp {
   constructor() {
     this.bindEvents();
+    this.bindModals();
   }
 
   bindEvents() {
@@ -15,7 +16,8 @@ class SiteApp {
       audioBtn.addEventListener("click", () => {
         const enabled = window.soundEngine.toggle();
         audioBtn.classList.toggle("active", enabled);
-        audioBtn.title = enabled ? "Sound FX Enabled" : "Sound FX Muted";
+        audioBtn.setAttribute("aria-pressed", String(enabled));
+        audioBtn.title = enabled ? "Sound effects on" : "Sound effects off";
         this.showToast(enabled ? "Sound effects enabled" : "Sound effects muted");
       });
     }
@@ -25,12 +27,11 @@ class SiteApp {
       btn.addEventListener("click", () => {
         const track = btn.dataset.track || "General Inquiry";
         const title = btn.dataset.title || "Partner Proposal";
-        const modal = document.getElementById("inquiry-modal");
         const trackInput = document.getElementById("inq-track");
         const titleEl = document.getElementById("inquiry-modal-title");
         if (trackInput) trackInput.value = track;
         if (titleEl) titleEl.textContent = title;
-        if (modal) modal.classList.add("active");
+        this.openModal("inquiry-modal", btn);
         window.soundEngine?.select();
       });
     });
@@ -77,9 +78,48 @@ class SiteApp {
     }, 2800);
   }
 
+  /* Modals: focus moves in on open and back to the opener on close; Escape,
+     the backdrop and any [data-close-modal] close it; Tab stays inside. The
+     exit plays its (shorter) animation before the overlay is hidden. */
+  openModal(modalId, opener) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    this.modalOpener = opener || document.activeElement;
+    modal.classList.remove("closing");
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+    const first = modal.querySelector("input:not([readonly]), textarea, select") || modal.querySelector("button");
+    requestAnimationFrame(() => first?.focus({ preventScroll: true }));
+  }
+
   closeModal(modalId) {
     const modal = document.getElementById(modalId);
-    if (modal) modal.classList.remove("active");
+    if (!modal || !modal.classList.contains("active") || modal.classList.contains("closing")) return;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const done = () => {
+      modal.classList.remove("active", "closing");
+      document.body.style.overflow = "";
+      this.modalOpener?.focus?.({ preventScroll: true });
+    };
+    if (reduced) return done();
+    modal.classList.add("closing");
+    setTimeout(done, 160);
+  }
+
+  bindModals() {
+    document.querySelectorAll("[data-modal]").forEach((modal) => {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal || e.target.closest("[data-close-modal]")) this.closeModal(modal.id);
+      });
+      modal.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") return this.closeModal(modal.id);
+        if (e.key !== "Tab") return;
+        const items = [...modal.querySelectorAll("button, input, textarea, select, a[href]")].filter((n) => !n.disabled && n.offsetParent);
+        const first = items[0], last = items[items.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      });
+    });
   }
 }
 
