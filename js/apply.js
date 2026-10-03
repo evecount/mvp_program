@@ -259,11 +259,35 @@ function hideBanner() {
 
 /* ── Navigation ────────────────────────────────────────────────────── */
 
+/* Motion: a step slides in from the side it came from, on the same expo
+   ease-out as the rest of the site; a blocked step gives a short iOS-style
+   shake. Both are skipped under reduced motion. */
+const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const EASE_OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+function slideIn(direction) {
+  if (reducedMotion() || !els.body.animate) return;
+  els.body.animate(
+    [{ opacity: 0, transform: `translateX(${direction * 28}px)` }, { opacity: 1, transform: "none" }],
+    { duration: 420, easing: EASE_OUT },
+  );
+}
+
+function shake(node) {
+  if (reducedMotion() || !node?.animate) return;
+  node.animate(
+    [0, -8, 7, -5, 3, 0].map((x) => ({ transform: `translateX(${x}px)` })),
+    { duration: 360, easing: "ease-out" },
+  );
+}
+
 function goTo(index) {
+  const direction = Math.sign(index - stepIndex) || 1;
   stepIndex = index;
   saveDraft();
   render();
-  els.card.scrollIntoView({ behavior: "smooth", block: "start" });
+  slideIn(direction);
+  els.card.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
   els.body.querySelector(".apply-step-title")?.focus({ preventScroll: true });
 }
 
@@ -297,6 +321,7 @@ els.form.addEventListener("submit", async (e) => {
   const invalid = validateStep(stepIndex);
   if (invalid) {
     showBanner("A few answers need a look before you continue.");
+    shake(els.banner);
     focusField(invalid);
     window.soundEngine?.warning?.();
     return;
