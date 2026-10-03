@@ -38,7 +38,7 @@
     cv.className = "rim-fx"; cv.setAttribute("aria-hidden", "true");
     btn.prepend(cv);
     const ctx = cv.getContext("2d");
-    let g = null, dpr = 1, raf = 0, visible = false, hover = 0, hoverTo = 0, ptr = null, t0 = performance.now() - bi * 1300, last = 0;
+    let g = null, dpr = 1, raf = 0, visible = false, hover = 0, hoverTo = 0, ptr = null, phase = 0.04, last = 0;
 
     const size = () => {
       const W = btn.offsetWidth, H = btn.offsetHeight;
@@ -55,7 +55,6 @@
 
     const paint = (now) => {
       size();
-      const phase = reduced ? 0.86 : ((now - t0) / 1000 / PERIOD) % 1;
       let u = phase;
       if (ptr && !reduced) {
         // Lean toward the pointer the short way round; ease the pull to nothing
@@ -107,15 +106,18 @@
     const frame = (now) => {
       raf = visible && !document.hidden ? requestAnimationFrame(frame) : 0;
       if (now - last < 15) return;
-      last = now;
+      const dt = last ? Math.min(now - last, 50) / 1000 : 0; last = now;
+      // Still at rest: the light only travels while the pointer is on it.
       hover += (hoverTo - hover) * 0.12;
+      phase = (phase + (dt / PERIOD) * hover) % 1;
       paint(now);
+      if (!hoverTo && hover < 0.01) { cancelAnimationFrame(raf); raf = 0; last = 0; }
     };
-    const start = () => { if (reduced) { paint(performance.now()); return; } if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
-    btn.addEventListener("pointerenter", () => (hoverTo = 1));
+    const start = () => { if (reduced || (!hoverTo && hover < 0.01)) { if (visible) paint(performance.now()); return; } if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
+    btn.addEventListener("pointerenter", () => { hoverTo = 1; start(); });
     btn.addEventListener("pointerleave", () => { hoverTo = 0; ptr = null; });
     btn.addEventListener("pointermove", (e) => { const r = btn.getBoundingClientRect(); ptr = { x: e.clientX - r.left, y: e.clientY - r.top }; });
-    btn.addEventListener("focus", () => (hoverTo = 1));
+    btn.addEventListener("focus", () => { hoverTo = 1; start(); });
     btn.addEventListener("blur", () => (hoverTo = 0));
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; start(); }).observe(btn);
     document.addEventListener("visibilitychange", start);
