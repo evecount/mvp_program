@@ -92,4 +92,25 @@
   };
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   update();
+
+  /* Header CTA: pill -> orb while reading down, orb -> pill on the way back.
+     Each fold gets one jelly squash (the shape overshoots, then settles). */
+  const cta = document.getElementById("nav-cta");
+  let lastY = scrollY;
+  const fold = (orb) => {
+    if (cta.classList.contains("is-orb") === orb) return;
+    cta.classList.toggle("is-orb", orb);
+    if (!reduced() && cta.animate && !cta.matches(":hover")) {
+      cta.animate(
+        [{ transform: "none" }, { transform: orb ? "scale(.9, 1.1)" : "scale(1.06, .92)", offset: 0.35 }, { transform: orb ? "scale(1.05, .96)" : "scale(.98, 1.03)", offset: 0.7 }, { transform: "none" }],
+        { duration: 380, easing: "ease-out" },
+      );
+    }
+  };
+  addEventListener("scroll", () => {
+    const y = scrollY, dy = y - lastY;
+    if (Math.abs(dy) < 6) return;
+    fold(y > innerHeight * 0.6 && dy > 0);
+    lastY = y;
+  }, { passive: true });
 })();
