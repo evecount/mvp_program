@@ -1,9 +1,12 @@
 /**
  * Application deadline countdown.
  *
- * Applications for each cohort close 72 hours before the cohort starts. The
- * cohort start is the one fact to edit when a new intake opens; the deadline
- * is derived. Every [data-countdown] element gets the remaining time:
+ * Applications for each cohort close 72 hours before it starts. The calendar
+ * comes from js/cohorts.js (generated from functions/src/mamba/program.ts,
+ * which the Firestore rules and the Cloud Function enforce too); the countdown
+ * follows the first cohort still open, so when one closes the next takes over.
+ * [data-cohort="start"] gets that cohort's start date. Every [data-countdown]
+ * element gets the remaining time:
  *   data-countdown="clock"  → 112d 04h 12m 08s (ticking each second)
  *   data-countdown="days"   → "in 112 days" / "in 5 hours" (updates each minute)
  *   data-countdown="date"   → "23 Jan 2027, 9am SGT"
@@ -11,9 +14,10 @@
  * Ticks only while the tab is visible.
  */
 (function () {
-  const COHORT = { n: 2, start: "2027-01-26T09:00:00+08:00" };
-  const CLOSE = Date.parse(COHORT.start) - 72 * 3600 * 1000;
-  window.MVP_DEADLINE = { cohort: COHORT, closesAt: CLOSE };
+  const OPEN = (window.MVP_COHORTS || []).find((c) => c.closesAt > Date.now()) || null;
+  const CLOSE = OPEN ? OPEN.closesAt : 0;
+  window.MVP_OPEN_COHORT = OPEN;
+  if (OPEN) document.querySelectorAll('[data-cohort="start"]').forEach((n) => (n.textContent = OPEN.startsLabel));
 
   const nodes = () => document.querySelectorAll("[data-countdown]");
   if (!nodes().length) return;
@@ -26,6 +30,7 @@
     const left = Math.max(0, CLOSE - Date.now());
     const s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
     const closed = left === 0;
+    if (closed && OPEN && !window.__mvpRolled) { window.__mvpRolled = true; location.reload(); return true; }   // roll over to the next cohort
     document.querySelectorAll("[data-countdown-open]").forEach((n) => (n.hidden = closed));
     document.querySelectorAll("[data-countdown-closed]").forEach((n) => (n.hidden = !closed));
     nodes().forEach((n) => {

@@ -77,6 +77,8 @@ export const COHORTS: ReadonlyArray<{
   n: number;
   /** ISO date the cohort begins. */
   starts: string;
+  /** Exact start, with its Singapore offset; applications close 72h before it. */
+  startsAt: string;
   /** Display form of the start date, as the applicant reads it. */
   startsLabel: string;
   /** Day of month, the oversized numeral of the header mark. */
@@ -91,12 +93,25 @@ export const COHORTS: ReadonlyArray<{
     label: 'The January 2027 cohort',
     n: 1,
     starts: '2027-01-26',
+    startsAt: '2027-01-26T09:00:00+08:00',
     startsLabel: '26 Jan 2027',
     day: '26',
     month: 'January',
     year: '2027',
   },
 ];
+
+/** Applications for a cohort close this long before it starts. */
+export const APPLICATION_CLOSE_HOURS = 72;
+
+/** When applications for a cohort close (epoch ms). */
+export const cohortClosesAt = (c: (typeof COHORTS)[number]) =>
+  Date.parse(c.startsAt) - APPLICATION_CLOSE_HOURS * 3600 * 1000;
+
+/** The cohort the form is serving: the first whose applications are still open. */
+export function openCohort(now: Date = new Date()) {
+  return COHORTS.find((c) => cohortClosesAt(c) > now.getTime()) ?? null;
+}
 
 /** The cohort an application filed today would join — the first not yet begun. */
 export function currentCohort(now: Date = new Date()) {

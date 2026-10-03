@@ -423,6 +423,13 @@ async function submit() {
     return;
   }
 
+  // Applications close 72h before a cohort starts (the rules enforce it too).
+  const cohort = (window.MVP_COHORTS || []).find((c) => c.closesAt > Date.now());
+  if (!cohort) {
+    showBanner("Applications are closed until the next cohort is announced. Your answers are saved on this device, so you can submit once they reopen.");
+    return;
+  }
+
   if (!window.MVP_FIREBASE_CONFIG) {
     showBanner("Applications aren't open yet. Your answers are saved on this device, so you can submit as soon as they are.");
     return;
@@ -435,6 +442,7 @@ async function submit() {
     const { db, firestore } = await getDb();
     await firestore.addDoc(firestore.collection(db, COLLECTION), {
       ...buildRecord(),
+      cohort: cohort.starts,
       status: "pending",
       schemaVersion: APP.schemaVersion,
       createdAt: firestore.serverTimestamp(),
@@ -479,3 +487,7 @@ document.addEventListener("mvp:route", (e) => {
 
 loadDraft();
 render();
+// Tell an applicant up front when no cohort is taking applications.
+if (!(window.MVP_COHORTS || []).some((c) => c.closesAt > Date.now())) {
+  showBanner("Applications are closed until the next cohort is announced. You can still fill this in; your answers are saved on this device.");
+}
