@@ -166,11 +166,27 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Journey (hairline columns) ───────────────────────────────────────── */
 .journey { padding: clamp(72px, 10vw, 128px) var(--gutter); background: var(--paper-2); border-top: 1px solid var(--hair); }
-.journey-grid { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--hair); }
-.journey-grid li { padding: 32px 28px 8px 0; border-right: 1px solid var(--hair); }
-.journey-grid li + li { padding-left: 28px; }
-.journey-grid li:last-child { border-right: 0; }
-.journey-grid p:not(.step) { color: var(--ink-2); max-width: 36ch; }
+.journey-grid { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.jstep { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 40px 28px 40px; border-right: 1px solid var(--hair); outline-offset: -3px; cursor: default; }
+.jstep:last-child { border-right: 0; }
+.jstep .step { color: var(--muted); transition: color .3s var(--ease-out-expo); }
+.jstep .h3 { font-size: clamp(2.2rem, 3.6vw, 3.4rem); margin-bottom: 0; transition: color .35s var(--ease-out-expo); }
+.jstep-copy { color: var(--ink-2); max-width: 32ch; margin-top: 8px; }
+.jstep.on .step, .jstep.on .h3 { color: var(--orange-text); }
+
+/* Isometric scenes (iso.js). At rest: still white line art. Lit: the extra
+   cubes drop in on the press spring and the tops glow orange. */
+.iso { position: relative; width: min(100%, 260px); aspect-ratio: 162 / 186; margin: 28px auto 24px; }
+.iso-svg, .iso-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.iso-fx { pointer-events: none; }
+.iso-frame polyline, .iso-frame polygon { fill: none; stroke: #d6d1ca; stroke-width: .8; }
+.cube .f { stroke: #c9c3bb; stroke-width: .8; stroke-linejoin: round; }
+.cube .glow { opacity: 0; transition: opacity .45s var(--ease-out-expo); transition-delay: var(--d, 0ms); }
+.cube .glow polygon { stroke: rgba(194, 65, 12, .55); stroke-width: .8; }
+.cube.extra { opacity: 0; transform: translateY(-26px); transition: opacity .3s var(--ease-out-expo), transform .55s var(--spring-press); transition-delay: var(--d, 0ms); }
+.jstep.on .cube.extra { opacity: 1; transform: none; }
+.jstep.on .cube .glow { opacity: 1; }
+.journey-rail { display: none; }
 
 /* ── Facts band ───────────────────────────────────────────────────────── */
 .facts { display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 var(--gutter); background: var(--paper-2); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
@@ -261,8 +277,21 @@ a { color: inherit; text-decoration: none; }
   .nav { grid-template-columns: 1fr auto; }
   .nav-glass { display: none; }
   .section-head { grid-template-columns: 1fr; gap: 12px; }
-  .journey-grid, .panel-cols, .partner-grid { grid-template-columns: 1fr; }
-  .journey-grid li, .panel-cols > div, .partner-grid > div { border-right: 0; border-bottom: 1px solid var(--hair); padding: 24px 0 !important; }
+  .panel-cols, .partner-grid { grid-template-columns: 1fr; }
+  .panel-cols > div, .partner-grid > div { border-right: 0; border-bottom: 1px solid var(--hair); padding: 24px 0 !important; }
+
+  /* Mobile: pin the steps and let scroll walk through them. */
+  .journey { padding-bottom: 0; }
+  .journey-track { height: 300svh; }
+  .journey-sticky { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 72px; }
+  .journey-grid { grid-template-columns: 1fr; border: 0; }
+  .jstep { grid-area: 1 / 1; border: 0; padding: 0; opacity: 0; transform: translateY(28px); pointer-events: none;
+           transition: opacity .35s var(--ease-out-expo), transform .55s var(--spring-sheet); }
+  .jstep.on, .journey-grid:not(:has(.on)) .jstep:first-child { opacity: 1; transform: none; pointer-events: auto; }
+  .iso { width: min(70vw, 260px); margin: 20px auto; }
+  .journey-rail { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
+  .journey-rail span { width: 28px; height: 4px; border-radius: 2px; background: var(--hair); transition: background-color .3s var(--ease-out-expo); }
+  .journey-rail span.on { background: var(--orange); }
   .panel-cols > div { border-bottom-color: var(--hair-dark); }
   .facts { grid-template-columns: 1fr 1fr; }
   .fact { padding: 28px 16px 32px 0 !important; border-bottom: 1px solid var(--hair); }
@@ -285,5 +314,8 @@ a { color: inherit; text-decoration: none; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-  .js .hero-title .line > span, .js .reveal { transform: none; opacity: 1; }
+  .js .hero-title .line > span, .js .reveal, .cube.extra { transform: none; opacity: 1; }
+  .journey-track { height: auto; }
+  .journey-sticky { position: static; height: auto; }
+  .journey-grid .jstep { grid-area: auto; opacity: 1; transform: none; pointer-events: auto; padding: 24px 0; }
 }

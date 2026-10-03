@@ -113,29 +113,39 @@
       <p class="statement-text reveal"><strong>MVP is a stepping stone, not a competing accelerator.</strong> Build, test and gather evidence with engineers, operators and investors beside you, before your next accelerator or funding application.</p>
     </section>
 
-    <!-- 3. Journey: hairline columns, Start / Sprint / Scale style -->
+    <!-- 3. Journey. Desktop: hairline columns whose isometric scenes build and
+         light up on hover/focus (Hexa-style, our own assets). Mobile: the
+         section pins and scrolling steps through 01 -> 02 -> 03. -->
     <section class="journey" id="journey" aria-labelledby="journey-title">
       <div class="section-head">
         <p class="mono label">How MVP works</p>
         <h2 class="display h2" id="journey-title">Three steps in</h2>
       </div>
-      <ol class="journey-grid">
-        <li class="reveal">
-          <p class="mono step">Step 01</p>
-          <h3 class="display h3">Share your idea</h3>
-          <p>Apply with the problem you know first-hand. An industry insight, an idea or an early prototype is enough.</p>
-        </li>
-        <li class="reveal">
-          <p class="mono step">Step 02</p>
-          <h3 class="display h3">Discuss your stage</h3>
-          <p>We read every application and talk with shortlisted applicants about where the venture really is.</p>
-        </li>
-        <li class="reveal">
-          <p class="mono step">Step 03</p>
-          <h3 class="display h3">Find your track</h3>
-          <p>Join the intake that fits, and get pointed to the Singapore support rails relevant to your venture.</p>
-        </li>
-      </ol>
+      <div class="journey-track" id="journey-track">
+        <div class="journey-sticky">
+          <ol class="journey-grid">
+            <li class="jstep" tabindex="0" data-step="0">
+              <p class="mono step">Step 01 · From insight</p>
+              <h3 class="display h3">Share your idea</h3>
+              <div class="iso" data-scene="0" aria-hidden="true"></div>
+              <p class="jstep-copy">Apply with the problem you know first-hand. An industry insight, an idea or an early prototype is enough.</p>
+            </li>
+            <li class="jstep" tabindex="0" data-step="1">
+              <p class="mono step">Step 02 · To evidence</p>
+              <h3 class="display h3">Discuss your stage</h3>
+              <div class="iso" data-scene="1" aria-hidden="true"></div>
+              <p class="jstep-copy">We read every application and talk with shortlisted applicants about where the venture really is.</p>
+            </li>
+            <li class="jstep" tabindex="0" data-step="2">
+              <p class="mono step">Step 03 · To a track</p>
+              <h3 class="display h3">Find your track</h3>
+              <div class="iso" data-scene="2" aria-hidden="true"></div>
+              <p class="jstep-copy">Join the intake that fits, and get pointed to the Singapore support rails relevant to your venture.</p>
+            </li>
+          </ol>
+          <div class="journey-rail" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      </div>
     </section>
 
     <!-- 4. Facts band: real program facts only, no invented metrics -->
@@ -322,5 +332,6 @@
   </footer>
 
   <script src="mockup.js"></script>
+  <script src="iso.js"></script>
 </body>
 </html>
