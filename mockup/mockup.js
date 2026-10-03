@@ -44,7 +44,22 @@
       t.tabIndex = on ? 0 : -1;
       document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
     });
+    // Rubber band (Apple motion): the leading edge shoots ahead to the new tab
+    // while the trailing edge holds, then the trailing edge snaps across, the
+    // pill overshoots a hair and recoils into place.
+    const x0 = tabs[from]?.offsetLeft ?? tab.offsetLeft, w0 = tabs[from]?.offsetWidth ?? tab.offsetWidth;
+    const x1 = tab.offsetLeft, w1 = tab.offsetWidth;
+    indicator.style.transition = "none";
     place(tab);
+    if (!reduced() && indicator.animate && from >= 0) {
+      const k = (x, w) => ({ transform: `translateX(${x}px)`, width: `${w}px` });
+      const frames = to > from
+        ? [k(x0, w0), { ...k(x0, x1 + w1 - x0 + 10), offset: 0.42 }, { ...k(x1 + 6, w1 - 4), offset: 0.74 }, { ...k(x1 - 2, w1 + 2), offset: 0.88 }, k(x1, w1)]
+        : [k(x0, w0), { ...k(x1 - 10, x0 + w0 - x1 + 10), offset: 0.42 }, { ...k(x1 - 2, w1 - 4), offset: 0.74 }, { ...k(x1, w1 + 2), offset: 0.88 }, k(x1, w1)];
+      frames.forEach((f, i) => { if (i < frames.length - 1) f.easing = i === 0 ? "cubic-bezier(.4,0,.2,1)" : "cubic-bezier(.3,0,.3,1)"; });
+      indicator.animate(frames, { duration: 560 });
+    }
+    requestAnimationFrame(() => (indicator.style.transition = ""));
     if (focus) tab.focus();
     tab.scrollIntoView({ block: "nearest", inline: "center", behavior: reduced() ? "auto" : "smooth" });
     const panel = document.getElementById(tab.getAttribute("aria-controls"));
