@@ -1,15 +1,11 @@
 /**
- * MVP mockup hero: a lava field and a jelly lens.
+ * MVP mockup hero: the lava field.
  *
- *   Field - five warm masses drift on slow Lissajous paths across a low-res
- *           canvas (upscaled by the browser, so it reads as soft light); one
- *           of them leans toward the pointer.
- *   Jelly - a drop of liquid glass whose backdrop is bent by a spherical
- *           displacement map, so the headline swells under it. It follows the
- *           pointer on an underdamped spring, squashes along its velocity and
- *           jiggles when you press.
+ * Five warm masses drift on slow Lissajous paths across a low-res canvas
+ * (upscaled by the browser, so it reads as soft light); one of them leans
+ * toward the pointer.
  *
- * One rAF loop drives both and runs only while the hero is on screen and the
+ * The loop and runs only while the hero is on screen and the
  * tab is visible (threeui-canvas-craft). Reduced motion: one still frame.
  */
 (function () {
@@ -17,26 +13,6 @@
   if (!hero) return;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(pointer: fine)").matches;
-
-  /* Spherical lens map: R/G push each sample toward the centre, gently in the
-     middle and hard at the rim, like looking through a drop of water. */
-  (function lensMap() {
-    const N = 256, c = document.createElement("canvas");
-    c.width = c.height = N;
-    const g = c.getContext("2d"), img = g.createImageData(N, N);
-    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
-      const nx = ((i + 0.5) / N) * 2 - 1, ny = ((j + 0.5) / N) * 2 - 1, r = Math.hypot(nx, ny);
-      let dx = 0, dy = 0;
-      if (r < 1) {
-        const k = 0.5 + (r > 1e-3 ? (0.85 * (1 - Math.sqrt(1 - r * r))) / r : 0);
-        dx = Math.max(-1, Math.min(1, -nx * k)); dy = Math.max(-1, Math.min(1, -ny * k));
-      }
-      const o = (j * N + i) * 4;
-      img.data[o] = 128 + 127 * dx; img.data[o + 1] = 128 + 127 * dy; img.data[o + 2] = 128; img.data[o + 3] = 255;
-    }
-    g.putImageData(img, 0, 0);
-    document.getElementById("lens-map-c")?.setAttribute("href", c.toDataURL());
-  })();
 
   /* Field */
   const cv = hero.querySelector(".hero-field"), ctx = cv.getContext("2d");
@@ -71,65 +47,21 @@
     });
   };
 
-  /* Jelly */
-  const jelly = hero.querySelector(".jelly");
-  const p = { x: 0, y: 0, vx: 0, vy: 0, s: 1, vs: 0 };
   let target = null, last = 0, raf = 0, visible = false;
-  const home = (t) => ({
-    x: HW * (HW < 700 ? 0.68 : 0.72) + Math.sin(t * 0.00045) * HW * 0.04,
-    y: HH * (HW < 700 ? 0.3 : 0.5) + Math.cos(t * 0.00061) * HH * 0.035,
-  });
-  /* Chromium paints a backdrop filter's feImage at its own size, so the map
-     is pinned to the lens's pixel box (and re-pinned on resize). */
-  const map = document.getElementById("lens-map-c");
-  const title = hero.querySelector(".hero-title");
-  const clone = title.cloneNode(true);
-  clone.removeAttribute("id");
-  const lensText = jelly.querySelector(".jelly-text"), lensBg = jelly.querySelector(".jelly-bg"), bctx = lensBg.getContext("2d");
-  lensText.append(clone);
-  const MAG = 1.22;
-  let tx = 0, ty = 0;
-  const measure = () => {
-    const h = hero.getBoundingClientRect(), t = title.getBoundingClientRect();
-    tx = t.left - h.left; ty = t.top - h.top;
-    clone.style.width = `${t.width}px`;
-    lensBg.width = lensBg.height = Math.max(32, Math.round(jelly.offsetWidth / 4));
-  };
-  const fitMap = () => { const S = jelly.offsetWidth; ["x", "y"].forEach((k) => map?.setAttribute(k, 0)); map?.setAttribute("width", S); map?.setAttribute("height", S); };
-  const placeJelly = () => {
-    const S = jelly.offsetWidth, sp = Math.hypot(p.vx, p.vy);
-    // The lens shows what is under its centre, magnified: the headline copy is
-    // laid where the real one sits, and the field is sampled around the centre.
-    clone.style.transform = `translate(${tx - (p.x - S / 2)}px, ${ty - (p.y - S / 2)}px)`;
-    const span = S / MAG, k = W / HW;
-    bctx.drawImage(cv, (p.x - span / 2) * k, (p.y - span / 2) * k, span * k, span * k, 0, 0, lensBg.width, lensBg.height);
-    const amt = Math.min(sp / 2600, 0.22), ang = Math.atan2(p.vy, p.vx);
-    jelly.style.transform =
-      `translate3d(${p.x - S / 2}px, ${p.y - S / 2}px, 0) rotate(${ang}rad) scale(${(1 + amt) * p.s}, ${(1 - amt * 0.8) * p.s}) rotate(${-ang}rad)`;
-  };
 
   const frame = (now) => {
     const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
-    const h = home(now), tg = target || h;
-    // Underdamped spring: it overshoots a little and settles, like jelly.
-    const K = 70, C = 9;
-    p.vx += (K * (tg.x - p.x) - C * p.vx) * dt; p.vy += (K * (tg.y - p.y) - C * p.vy) * dt;
-    p.x += p.vx * dt; p.y += p.vy * dt;
-    p.vs += (260 * (1 - p.s) - 10 * p.vs) * dt; p.s += p.vs * dt;
     const lx = target ? target.x / HW : 0.7, ly = target ? target.y / HH : 0.45;
     lean.x += (lx - lean.x) * Math.min(dt * 1.5, 1); lean.y += (ly - lean.y) * Math.min(dt * 1.5, 1);
     drawField(now);
-    placeJelly();
     raf = visible && !document.hidden ? requestAnimationFrame(frame) : 0;
   };
   const start = () => { if (!raf && !reduced && visible && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(frame); } };
 
-  size(); fitMap(); measure();
-  document.fonts?.ready.then(() => { measure(); placeJelly(); });
-  const h0 = home(0); p.x = h0.x; p.y = h0.y;
-  drawField(0); placeJelly();
+  size();
+  drawField(0);
 
-  if (reduced) { addEventListener("resize", () => { size(); fitMap(); measure(); const h = home(0); p.x = h.x; p.y = h.y; drawField(0); placeJelly(); }); return; }
+  if (reduced) { addEventListener("resize", () => { size(); drawField(0); }); return; }
 
   if (finePointer) {
     hero.addEventListener("pointermove", (e) => {
@@ -138,8 +70,7 @@
     });
     hero.addEventListener("pointerleave", () => (target = null));
   }
-  hero.addEventListener("pointerdown", () => (p.vs -= 3.2));
-  addEventListener("resize", () => { size(); fitMap(); measure(); });
+  addEventListener("resize", size);
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; start(); }).observe(hero);
   document.addEventListener("visibilitychange", start);
 })();

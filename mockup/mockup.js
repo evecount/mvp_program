@@ -119,10 +119,22 @@
       );
     }
   };
+  /* No duplicate CTAs: the header one waits offstage while the hero's Apply button is on screen, and arrives as an orb when it leaves. */
+  const onStage = new Set();
+  const stage = () => {
+    const away = onStage.size === 0;
+    if (away === !cta.classList.contains("is-hidden")) return;
+    cta.classList.toggle("is-hidden", !away);
+    if (away) cta.classList.add("is-orb");
+  };
+  if ("IntersectionObserver" in window) {
+    const watch = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? onStage.add(e.target) : onStage.delete(e.target))); stage(); });
+    document.querySelectorAll(".hero-ctas .pill--black").forEach((b) => watch.observe(b));
+  } else cta.classList.remove("is-hidden");
   addEventListener("scroll", () => {
     const y = scrollY, dy = y - lastY;
     if (Math.abs(dy) < 6) return;
-    fold(y > innerHeight * 0.6 && dy > 0);
+    if (!cta.classList.contains("is-hidden")) fold(dy > 0);
     lastY = y;
   }, { passive: true });
 })();

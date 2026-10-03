@@ -140,6 +140,8 @@ a { color: inherit; text-decoration: none; }
 .pill-label > span { overflow: hidden; min-width: 0; }
 .pill--orb.is-orb:not(:hover):not(:focus-visible) { padding-inline: 14px; gap: 0; }
 .pill--orb.is-orb:not(:hover):not(:focus-visible) .pill-label { grid-template-columns: 0fr; opacity: 0; }
+.pill--orb { transition: transform .42s var(--spring-morph), padding .42s var(--spring-morph), gap .42s var(--spring-morph), opacity .25s var(--ease-out-expo), visibility 0s; }
+.pill--orb.is-hidden { opacity: 0; transform: scale(.4); visibility: hidden; pointer-events: none; transition: transform .3s var(--ease-out-expo), opacity .2s var(--ease-out-expo), visibility 0s .3s; }
 
 .pill--orange { background: var(--orange); color: var(--ink); }
 .pill--orange:hover { background: #ff7a4d; }
@@ -200,38 +202,17 @@ a { color: inherit; text-decoration: none; }
 .hero-field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
 .hero-grain { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px; }
-/* The jelly: a drop of liquid glass that magnifies the headline, follows the
-   pointer on an underdamped spring and squashes along its velocity. */
-.jelly {
-  position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; overflow: hidden; isolation: isolate;
-  width: clamp(120px, 23vw, 360px); aspect-ratio: 1; border-radius: 50%;
-  box-shadow: 0 40px 70px -34px rgba(90, 20, 0, .55), 0 0 0 1px rgba(255,255,255,.28);
-  opacity: 0; transition: opacity .8s ease .5s;
-  animation: jelly-morph 11s ease-in-out infinite;
-}
-/* Inside the drop: the field and headline, magnified and bulged at the rim. */
-.jelly-bg { position: absolute; inset: 0; width: 100%; height: 100%; filter: saturate(1.25) brightness(1.06); }
-.jelly-text { position: absolute; inset: 0; transform: scale(1.22); filter: url(#cd-jelly-bulge); }
-.jelly-text .hero-title { position: absolute; left: 0; top: 0; margin: 0; }
-/* The glass skin sits on top: specular highlight, rim light, inner depth. */
-.jelly::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit;
-  background:
-    radial-gradient(circle at 32% 24%, rgba(255,255,255,.6) 0, rgba(255,255,255,0) 20%),
-    radial-gradient(circle at 70% 84%, rgba(255,220,190,.4) 0, rgba(255,220,190,0) 26%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,0) 62%, rgba(255,240,228,.22) 100%);
-  box-shadow:
-    inset 0 2px 1px rgba(255,255,255,.8),
-    inset 0 -16px 30px -8px rgba(150, 34, 0, .38),
-    inset 12px 0 26px -16px rgba(255,255,255,.65),
-    inset 0 0 0 1px rgba(255,255,255,.35);
-}
-.js.ready .jelly { opacity: 1; }
-@keyframes jelly-morph {
-  0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
-  33% { border-radius: 54% 46% 51% 49% / 47% 53% 47% 53%; }
-  66% { border-radius: 47% 53% 46% 54% / 53% 47% 54% 46%; }
-}
+/* First-visit intro (intro.js): a hand built from lines of type tosses a
+   paper plane; the headline streams out of its tail and lays itself down. */
+.hero-type { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; opacity: 0; transition: opacity .7s var(--ease-out-expo); }
+.hero-type.on { opacity: 1; }
+.hero-title .word { display: inline-block; white-space: nowrap; }
+.hero-title .ch { display: inline-block; }
+.intro .hero-title .line { overflow: visible; }
+.intro .hero-title .line > span { transform: none !important; transition: none !important; }
+.intro .hero-title .ch { opacity: 0; }
+.intro .hero-kicker, .intro .hero-foot, .intro .hero-scroll { opacity: 0; transform: translateY(12px); }
+.hero-kicker, .hero-foot, .hero-scroll { transition: opacity .7s var(--ease-out-expo), transform .9s var(--spring-sheet); }
 .hero-foot, .hero-scroll { position: relative; z-index: 2; }
 .hero-kicker { color: var(--ink); opacity: .78; }
 .hero-title { align-self: end; font-size: clamp(3.6rem, 14.5vw, 13.5rem); color: var(--ink); }
@@ -438,7 +419,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .jelly { animation: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   .js .hero-title .line > span, .js .reveal { transform: none; opacity: 1; }
