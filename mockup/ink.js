@@ -39,6 +39,10 @@
      packed with strokes that run along the ridge, valleys get back-and-forth
      scribble, and stands of tiny pines climb the lower slopes. */
   const draw = () => {
+    // The stage runs from just under the floating header to the foot of the hero.
+    const nav = document.getElementById("nav"), hr = hero.getBoundingClientRect();
+    const top = Math.max(0, Math.round((nav ? nav.getBoundingClientRect().bottom - hr.top : 0) + 8));
+    cv.style.top = `${top}px`; cv.style.height = `${hr.height - top}px`;
     const r = cv.getBoundingClientRect();
     W = Math.round(r.width); H = Math.round(r.height); dpr = Math.min(devicePixelRatio || 1, 2);
     if (!W || !H) return;
@@ -46,78 +50,100 @@
     const g = actx;
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     g.lineCap = "round"; g.lineJoin = "round"; g.strokeStyle = INK;
-    const sx = Math.max(W / 1440, 0.5);
-    let rnd = 1;
+    const sx = Math.max(W / 1440, 0.4), portrait = W < H;
+    let rnd = 7;
     const R = () => { rnd = (rnd * 16807) % 2147483647; return rnd / 2147483647; };
 
-    // Silhouettes (y of the skyline at x), back to front.
-    const PX = W * (W < 700 ? 0.6 : 0.6), P2 = W * 0.86;
-    const far = (x) => H * (0.5 - 0.16 * ridged(x / sx / 260, 4) - 0.1 * Math.exp(-(((x - W * 0.2) / (W * 0.18)) ** 2)));
-    const massif = (x) => {
-      const dL = (PX - x) / (W * 0.36), dR = (x - PX) / (W * 0.3), d = x < PX ? dL : dR;
-      const main = 0.04 + 0.78 * Math.pow(Math.min(Math.abs(d), 1.4), 0.9);
-      const second = 0.36 + 0.5 * Math.pow(Math.min(Math.abs((x - P2) / (W * 0.13)), 1.6), 0.95);
-      return H * Math.min(main, second, 0.95) + H * 0.05 * (ridged(x / sx / 70, 9) - 0.5);
+    // Copy stays legible: the drawing thins to a whisper around small text and buttons.
+    const quiet = [".hero-kicker", ".hero-lede", ".hero-ctas", ".hero-scroll"].flatMap((q) => [...hero.querySelectorAll(q)]).map((el) => {
+      const b = el.getBoundingClientRect();
+      return { l: b.left - r.left - 16, t: b.top - r.top - 14, rr: b.right - r.left + 16, b: b.bottom - r.top + 14 };
+    });
+    // Clear inside each copy box, feathering back to full over 28px.
+    const hush = (x, y) => {
+      let k = 1;
+      for (const q of quiet) {
+        const dx = Math.max(q.l - x, 0, x - q.rr), dy = Math.max(q.t - y, 0, y - q.b), d = Math.hypot(dx, dy);
+        k = Math.min(k, d === 0 ? 0 : Math.min(1, d / 28) ** 1.5);
+      }
+      return k;
     };
-    const hills = (x) => H * (0.8 - 0.07 * noise(x / sx / 140, 21) - 0.05 * noise(x / sx / 45, 22));
-    const LAY = [{ y: far, a: 0.5, k: 0.55 }, { y: massif, a: 1, k: 1 }, { y: hills, a: 1, k: 0.85 }];
+
+    // Composition after the study: one great peak right of centre, a steep left
+    // face, a long shoulder falling to the right edge, a far range behind it and
+    // forested foothills in front.
+    const PX = W * (portrait ? 0.66 : 0.7), PY = H * (portrait ? 0.06 : 0.05);
+    const massif = (x) => {
+      const t = x < PX ? (PX - x) / (W * (portrait ? 0.55 : 0.4)) : (x - PX) / (W * 0.34);
+      const fall = x < PX ? 0.66 * Math.pow(Math.min(t, 1.3), 0.82) : 0.4 * Math.pow(Math.min(t, 1.5), 0.72);
+      return PY + H * fall + H * 0.03 * (ridged(x / sx / 60, 9) - 0.45) * Math.min(1, t * 3);
+    };
+    const far = (x) => H * (0.36 - 0.07 * ridged(x / sx / 90, 4) + 0.12 * Math.max(0, (W * 0.8 - x) / (W * 0.2)));
+    const hills = (x) => H * (0.8 - 0.06 * noise(x / sx / 160, 21) - 0.04 * noise(x / sx / 50, 22));
+    const LAY = [{ y: far, a: 0.55 }, { y: massif, a: 1 }, { y: hills, a: 0.95 }];
     const owner = (x, y) => { for (let i = LAY.length - 1; i >= 0; i--) if (y >= LAY[i].y(x)) return i; return -1; };
 
-    // Aretes: ridges falling from the summits, each a polyline x(y).
+    // Aretes: from the summit and along the shoulder, falling in long diagonals.
     const ridges = [];
-    const spur = (x0, y0, lean, len, wob, seed) => {
-      const pts = [[x0, y0]];
-      let x = x0;
-      for (let y = y0 + 3; y < y0 + len && y < H; y += 3) { x += lean * 3 + (noise(y / 22 + seed, 31 + seed) - 0.5) * wob; pts.push([x, y]); }
+    const spur = (x0, lean, len, seed) => {
+      let x = x0; const y0 = massif(x0) + 1, pts = [[x, y0]];
+      for (let y = y0 + 3; y < y0 + len && y < H; y += 3) { x += lean * 3 + (noise(y / 26 + seed, 31 + seed) - 0.5) * 2.4; pts.push([x, y]); }
       ridges.push(pts);
     };
-    const top = massif(PX), top2 = massif(P2);
-    spur(PX, top, -0.62, H * 0.75, 2.2, 1); spur(PX, top, 0.7, H * 0.7, 2.2, 2);
-    spur(PX, top, 0.08, H * 0.6, 3, 3); spur(PX - W * 0.08, massif(PX - W * 0.08), -0.25, H * 0.5, 2.6, 4);
-    spur(PX + W * 0.09, massif(PX + W * 0.09), 0.28, H * 0.45, 2.6, 5); spur(PX - W * 0.18, massif(PX - W * 0.18), -0.1, H * 0.35, 2.4, 6);
-    spur(P2, top2, -0.5, H * 0.45, 2, 7); spur(P2, top2, 0.55, H * 0.45, 2, 8); spur(P2 + W * 0.05, massif(P2 + W * 0.05), 0.15, H * 0.3, 2, 9);
-    const ridgeX = (pts, y) => { const i = Math.round((y - pts[0][1]) / 3); return i >= 0 && i < pts.length ? pts[i][0] : null; };
+    spur(PX, -0.38, H * 0.7, 1); spur(PX, 0.12, H * 0.62, 2); spur(PX, 0.85, H * 0.42, 3);
+    [[-0.12, -0.15, 0.4], [-0.2, -0.3, 0.3], [0.07, 0.3, 0.5], [0.13, 0.22, 0.48], [0.19, 0.35, 0.42], [0.25, 0.18, 0.36]].forEach(([dx, lean, len], k) => spur(PX + dx * W, lean, H * len, 4 + k));
+    const ridgeAt = (pts, y) => { const i = Math.round((y - pts[0][1]) / 3); return i >= 0 && i < pts.length ? i : -1; };
 
-    // Stroke field over a jittered grid.
     const marks = [], scrib = [], trees = [];
-    const step = 2.6;
+    const step = portrait ? 2 : 2.4;
     for (let gy = 0; gy < H; gy += step) for (let gx = 0; gx < W; gx += step) {
       const x = gx + R() * step, y = gy + R() * step, li = owner(x, y);
       if (li < 0) continue;
-      const L = LAY[li], top = L.y(x), depth = (y - top) / Math.max(H - top, 1);
+      const L = LAY[li], tp = L.y(x), depth = (y - tp) / Math.max(H - tp, 1), q = hush(x, y);
       if (li === 1) {
-        // Between which ridges? Shade is heavy just right of a ridge, fading to light.
-        let dl = 1e9, dr = 1e9, slope = 0.4, near = 1e9;
+        let dl = 1e9, dr = 1e9, slope = 0.3, near = 1e9;
         for (const pts of ridges) {
-          const rx = ridgeX(pts, y); if (rx === null) continue;
-          const d = x - rx; near = Math.min(near, Math.abs(d));
-          if (d >= 0 && d < dl) { dl = d; const i = Math.round((y - pts[0][1]) / 3); slope = (pts[Math.min(i + 2, pts.length - 1)][0] - pts[Math.max(i - 2, 0)][0]) / 12; }
+          const i = ridgeAt(pts, y); if (i < 0) continue;
+          const d = x - pts[i][0]; near = Math.min(near, Math.abs(d));
+          if (d >= 0 && d < dl) { dl = d; slope = (pts[Math.min(i + 3, pts.length - 1)][0] - pts[Math.max(i - 3, 0)][0]) / 18; }
           if (d < 0 && -d < dr) dr = -d;
         }
-        if (near < 2.2 || y - top < 1.5) continue;                     // bare paper on the ridgelines
-        const t = dl > 1e8 ? 0.8 : dr > 1e8 ? 0.15 : dl / (dl + dr);
-        const shade = Math.min(1, (1 - t) * 0.85 + (x > PX ? 0.2 : 0) + depth * 0.25);
-        if (R() > 0.06 + shade * 0.74) continue;
-        if (depth > 0.6 && R() < 0.3) { if (R() < 0.5) trees.push([x, y, 3 + R() * 4]); continue; }
-        const ang = Math.atan2(1, slope) + (R() - 0.5) * 0.5, len = 3 + R() * (4 + shade * 7);
-        marks.push([x, y, ang, len, L.a * (0.6 + 0.4 * shade)]);
+        if (near < 2.4 || y - tp < 1.4) continue;                       // ridgelines stay bare paper
+        const t = dl > 1e8 ? 0.85 : dr > 1e8 ? 0.2 : dl / (dl + dr);
+        const shade = Math.min(1, (1 - t) * 0.85 + depth * 0.2);
+        if (R() > (0.03 + shade * shade * 0.7) * q) continue;
+        if (depth > 0.55 && R() < 0.3 + depth * 0.3) {                  // the treeline creeps up the lower slopes
+          if (R() < 0.45) trees.push([x, y, 3 + R() * 4]); else scrib.push([x, y, 5 + R() * 9, L.a]);
+          continue;
+        }
+        const ang = Math.atan2(1, slope) + (R() - 0.5) * 0.55, len = (3 + R() * (4 + shade * 8)) * Math.min(1, 0.45 + sx * 0.55);
+        marks.push([x, y, ang, len, L.a * (0.55 + 0.45 * shade)]);
+        if (shade > 0.72 && R() < 0.4) marks.push([x, y, ang + 1.1 + (R() - 0.5) * 0.3, len * 0.7, L.a * 0.8]);   // cross-hatch in deep shadow
       } else if (li === 0) {
-        const slope = (L.y(x + 4) - L.y(x - 4)) / 8, shade = Math.max(0, Math.min(1, slope * 2 + 0.3));
-        if (y - top < 1.2 || depth > 0.45 || R() > 0.02 + shade * 0.22) continue;
-        marks.push([x, y, Math.atan2(1, slope * 1.4) + (R() - 0.5) * 0.4, 2 + R() * 3.5, L.a]);
+        const slope = (L.y(x + 4) - L.y(x - 4)) / 8, shade = Math.max(0, Math.min(1, slope * 2 + 0.35));
+        if (y - tp < 1.2 || depth > 0.5 || R() > (0.03 + shade * 0.3) * q) continue;
+        marks.push([x, y, Math.atan2(1, slope * 1.4) + (R() - 0.5) * 0.4, 2 + R() * 4, L.a]);
       } else {
-        // Foothills: forest, with scribbled clearings.
-        const stand = noise(x / 70, 41);
-        if (stand > 0.5 && R() < 0.1 + depth * 0.06) trees.push([x, y, 3 + R() * 5 + depth * 8]);
-        else if (R() < 0.035) scrib.push([x, y, 6 + R() * 12]);
+        const stand = noise(x / 80, 41);
+        if (R() > q) continue;
+        if (stand > 0.55 && R() < 0.05 + depth * 0.05) trees.push([x, y, 3 + R() * 5 + depth * 9]);
+        else if (R() < 0.02) scrib.push([x, y, 6 + R() * 14, 0.8]);
       }
     }
-    // Skyline of the massif and hills: broken quick strokes, not a contour.
-    for (const [li, gap] of [[0, 0.45], [1, 0.25], [2, 0.55]]) for (let x = 0; x < W; x += 3) {
-      if (R() < gap) continue;
+    // Skylines as broken quick strokes, never a clean contour.
+    for (const [li, gap] of [[0, 0.4], [1, 0.15], [2, 0.5]]) for (let x = 0; x < W; x += 3) {
       const y = LAY[li].y(x);
-      if (owner(x, y - 0.5) > li) continue;
-      marks.push([x, y, Math.atan2(LAY[li].y(x + 4) - y, 4), 3.5, 1]);
+      if (R() < gap || owner(x, y - 0.5) > li || R() > hush(x, y)) continue;
+      marks.push([x, y, Math.atan2(LAY[li].y(x + 4) - y, 4), 3.5, li === 0 ? 0.6 : 1]);
+    }
+    // Clouds: loose scribbled wisps in the open sky right of the headline.
+    const clouds = [];
+    for (let c = 0; c < (portrait ? 2 : 4); c++) {
+      const cx = W * (portrait ? 0.2 + R() * 0.7 : 0.6 + R() * 0.38), cy = H * (0.04 + R() * 0.24), cw = W * (0.05 + R() * 0.07);
+      for (let k = 0; k < 14; k++) {
+        const x = cx + (R() - 0.5) * cw * 2, y = cy + (R() - 0.5) * cw * 0.35;
+        if (y < massif(x) - 6 && hush(x, y) > 0.95) clouds.push([x, y, 3 + R() * 7]);
+      }
     }
 
     g.lineWidth = 0.75;
@@ -126,10 +152,17 @@
       const bx = Math.cos(a) * len, by = Math.sin(a) * len, w = (R() - 0.5) * 1.2;
       g.moveTo(x, y); g.quadraticCurveTo(x + bx * 0.5 - by * 0.1 * w, y + by * 0.5 + bx * 0.1 * w, x + bx, y + by); g.stroke();
     }
-    g.globalAlpha = 0.9; g.lineWidth = 0.7;
-    for (const [x, y, wd] of scrib) {
+    g.lineWidth = 0.7;
+    for (const [x, y, wd, al] of scrib) {
+      g.globalAlpha = al * 0.85; g.beginPath(); g.moveTo(x, y);
+      for (let k = 0; k < 4; k++) g.lineTo(x + (k % 2 ? wd : 0) + R() * 2, y + k * 1.3);
+      g.stroke();
+    }
+    g.globalAlpha = 0.6; g.lineWidth = 0.65;
+    for (const [x, y, wd] of clouds) {
       g.beginPath(); g.moveTo(x, y);
-      for (let k = 0; k < 4; k++) g.lineTo(x + (k % 2 ? wd : 0) + R() * 2, y + k * 1.4);
+      g.bezierCurveTo(x + wd * 0.3, y - 2.5, x + wd * 0.6, y + 2, x + wd, y - 0.5);
+      if (R() < 0.3) g.arc(x + wd + 1.5, y - 1.5, 1.6, Math.PI, Math.PI * 2.6);
       g.stroke();
     }
     g.globalAlpha = 1; g.lineWidth = 0.8;
@@ -138,11 +171,12 @@
       for (let k = 1; k < 4; k++) { const ty = y - h * (k / 4), tw = h * 0.22 * (1 - k / 5); g.moveTo(x - tw, ty + tw * 0.5); g.lineTo(x, ty); g.lineTo(x + tw, ty + tw * 0.5); }
       g.stroke();
     }
-    // A few tall foreground pines at the edges, as in the study.
-    for (let i = 0; i < 9; i++) {
-      const x = (i < 5 ? 0.02 + i * 0.035 : 0.78 + (i - 5) * 0.05) * W + R() * 10, h = H * (0.18 + R() * 0.16), y = H + 2;
+    // Tall pines stand in the foreground at the right, as in the study.
+    for (let i = 0; i < (portrait ? 4 : 8); i++) {
+      const x = W * (0.62 + i * 0.045) + R() * 12, h = H * (0.12 + R() * 0.12), y = H + 2;
+      if (hush(x, y - h * 0.5) < 0.95 || hush(x, y - h) < 0.95) continue;
       g.lineWidth = 0.9; g.beginPath(); g.moveTo(x, y); g.lineTo(x, y - h);
-      for (let k = 1; k < 10; k++) { const ty = y - h * (k / 10), tw = h * 0.16 * (1 - k / 11) * (0.7 + R() * 0.5); g.moveTo(x - tw, ty + tw * 0.4); g.lineTo(x, ty); g.lineTo(x + tw, ty + tw * 0.4); }
+      for (let k = 1; k < 11; k++) { const ty = y - h * (k / 11), tw = h * 0.14 * (1 - k / 12) * (0.7 + R() * 0.5); g.moveTo(x - tw, ty + tw * 0.4); g.lineTo(x, ty); g.lineTo(x + tw, ty + tw * 0.4); }
       g.stroke();
     }
     g.globalAlpha = 1;
@@ -198,6 +232,7 @@
   root.classList.add("inking");
   const DUR = 1900;
   const start = () => {
+    draw();                                                   // re-measure once the fonts have settled the copy
     const t0 = performance.now(), hr = hero.getBoundingClientRect();
     letters.forEach((ch) => {
       const x = ch.getBoundingClientRect().left - hr.left;

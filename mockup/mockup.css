@@ -213,8 +213,7 @@ a { color: inherit; text-decoration: none; }
 /* Ink landscape (ink.js): an engraved range along the foot of the hero that
    sweeps in from the left; the headline fades up in step, the column guides
    draw down, then the rest of the hero follows. */
-.hero { --ink-h: clamp(200px, 40svh, 380px); padding-bottom: calc(var(--ink-h) * .62); }
-.hero-ink { position: absolute; left: 0; bottom: 0; width: 100%; height: var(--ink-h); z-index: -1; pointer-events: none; }
+.hero-ink { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   --dash: repeating-linear-gradient(to bottom, rgba(12,12,14,.2) 0 5px, transparent 5px 11px);
@@ -231,7 +230,7 @@ a { color: inherit; text-decoration: none; }
 .inking:not(.inked) .hero-kicker, .inking:not(.inked) .hero-foot, .inking:not(.inked) .hero-scroll { opacity: 0; transform: translateY(12px); }
 .hero-kicker, .hero-foot, .hero-scroll { transition: opacity .7s var(--ease-out-expo) 1.1s, transform .9s var(--spring-sheet) 1.1s; }
 .inking.inked .hero-kicker { transition-delay: .2s; }
-@media (max-width: 900px) { .hero { --ink-h: clamp(160px, 28svh, 260px); } .hero::after { background-position: var(--gutter) 0, 50% 0, calc(100% - var(--gutter)) 0, 200% 0, 200% 0, 0 96px; } }
+@media (max-width: 900px) { .hero::after { background-position: var(--gutter) 0, 50% 0, calc(100% - var(--gutter)) 0, 200% 0, 200% 0, 0 96px; } }
 .hero-foot, .hero-scroll { position: relative; z-index: 2; }
 .hero-kicker { color: var(--ink); opacity: .78; }
 .hero-title { align-self: end; font-size: clamp(3.4rem, 9.4vw, 9.6rem); color: var(--ink); }
