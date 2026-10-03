@@ -339,12 +339,12 @@ a { color: inherit; text-decoration: none; }
 .journey-rail { display: none; }
 
 /* ── Facts band ───────────────────────────────────────────────────────── */
-.facts { display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 var(--gutter); background: var(--paper-2); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); padding: 0 var(--gutter); background: var(--paper-2); }
 .fact { padding: 36px 24px 40px; border-right: 1px solid var(--hair); }
 .fact:first-child { padding-left: 0; }
 .fact:last-child { border-right: 0; }
 .fact-num { font-size: clamp(2rem, 3.4vw, 3rem); margin: 14px 0 8px; font-weight: 700; }
-.fact-poster { display: block; width: min(100%, 300px); height: auto; margin: 14px 0 12px; box-shadow: 0 10px 24px -14px rgba(12,12,14,.45); }
+.fact-poster { display: block; width: min(100%, 180px); height: auto; margin: 14px 0 12px; box-shadow: 0 10px 24px -14px rgba(12,12,14,.45); }
 .fact-unit { color: var(--ink-2); max-width: 24ch; font-size: .95rem; }
 .fact-rsvp { margin-top: 18px; min-height: 40px; padding: 0 18px; font-size: .9rem; }
 
@@ -405,6 +405,9 @@ a { color: inherit; text-decoration: none; }
 .partner-grid > div { padding: 32px 24px 8px 0; border-right: 1px solid var(--hair); }
 .partner-grid > div + div { padding-left: 24px; }
 .partner-grid > div:last-child { border-right: 0; }
+.join { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--hair); }
+.join-copy { max-width: 60ch; font-size: 1.1rem; color: var(--ink-2); }
+.join-copy strong { color: var(--ink); font-weight: 600; }
 .partner-grid p:not(.step) { color: var(--ink-2); max-width: 34ch; }
 .partner-grid .step { margin: 22px 0 8px; }
 .logo-cybrdeck { height: 32px; width: auto; }

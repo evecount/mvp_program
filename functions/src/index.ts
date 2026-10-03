@@ -319,3 +319,74 @@ export const nextInfoSession = onRequest(
     res.json({ next: infoCache!.next });
   },
 );
+
+/* ── Contact enquiries ─────────────────────────────────────────────────
+   Served at /api/contact through a Hosting rewrite. A public enquiry is
+   validated, kept in mvp_enquiries (the record our data protection policy
+   describes) and mailed to the reviewers through the same SMTP account, with
+   Reply-To set to the sender so a reply goes straight back. Nothing is mailed
+   to the sender, so the form can't be used to send mail to a stranger.
+   Abuse guards: a honeypot field, a minimum time on the page, length limits,
+   and at most 3 enquiries per address and 10 per IP per day. */
+const ENQUIRIES = 'mvp_enquiries';
+const ENQUIRY_TOPICS = ['Applying to the programme', 'Schools and universities', 'Enterprise', 'Partnering or mentoring', 'Media', 'Something else'];
+/* The network form (partner.html): people who want to mentor, invest or build with the programme. */
+const NETWORK_ROLES = ['Mentor or domain advisor', 'Angel investor', 'VC fund', 'Venture builder or studio', 'Incubator or ecosystem partner', 'Venture or commercial partner', 'Corporate or service partner'];
+const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+export const contactEnquiry = onRequest(
+  { region: 'asia-southeast1', memory: '256MiB', maxInstances: 3, secrets: [SMTP_PASSWORD] },
+  async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    if (req.method !== 'POST') { res.status(405).json({ ok: false }); return; }
+    const b = (req.body ?? {}) as Record<string, unknown>;
+    const str = (k: string, max: number) => (typeof b[k] === 'string' ? (b[k] as string).trim().slice(0, max) : '');
+    const name = str('name', 120), email = str('email', 200).toLowerCase(), organisation = str('organisation', 160);
+    const topic = str('topic', 80), message = str('message', 4000), website = str('website', 200);
+    const elapsed = Number(b.elapsed) || 0;
+    const linkedin = str('linkedin', 300);
+    const network = NETWORK_ROLES.includes(topic);
+
+    // Bots fill the hidden field or submit instantly: answer as if it worked.
+    if (website || elapsed < 3000) { res.json({ ok: true }); return; }
+    const reasons: string[] = [];
+    if (name.length < 2) reasons.push('name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) reasons.push('email');
+    if (!ENQUIRY_TOPICS.includes(topic) && !network) reasons.push('topic');
+    if (linkedin && !/^https?:\/\/\S+$/.test(linkedin)) reasons.push('linkedin');
+    if (message.length < 10) reasons.push('message');
+    if (b.consent !== true) reasons.push('consent');
+    if (reasons.length) { res.status(400).json({ ok: false, reasons }); return; }
+
+    const ip = String(req.headers['x-forwarded-for'] ?? req.ip ?? '').split(',')[0].trim();
+    const since = Timestamp.fromMillis(Date.now() - RECEIPT_WINDOW_MS);
+    const [byEmail, byIp] = await Promise.all([
+      db.collection(ENQUIRIES).where('email', '==', email).get(),
+      db.collection(ENQUIRIES).where('ip', '==', ip).get(),
+    ]);
+    const recent = (s: FirebaseFirestore.QuerySnapshot) => s.docs.filter((d) => { const t = d.get('createdAt'); return t instanceof Timestamp && t >= since; }).length;
+    if (recent(byEmail) >= 3 || recent(byIp) >= 10) { res.status(429).json({ ok: false, reasons: ['rate'] }); return; }
+
+    const ref = await db.collection(ENQUIRIES).add({ name, email, organisation, topic, linkedin, kind: network ? 'network' : 'enquiry', message, ip, createdAt: FieldValue.serverTimestamp() });
+    const to = REVIEWER_EMAILS.value().split(',').map((s) => s.trim()).filter(Boolean);
+    try {
+      await transport().sendMail({
+        from: `"Mamba Venture Program" <${SMTP_USER.value()}>`,
+        to,
+        replyTo: { name, address: email },
+        subject: `[MVP ${network ? 'network' : 'enquiry'}] ${topic}: ${name}${organisation ? `, ${organisation}` : ''}`,
+        text: `${message}\n\n—\n${name}\n${email}${organisation ? `\n${organisation}` : ''}${linkedin ? `\n${linkedin}` : ''}\nTopic: ${topic}\n\nReply to this email to answer ${name} directly.`,
+        html: `<div style="font-family:system-ui,sans-serif;font-size:15px;line-height:1.6;color:#0c0c0e">
+          <p style="white-space:pre-wrap;margin:0 0 20px">${escapeHtml(message)}</p>
+          <p style="margin:0;color:#3a3a40">— <strong>${escapeHtml(name)}</strong><br>${escapeHtml(email)}${organisation ? `<br>${escapeHtml(organisation)}` : ''}${linkedin ? `<br><a href="${escapeHtml(linkedin)}">${escapeHtml(linkedin)}</a>` : ''}<br>Topic: ${escapeHtml(topic)}</p>
+          <p style="margin:20px 0 0;color:#8a8a90;font-size:13px">Reply to this email to answer ${escapeHtml(name)} directly.</p></div>`,
+      });
+      await ref.set({ mailedAt: FieldValue.serverTimestamp() }, { merge: true });
+      res.json({ ok: true });
+    } catch (err) {
+      logger.error('[mvp] enquiry mail failed', { id: ref.id, error: String(err) });
+      await ref.set({ mailError: String(err) }, { merge: true });
+      res.status(502).json({ ok: false, reasons: ['mail'] });
+    }
+  },
+);

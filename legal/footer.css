@@ -1,0 +1,13 @@
+/* Site footer (shared with the homepage and application page). */
+.site-foot { font-family: "DM Sans", system-ui, sans-serif; line-height: 1.6; background: #0c0c0e; color: rgba(255,255,255,.72); padding: 56px clamp(16px, 4vw, 56px) 32px; font-size: .92rem; }
+.site-foot a { color: #fff; text-decoration: none; }
+.site-foot a:hover { text-decoration: underline; text-decoration-color: #fc6736; }
+.site-foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; }
+.site-foot h2 { margin: 0 0 12px; font-size: .92rem; font-weight: 600; color: rgba(255,255,255,.5); }
+.site-foot ul { list-style: none; padding: 0; margin: 0; }
+.site-foot li + li { margin-top: 8px; }
+.site-foot-brand p { max-width: 34ch; margin-top: 10px; }
+.site-foot-base { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: 44px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.12); font-size: .85rem; color: rgba(255,255,255,.5); }
+@media (max-width: 800px) { .site-foot-grid { grid-template-columns: 1fr 1fr; } .site-foot-brand { grid-column: 1 / -1; } }
+
+.site-foot a:focus-visible { outline: 3px solid #fc6736; outline-offset: 3px; border-radius: 4px; }

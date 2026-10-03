@@ -15,7 +15,8 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      { "source": "/api/next-info-session", "function": { "functionId": "nextInfoSession", "region": "asia-southeast1" } }
+      { "source": "/api/next-info-session", "function": { "functionId": "nextInfoSession", "region": "asia-southeast1" } },
+      { "source": "/api/contact", "function": { "functionId": "contactEnquiry", "region": "asia-southeast1" } }
     ],
     "headers": [
       {
