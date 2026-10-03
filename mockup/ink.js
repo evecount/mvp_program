@@ -64,35 +64,35 @@
     // mirrored and flattened into foothills, continue past its left edge and
     // fade into the orange; the seam is cross-faded so no edge shows.
     if (dx > 4) {
-      // Radial fades only, so no boundary is a straight line. The drawing keeps
-      // a disc centred on its right side; its left edge dissolves along an arc.
-      const kx = dx + dw, ky = dy + dh * 0.55, kr = dw * 0.97;
+      // The drawing keeps everything but a thin rim at its left border (a
+      // radial arc, never a straight line); the range then carries on left.
+      const kx = dx + dw, ky = dy + dh * 0.5, kr = dw * 1.0;
       const keepGrad = (c) => {
         const k = c.createRadialGradient(kx, ky, 0, kx, ky, kr);
-        k.addColorStop(0, "rgba(0,0,0,1)"); k.addColorStop(0.42, "rgba(0,0,0,1)"); k.addColorStop(0.6, "rgba(0,0,0,.8)"); k.addColorStop(0.76, "rgba(0,0,0,.42)"); k.addColorStop(0.9, "rgba(0,0,0,.12)"); k.addColorStop(1, "rgba(0,0,0,0)");
+        k.addColorStop(0, "rgba(0,0,0,1)"); k.addColorStop(0.84, "rgba(0,0,0,1)"); k.addColorStop(0.92, "rgba(0,0,0,.55)"); k.addColorStop(0.985, "rgba(0,0,0,0)");
         return k;
       };
       g.save(); g.globalCompositeOperation = "destination-in"; g.fillStyle = keepGrad(g); g.fillRect(0, 0, W, H); g.restore();
-      // Foothills: the study's lower ranges, mirrored and flattened, under an
-      // elliptical fade anchored at the foot of the arc.
-      const sy = study.naturalHeight * 0.45, sh = study.naturalHeight * 0.55, eh = dh * 0.55 * 0.72, ey = dy + dh - eh;
+      // Continuation: the whole study, mirrored and set smaller and lower, so a
+      // second peak steps down toward the headline, then a farther, lower one.
       const ext = document.createElement("canvas");
       ext.width = W * dpr; ext.height = H * dpr;
       const e = ext.getContext("2d");
       e.setTransform(dpr, 0, 0, dpr, 0, 0); e.imageSmoothingQuality = "high";
-      const ax = kx - kr * 0.85;
-      e.save(); e.translate(ax + dw * 0.1, 0); e.scale(-1, 1);
-      e.drawImage(study, 0, sy, study.naturalWidth, sh, 0, ey, dw, eh);
-      e.drawImage(study, 0, sy, study.naturalWidth, sh, dw, ey + eh * 0.08, dw * 0.8, eh * 0.92);
-      e.restore();
-      const rx = Math.max(W * 0.55, ax * 1.05), ry = eh * 0.78;
+      const ax = dx + dw * 0.1, foot = dy + dh;
+      const copy = (right, k) => { const w2 = dw * k, h2 = dh * k; e.save(); e.translate(right, 0); e.scale(-1, 1); e.drawImage(study, 0, foot - h2, w2, h2); e.restore(); return right - w2 * 0.72; };
+      const next = copy(ax, 0.72);
+      copy(next, 0.5);
+      // Fade the continuation with an oval anchored at its foot: strong by the
+      // drawing, thinning as it steps left and up.
+      const rx = Math.max(W * 0.62, ax * 1.05), ry = dh * 0.78;
       e.save(); e.globalCompositeOperation = "destination-in";
-      e.translate(ax, H); e.scale(1, ry / rx);
+      e.translate(ax, foot); e.scale(1, ry / rx);
       const oval = e.createRadialGradient(0, 0, 0, 0, 0, rx);
-      oval.addColorStop(0, "rgba(0,0,0,.8)"); oval.addColorStop(0.3, "rgba(0,0,0,.66)"); oval.addColorStop(0.6, "rgba(0,0,0,.34)"); oval.addColorStop(0.82, "rgba(0,0,0,.1)"); oval.addColorStop(1, "rgba(0,0,0,0)");
+      oval.addColorStop(0, "rgba(0,0,0,.9)"); oval.addColorStop(0.35, "rgba(0,0,0,.75)"); oval.addColorStop(0.65, "rgba(0,0,0,.4)"); oval.addColorStop(0.85, "rgba(0,0,0,.12)"); oval.addColorStop(1, "rgba(0,0,0,0)");
       e.fillStyle = oval; e.fillRect(-W * 2, -H * 4 * (rx / ry), W * 4, H * 8 * (rx / ry));
       e.restore();
-      // Complement of the drawing's disc, so the two meet along the same arc.
+      // Complement of the drawing's rim, so the two meet with no seam.
       e.save(); e.globalCompositeOperation = "destination-out"; e.fillStyle = keepGrad(e); e.fillRect(0, 0, W, H); e.restore();
       g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
     }
