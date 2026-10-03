@@ -29,7 +29,7 @@
       const num = (next.name.match(/#\s*\d+/) || [""])[0].replace(/\s/g, "");
 
       slots("link").forEach((a) => (a.href = next.url));
-      slots("date").forEach((n) => (n.textContent = `${day}.${month}`));
+      slots("date").forEach((n) => (n.textContent = short));
       slots("detail").forEach((n) => (n.textContent = place ? `${time} at ${place}` : `${time}, venue shared on RSVP`));
       slots("strip").forEach((n) => {
         n.innerHTML = "";
