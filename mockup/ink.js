@@ -110,6 +110,22 @@
       g.fillStyle = o; g.fillRect(-W * 3, -H * 6, W * 6, H * 12);
       g.restore();
     }
+    if (portrait) {
+      // Phones: the ink thins (never a box) behind each line of the lede, in
+      // soft ovals hugging the words, so the three steps read cleanly.
+      g.save(); g.globalCompositeOperation = "destination-out";
+      hero.querySelectorAll(".hero-lede > span").forEach((sp) => {
+        const range = document.createRange(); range.selectNodeContents(sp);
+        const b = range.getBoundingClientRect();
+        const cx = b.left - r.left + b.width / 2, cy = b.top - r.top + b.height / 2, rx = b.width / 2 + 22, ry = b.height * 0.85;
+        g.save(); g.translate(cx, cy); g.scale(1, ry / rx);
+        const o = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+        o.addColorStop(0, "rgba(0,0,0,.78)"); o.addColorStop(0.7, "rgba(0,0,0,.65)"); o.addColorStop(1, "rgba(0,0,0,0)");
+        g.fillStyle = o; g.beginPath(); g.arc(0, 0, rx, 0, Math.PI * 2); g.fill();
+        g.restore();
+      });
+      g.restore();
+    }
     // No clearings: the range runs on under the copy. The copy carries its own
     // halo (mockup.css) so it reads over the ink without boxing the drawing.
     // Flakes: short ink dashes sampled from where the drawing has ink.
