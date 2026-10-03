@@ -385,6 +385,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Mentors ──────────────────────────────────────────────────────────── */
 .mentors { padding: clamp(80px, 11vw, 140px) var(--gutter); background: var(--paper); }
+.statement > .mentors { grid-column: 1 / -1; padding: clamp(48px, 7vw, 96px) 0 0; background: none; }
 .mentor-row {
   /* Room for a growing roster: as many 240px columns as fit. Photos stay
      small, since the source headshots are 320px. */

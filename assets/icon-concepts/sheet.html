@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Anton&family=DM+Sans:wght@500;700&display=block" rel="stylesheet">
+<style>
+body{margin:0;background:#f4f2ee;font-family:"DM Sans",sans-serif;color:#0c0c0e}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;padding:36px}
+.c{display:grid;gap:12px}
+.big{width:100%;aspect-ratio:1;border-radius:22%;overflow:hidden;box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.small{display:flex;gap:14px;align-items:end}
+.small svg{border-radius:22%;box-shadow:0 2px 6px -3px rgba(0,0,0,.4)}
+h3{margin:4px 0 0;font-size:17px}p{margin:0;font-size:13.5px;color:#3a3a40;line-height:1.45}
+</style></head><body><div class="grid" id="g"></div>
+<script>
+const C = {
+ A: { t:"A · Peak V", d:"MVP in the headline face; the V flips into a summit (Λ) with a hatched shadow face, tying to the hero range and 'build a venture that scales'.", svg:`
+  <rect width="512" height="512" fill="#fc6736"/>
+  <text x="256" y="350" text-anchor="middle" font-family="Big Shoulders Display" font-weight="900" font-size="250" fill="#0c0c0e" letter-spacing="-4">M<tspan fill="none">V</tspan>P</text>
+  <g transform="translate(256 350)"><path d="M-62 0 L0 -178 L62 0 Z" fill="#0c0c0e"/><path d="M0 -178 L62 0 L18 0 Z" fill="#fc6736" opacity=".0"/>
+  <g stroke="#fc6736" stroke-width="5" stroke-linecap="round"><path d="M6 -150 L26 -4"/><path d="M16 -120 L38 -4"/><path d="M26 -90 L48 -4"/></g></g>`},
+ B: { t:"B · Print plate", d:"The cohort poster's two-ink print: vermilion MVP on cream with a solid ink extrusion and border. Reads as a family with the COHORT posters.", svg:`
+  <rect width="512" height="512" fill="#eee8ce"/><rect x="22" y="22" width="468" height="468" fill="none" stroke="#c83b2b" stroke-width="12"/>
+  <g font-family="Anton" font-size="228" text-anchor="middle">
+   ${Array.from({length:12},(_,i)=>`<text x="${256+i*1.6}" y="${352-i*1.6}" fill="#0b0b0c">MVP</text>`).join("")}
+   <text x="256" y="352" fill="#c83b2b" stroke="#0b0b0c" stroke-width="5" paint-order="stroke">MVP</text></g>`},
+ C: { t:"C · Stepping stones", d:"Three stones rising bottom-left to top-right (the 'stepping stone, not an accelerator' line), with MVP set small beneath. Calm, works as a mark without text.", svg:`
+  <rect width="512" height="512" fill="#0c0c0e"/>
+  <g fill="#fc6736"><ellipse cx="150" cy="300" rx="78" ry="26"/><ellipse cx="262" cy="222" rx="62" ry="21"/><ellipse cx="362" cy="152" rx="46" ry="16"/></g>
+  <g fill="#0c0c0e" opacity=".35"><ellipse cx="150" cy="292" rx="70" ry="18"/><ellipse cx="262" cy="216" rx="55" ry="14"/><ellipse cx="362" cy="147" rx="40" ry="11"/></g>
+  <text x="256" y="430" text-anchor="middle" font-family="Big Shoulders Display" font-weight="800" font-size="96" letter-spacing="10" fill="#f4f2ee">MVP</text>`},
+ D: { t:"D · Launch monogram", d:"Black tile, orange MVP; the V is cut by a rising trail so it reads as liftoff, echoing the rocket journey. Strongest at tiny sizes.", svg:`
+  <rect width="512" height="512" fill="#0c0c0e"/>
+  <text x="256" y="356" text-anchor="middle" font-family="Big Shoulders Display" font-weight="900" font-size="260" fill="#fc6736" letter-spacing="-2">MVP</text>
+  <path d="M256 372 L256 120" stroke="#0c0c0e" stroke-width="18"/><path d="M256 104 l-20 34 h40 z" fill="#f4f2ee"/>`},
+};
+const g = document.getElementById("g");
+for (const k of Object.keys(C)) {
+  const s = (w) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="${w}" height="${w}">${C[k].svg}</svg>`;
+  g.insertAdjacentHTML("beforeend", `<div class="c"><div class="big">${s("100%")}</div><div class="small">${s(64)}${s(32)}${s(16)}</div><h3>${C[k].t}</h3><p>${C[k].d}</p></div>`);
+  window["svg_"+k] = s(512);
+}
+</script></body></html>
