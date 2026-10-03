@@ -96,14 +96,8 @@
       e.save(); e.globalCompositeOperation = "destination-out"; e.fillStyle = keepGrad(e); e.fillRect(0, 0, W, H); e.restore();
       g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
     }
-    // Copy stays legible: feathered clearings around the small text and buttons.
-    g.globalCompositeOperation = "destination-out";
-    g.filter = "blur(14px)";
-    [".hero-kicker", ".hero-lede", ".hero-ctas", ".hero-scroll", ...(portrait ? [".hero-title"] : [])].forEach((q) => hero.querySelectorAll(q).forEach((el) => {
-      const b = el.getBoundingClientRect();
-      g.fillRect(b.left - r.left - 18, b.top - r.top - 16, b.width + 36, b.height + 32);
-    }));
-    g.filter = "none"; g.globalCompositeOperation = "source-over";
+    // No clearings: the range runs on under the copy. The copy carries its own
+    // halo (mockup.css) so it reads over the ink without boxing the drawing.
     // Flakes: short ink dashes sampled from where the drawing has ink.
     const data = g.getImageData(0, 0, W * dpr, H * dpr).data;
     frags = [];
