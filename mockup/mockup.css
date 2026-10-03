@@ -45,7 +45,7 @@ a { color: inherit; text-decoration: none; }
 .lens-defs, .icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 
 .display { font-family: var(--display); font-weight: 800; text-transform: uppercase; line-height: 0.88; letter-spacing: -0.005em; }
-.mono { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.mono { font-family: var(--sans); font-size: 0.86rem; font-weight: 600; letter-spacing: 0; }
 .label { color: var(--muted); }
 .step { color: var(--orange-text); margin-bottom: 14px; }
 .i { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
@@ -84,7 +84,6 @@ a { color: inherit; text-decoration: none; }
   transition: transform 0.31s var(--spring-press), background-color 0.2s var(--ease-out-expo), box-shadow 0.2s var(--ease-out-expo);
 }
 .pill .i { width: 16px; height: 16px; transition: transform 0.31s var(--spring-press); }
-.pill:hover .i { transform: translate(2px, -2px); }
 .pill:active { transform: scale(0.96); transition-duration: 0.1s; }
 .pill--lg { min-height: 46px; padding: 0 22px; font-size: .96rem; }
 /* Obsidian pill, lit. A simulated light source sits above and to the left:
@@ -193,6 +192,7 @@ a { color: inherit; text-decoration: none; }
 /* Black on black disappears: over the dark stage the CTA turns orange. */
 .nav[data-on="dark"] > .pill--black { background: var(--orange); color: var(--ink); }
 .nav[data-on="dark"] > .pill--black::before, .nav[data-on="dark"] > .pill--black::after, .nav[data-on="dark"] > .pill--black .pill-shine { opacity: 0; }
+.nav[data-on="dark"] > .pill--black .rim-fx { display: none; }
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 .hero, .closer {
@@ -200,14 +200,8 @@ a { color: inherit; text-decoration: none; }
   min-height: calc(100svh - 44px);
   display: grid; grid-template-rows: auto 1fr auto auto; gap: 28px;
   padding: 120px var(--gutter) 32px;
-  background:
-    radial-gradient(120% 90% at 85% 0%, #ff9b63 0%, rgba(255, 155, 99, 0) 55%),
-    linear-gradient(165deg, #ff7f45 0%, var(--orange) 42%, var(--orange-deep) 100%);
+  background: var(--orange);
 }
-/* A still light field for the glass to bend: the substrate, not decoration. */
-.hero-glow { position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 50% at 20% 80%, rgba(12,12,14,.18), transparent 70%); }
-/* Lava field: soft warm masses drift behind the type (hero.js, low-res canvas). */
-.hero-field { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
 .hero-grain { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 200px; }
 /* Ink landscape (ink.js): an engraved range along the foot of the hero that
@@ -354,9 +348,6 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Audiences: black stage ───────────────────────────────────────────── */
 .audiences { position: relative; isolation: isolate; overflow: hidden; padding: clamp(80px, 11vw, 140px) var(--gutter); background: var(--ink); color: #fff; }
-.aud-glow { position: absolute; inset: 0; z-index: -1; background:
-  radial-gradient(55% 40% at 50% 34%, rgba(252, 103, 54, 0.42), transparent 70%),
-  radial-gradient(40% 30% at 90% 100%, rgba(252, 103, 54, 0.18), transparent 70%); }
 .section-head--dark .label { color: rgba(255, 255, 255, 0.6); }
 .seg-wrap { margin: 0 calc(var(--gutter) * -1) clamp(40px, 6vw, 64px); padding: 6px var(--gutter); overflow-x: auto; scrollbar-width: none; }
 .seg-wrap::-webkit-scrollbar { display: none; }
