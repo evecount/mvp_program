@@ -56,8 +56,12 @@
     g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
     const ar = study.naturalWidth / study.naturalHeight, portrait = W < H;
     let dh = H * 1.04, dw = dh * ar;
-    if (portrait) { dw = W * 1.35; dh = dw / ar; }
-    const dx = portrait ? W - dw * 0.86 : Math.max(W - dw + W * 0.04, W * 0.34), dy = portrait ? H * 0.02 : 0;
+    // Phones: same flow as desktop. The summit sits right, its foot at the
+    // lede, and the range steps down leftward behind the headline.
+    const lede = hero.querySelector(".hero-lede")?.getBoundingClientRect();
+    if (portrait) { dw = W * 1.15; dh = dw / ar; }
+    const dx = portrait ? W * 0.74 - dw * 0.35 : Math.max(W - dw + W * 0.04, W * 0.34);
+    const dy = portrait && lede ? lede.top + lede.height * 0.6 - r.top - dh : 0;
     g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
     g.drawImage(study, dx, dy, dw, dh);
     // Extend the range leftward from the study itself: its lower ranges,
@@ -95,6 +99,16 @@
       // Complement of the drawing's rim, so the two meet with no seam.
       e.save(); e.globalCompositeOperation = "destination-out"; e.fillStyle = keepGrad(e); e.fillRect(0, 0, W, H); e.restore();
       g.save(); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "destination-over"; g.drawImage(ext, 0, 0); g.restore();
+    }
+    if (portrait) {
+      // No straight foot on phones: the whole range sits in one soft oval.
+      const cx = dx + dw * 0.35, cy = dy + dh * 0.4, rx = W * 0.95, ry = dh * 0.68;
+      g.save(); g.globalCompositeOperation = "destination-in";
+      g.translate(cx, cy); g.scale(1, ry / rx);
+      const o = g.createRadialGradient(0, 0, 0, 0, 0, rx);
+      o.addColorStop(0, "rgba(0,0,0,1)"); o.addColorStop(0.6, "rgba(0,0,0,1)"); o.addColorStop(0.82, "rgba(0,0,0,.5)"); o.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = o; g.fillRect(-W * 3, -H * 6, W * 6, H * 12);
+      g.restore();
     }
     // No clearings: the range runs on under the copy. The copy carries its own
     // halo (mockup.css) so it reads over the ink without boxing the drawing.
