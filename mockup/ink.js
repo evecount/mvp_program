@@ -42,7 +42,7 @@
      in black (assets/art/range-study.png). Placed right of centre so the summit
      sits just behind the end of the headline and the sky stays under the header. */
   const study = new Image();
-  study.src = "../assets/art/range-study.png";
+  study.src = new URL("../assets/art/range-study.png", document.currentScript.src).href;
   const ready = study.decode().catch(() => null);
   const draw = () => {
     const nav = document.getElementById("nav"), hr = hero.getBoundingClientRect();
