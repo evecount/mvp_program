@@ -15,7 +15,14 @@
  *   }
  */
 const MENTORS = [
-  { name: "James Sun", role: "Venture Partner", org: "Mamba Partners" },
+  {
+    name: "James Sun",
+    role: "Venture Partner",
+    org: "Mamba Partners",
+    photo: "assets/mentors/james-sun.jpg",
+    bio: "Leads go-to-market, marketing and sales: who buys, how to reach them, and how to turn a first conversation into a paying customer.",
+    focus: ["Go-to-market", "Marketing", "Sales"],
+  },
   {
     name: "Benjamin Lim",
     role: "Co-Founder",
