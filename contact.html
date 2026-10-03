@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact us | Mamba Venture Program</title>
+  <meta name="description" content="Contact the Mamba Venture Program team.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/legal/legal.css">
+  <link rel="stylesheet" href="/legal/footer.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <header class="legal-top">
+    <a href="/" aria-label="Mamba Venture Program home"><img src="/assets/brand/cybrdeck-logo.png" alt="Cybrdeck" width="886" height="197"></a>
+    <nav aria-label="Legal"><a href="/legal/privacy.html">Privacy</a><a href="/legal/terms.html">Terms</a><a href="/legal/data-protection.html">Data protection</a></nav>
+  </header>
+  <main>
+    <h1>Contact us</h1>
+    <p class="lead">Questions about the programme, partnering, a university workshop or an enterprise briefing? Send us a note and the programme team will reply by email.</p>
+    <form class="contact" id="contact-form" novalidate>
+      <div class="row">
+        <label>Name<input name="name" autocomplete="name" required maxlength="120"></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required maxlength="200"></label>
+      </div>
+      <label>Organisation <span class="opt">(optional)</span><input name="organisation" autocomplete="organization" maxlength="160"></label>
+      <label>What's it about?
+        <select name="topic" required>
+          <option value="">Choose one</option>
+          <option>Applying to the programme</option><option>Schools and universities</option><option>Enterprise</option>
+          <option>Partnering or mentoring</option><option>Media</option><option>Something else</option>
+        </select>
+      </label>
+      <label>Message<textarea name="message" rows="7" required maxlength="4000"></textarea></label>
+      <label class="hp" aria-hidden="true">Website<input name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="check"><input type="checkbox" name="consent" required> <span>I agree to the programme team using these details to reply to me, as set out in the <a href="/legal/privacy.html">privacy policy</a>.</span></label>
+      <p class="form-msg" id="contact-msg" role="status" aria-live="polite"></p>
+      <button type="submit" class="send">Send message</button>
+    </form>
+    <p class="meta">Looking to apply? Use the <a href="/apply.html#apply">application form</a> instead.</p>
+    <script src="/legal/contact.js"></script>
+
+  </main>
+  <footer class="site-foot">
+    <div class="site-foot-grid">
+      <div class="site-foot-brand">
+        <a href="/"><strong>Mamba Venture Program</strong></a>
+        <p>A Cybrdeck and Mamba Partners programme, with SG Innovation, in Singapore.</p>
+      </div>
+      <div>
+        <h2>Programme</h2>
+        <ul>
+          <li><a href="/#journey">How it works</a></li>
+          <li><a href="/#audiences">Who it's for</a></li>
+          <li><a href="/#mentors">Mentors</a></li>
+          <li><a href="/apply.html#apply">Apply</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Connect</h2>
+        <ul>
+          <li><a href="https://luma.com/vetnk204" target="_blank" rel="noopener" data-info="link">Info session RSVP</a></li>
+          <li><a href="https://cybrdeck.com" target="_blank" rel="noopener">cybrdeck.com</a></li>
+          <li><a href="/partner.html">Mentor, invest or partner</a></li>
+          <li><a href="/contact.html">Contact us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Legal</h2>
+        <ul>
+          <li><a href="/legal/privacy.html">Privacy policy</a></li>
+          <li><a href="/legal/terms.html">Terms and conditions</a></li>
+          <li><a href="/legal/data-protection.html">Data protection policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-foot-base">
+      <span>© 2026 Mamba Venture Program. Operated by Cybrdeck.</span>
+      <span>Singapore</span>
+    </div>
+  </footer>
+</body>
+</html>
