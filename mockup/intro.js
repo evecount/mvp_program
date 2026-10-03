@@ -27,7 +27,7 @@
   const VERT = "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
   const FRAG = `
 precision highp float;
-uniform vec2 uRes; uniform float uBuild, uYaw, uFlick, uTextLen, uDist, uHandFade;
+uniform vec2 uRes; uniform float uBuild, uYaw, uCurl, uTextLen, uDist, uHandFade;
 uniform mat3 uHandRi, uPlaneRi; uniform vec3 uHandP, uPlaneP, uInk;
 uniform sampler2D uAtlas, uText;
 
@@ -42,21 +42,25 @@ float tri(vec3 p, vec3 a, vec3 b, vec3 c){
     : dot(n,pa)*dot(n,pa)/dot2(n));
 }
 
-float finger(vec3 q, float z, float l1, float l2, float s, float r){
+// Each finger bends at the knuckle and again mid-way; uCurl closes them toward
+// the palm (local +y) - relaxed while holding, flicked open on the toss. The
+// smaller fingers curl a little more, so the hand never reads as a paddle.
+float finger(vec3 q, float z, float l1, float l2, float s, float r, float cf){
+  float c1 = uCurl*.5*cf, c2 = uCurl*.95*cf;
   vec3 a = vec3(.42, .03, z);
-  vec3 b = a + vec3(l1, .04 + uFlick*.06, s);
-  vec3 c = b + vec3(l2, .05 + uFlick*.12, s*1.3);
+  vec3 b = a + vec3(l1*cos(c1), l1*sin(c1) + .02, s);
+  vec3 c = b + vec3(l2*cos(c1 + c2), l2*sin(c1 + c2), s*1.3);
   return min(cap(q, a, b, r, r*.9), cap(q, b, c, r*.9, r*.74));
 }
 float hand(vec3 q){
   float d = rbox(q, vec3(.36, .045, .36), .09);
-  d = smin(d, cap(q, vec3(-.42, -.01, 0.), vec3(-2.8, -.1, 0.), .27, .34), .16);
-  float f = finger(q, -.31, .42, .36, -.16, .074);
-  f = min(f, finger(q, -.105, .48, .4, -.05, .077));
-  f = min(f, finger(q, .105, .45, .37, .06, .074));
-  f = min(f, finger(q, .3, .34, .29, .17, .066));
+  d = smin(d, cap(q, vec3(-.42, -.01, 0.), vec3(-1.6, -.06, 0.), .27, .31), .16);
+  float f = finger(q, -.31, .42, .36, -.16, .074, .85);
+  f = min(f, finger(q, -.105, .48, .4, -.05, .077, 1.));
+  f = min(f, finger(q, .105, .45, .37, .06, .074, 1.15));
+  f = min(f, finger(q, .3, .34, .29, .17, .066, 1.35));
   d = smin(d, f, .035);
-  float t = min(cap(q, vec3(-.05, -.02, -.34), vec3(.18, .06, -.7), .11, .095), cap(q, vec3(.18, .06, -.7), vec3(.42, .12 + uFlick*.05, -.92), .095, .08));
+  float t = min(cap(q, vec3(-.05, -.02, -.34), vec3(.18, .06, -.7), .11, .095), cap(q, vec3(.18, .06, -.7), vec3(.42 - uCurl*.06, .12 + uCurl*.16, -.88), .095, .08));
   return smin(d, t, .07);
 }
 float plane(vec3 r){
@@ -66,10 +70,10 @@ float plane(vec3 r){
   return d - .007;
 }
 vec2 map(vec3 p){
-  float h = hand(uHandRi * (p - uHandP) / 1.45) * 1.45;
+  float h = hand(uHandRi * (p - uHandP));
   vec3 pp = p - uPlaneP;
-  float b = length(pp) - 1.2;
-  float pl = b > .1 ? b : plane(uPlaneRi * pp / 1.7) * 1.7;
+  float b = length(pp) - .9;
+  float pl = b > .1 ? b : plane(uPlaneRi * pp / 1.2) * 1.2;
   return h < pl ? vec2(h, 0.) : vec2(pl, 1.);
 }
 vec3 normal(vec3 p){
@@ -102,21 +106,24 @@ void main(){
   if (hit < .5){
     vec3 q = uHandRi * (p - uHandP), nl = uHandRi * n;
     float k = uDist / 9.;
-    float v = q.x / (.075*k); line = floor(v); fy = fract(v);
+    float v = q.x / (.06*k); line = floor(v); fy = fract(v);
     vec2 tn = normalize(vec2(-nl.z, nl.y) + 1e-5);
-    u = dot(q.yz, tn) / (.045*k);
+    u = dot(q.yz, tn) / (.036*k);
   } else {
     vec3 r = uPlaneRi * (p - uPlaneP), nl = uPlaneRi * n;
     float k = uDist / 9.;
-    float v = (abs(nl.y) > abs(nl.z) ? r.z : r.y) / (.07*k);
+    float v = (abs(nl.y) > abs(nl.z) ? r.z : r.y) / (.056*k);
     line = floor(v) + 400.; fy = fract(v);
-    u = r.x / (.042*k);
+    u = r.x / (.034*k);
   }
   float ink = 0.;
   if (fy > .1 && fy < .9) ink = glyph(line, floor(u), vec2(fract(u), 1. - (fy - .1)/.8));
   float h = hash(line + id*131.7);
   ink *= smoothstep(h*.85, h*.85 + .15, uBuild);
-  if (hit < .5) ink *= 1. - smoothstep(h*.85, h*.85 + .15, uHandFade);
+  if (hit < .5){
+    ink *= 1. - smoothstep(h*.85, h*.85 + .15, uHandFade);
+    ink *= smoothstep(-1.45, -.75, (uHandRi * (p - uHandP)).x);   // the forearm fades out: no cut-off edge
+  }
   float diff = clamp(dot(n, normalize(vec3(-.5, .75, .55))), 0., 1.);
   float a = min(ink * 1.25, 1.) * (.72 + .28*diff);
   gl_FragColor = vec4(uInk * a, a);
@@ -134,7 +141,7 @@ void main(){
   const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   const aLoc = gl.getAttribLocation(prog, "a"); gl.enableVertexAttribArray(aLoc); gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
-  const U = {}; ["uRes", "uBuild", "uYaw", "uFlick", "uDist", "uHandFade", "uTextLen", "uHandRi", "uPlaneRi", "uHandP", "uPlaneP", "uInk", "uAtlas", "uText"].forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
+  const U = {}; ["uRes", "uBuild", "uYaw", "uCurl", "uDist", "uHandFade", "uTextLen", "uHandRi", "uPlaneRi", "uHandP", "uPlaneP", "uInk", "uAtlas", "uText"].forEach((n) => (U[n] = gl.getUniformLocation(prog, n)));
 
   /* Glyph atlas (printable ASCII, 16 x 6 cells) and the text as a data row. */
   const tex = (unit) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); ["TEXTURE_WRAP_S", "TEXTURE_WRAP_T"].forEach((k) => gl.texParameteri(gl.TEXTURE_2D, gl[k], gl.CLAMP_TO_EDGE)); return t; };
@@ -166,10 +173,38 @@ void main(){
   const smooth = (x) => { x = clamp01(x); return x * x * (3 - 2 * x); };
   const YAW = 0.14;
 
+  /* Choreography (seconds) */
+  const T = { build: 0.7, swing: [0.45, 1.05], release: 1.0, flight: 2.3, fade: 1.2, emit: [0.14, 0.72], settle: 1.0 };
+  /* The hand: cocked back while it forms, swings through the toss (the plane
+     rides the fingertips until release), fingers flick open, then relax. */
+  const X0 = norm([0.6, 0.8, 0]), Y0 = ortho(X0, [-0.3, 0.2, 1]);
+  const rz = (v, a) => [v[0] * Math.cos(a) - v[1] * Math.sin(a), v[0] * Math.sin(a) + v[1] * Math.cos(a), v[2]];
+  const hand = (s) => {
+    const w = smooth((s - T.swing[0]) / (T.swing[1] - T.swing[0])), after = smooth((s - T.swing[1]) / 0.7);
+    const ang = 0.28 - 0.62 * w + 0.12 * after;                 // back, through, settle
+    const X = rz(X0, ang), Y = rz(Y0, ang);
+    const p = S.handP ? add(S.handP, [0.18, 0.1, 0], w - 0.4 * after) : [0, 0, 0];
+    const curl = 0.42 - 0.5 * smooth((s - 0.6) / 0.4) + 0.38 * after;
+    return { X, Y, p, curl, ri: inv(X, Y), tips: add(add(p, X, 1.62), Y, 0.3) };
+  };
+  const plane = (s) => {
+    const h = hand(s);
+    if (s < T.release) return { u: 0, pos: h.tips, head: h.X, ri: inv(h.X, ortho(h.X, [0, 0.6, 0.8])), h };
+    const u = clamp01((s - T.release) / T.flight);
+    const e = u * (1.55 - 0.55 * u);                            // leaves at toss speed, eases into the glide
+    const k = Math.min(e, 0.999), p = bez(S.path, k), q = bez(S.path, Math.min(k + 0.01, 1));
+    const head = norm(q.map((x, i) => x - p[i]));
+    const roll = Math.sin(s * 2.4) * 0.1 * u;
+    return { u, pos: p, head, ri: inv(head, ortho(head, [roll, 0.6, 0.8])), h };
+  };
   /* Stage: everything is placed in screen-normalised units (-1..1) and lifted
      onto the z = 0 plane, so the throw reads the same on any viewport. */
   let W = 0, H = 0, D = 9, S = {};
   const resize = () => {
+    // The stage starts under the floating header (logos + nav), not behind it.
+    const nav = document.getElementById("nav"), hr = hero.getBoundingClientRect();
+    const top = Math.max(0, Math.round((nav ? nav.getBoundingClientRect().bottom : hr.top) - hr.top + 12));
+    canvas.style.top = `${top}px`; canvas.style.height = `${hr.height - top}px`;
     const r = canvas.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 1.25);
     W = r.width; H = r.height;
     canvas.width = Math.max(2, Math.round(W * dpr)); canvas.height = Math.max(2, Math.round(H * dpr));
@@ -178,11 +213,13 @@ void main(){
     const portrait = W / H < 1;
     D = portrait ? 13 : 9;
     const hh = D / 4, hw = hh * (W / H), at = (x, y, z = 0) => [x * hw, y * hh, z];
-    const handP = portrait ? at(-0.5, -0.78) : at(-0.62, -0.78);
-    const X = norm([0.6, 0.8, 0]), Y = ortho(X, [-0.3, 0.2, 1]);
-    const tips = add(add(handP, X, 1.75 * 1.45), Y, 0.4);
-    S = { handP, handRi: inv(X, Y), X, Y, tips,
-      path: [tips, portrait ? at(-0.2, 0.55, 0.6) : at(-0.35, 0.62, 0.8), portrait ? at(0.55, 0.95, 0.5) : at(0.35, 0.9, 0.7), portrait ? at(1.6, 1.25, 0.2) : at(1.45, 1.05, 0.2)] };
+    const handP = portrait ? at(-0.5, -0.5) : at(-0.62, -0.42);
+    // Release: the plane leaves the fingertips along their swing, then levels
+    // out and flies flat across the hero, above the headline it writes.
+    S = { handP, at };
+    const r0 = hand(T.release), dir = norm(r0.X.map((x, i) => x * 0.55 + [1, 0, 0][i] * 0.45));
+    const level = portrait ? 0.52 : 0.42;
+    S.path = [r0.tips, add(r0.tips, dir, 0.9), at(-0.1, level, 0.4), at(1.45, level + 0.04, 0.2)];
     gl.uniform1f(U.uDist, D);
   };
   /* World -> canvas CSS pixels, through the same yawed camera as the shader. */
@@ -192,23 +229,13 @@ void main(){
     return [W / 2 + (x * 2 / -z) * H, H / 2 - (y * 2 / -z) * H];
   };
 
-  /* Choreography (seconds) */
-  const T = { build: 1.5, flick: 1.3, release: 1.55, flight: 2.9, fade: 2.1, emit: [0.22, 0.78], settle: 1.25 };
-  const plane = (s) => {
-    const u = clamp01((s - T.release) / T.flight);
-    const e = u < 0.5 ? 2 * u * u * 0.9 + u * 0.1 : u;          // a quick toss, then steady glide
-    const k = Math.min(e, 0.999), p = bez(S.path, k), q = bez(S.path, Math.min(k + 0.01, 1));
-    const head = s < T.release ? S.X : norm(q.map((x, i) => x - p[i]));
-    const roll = Math.sin(s * 2.2) * 0.12 * u;
-    return { u, pos: s < T.release ? S.tips : p, head, ri: inv(head, ortho(head, [roll, 0.6, 0.8])) };
-  };
   const draw = (s) => {
     const P = plane(s);
     gl.uniform1f(U.uBuild, clamp01(s / T.build));
-    gl.uniform1f(U.uFlick, Math.sin(clamp01((s - T.flick) / 0.6) * Math.PI));
-    gl.uniform1f(U.uHandFade, clamp01((s - T.fade) / 0.9));
+    gl.uniform1f(U.uCurl, P.h.curl);
+    gl.uniform1f(U.uHandFade, clamp01((s - T.fade) / 0.7));
     gl.uniform1f(U.uYaw, YAW);
-    gl.uniformMatrix3fv(U.uHandRi, false, S.handRi); gl.uniform3fv(U.uHandP, S.handP);
+    gl.uniformMatrix3fv(U.uHandRi, false, P.h.ri); gl.uniform3fv(U.uHandP, P.h.p);
     gl.uniformMatrix3fv(U.uPlaneRi, false, P.ri); gl.uniform3fv(U.uPlaneP, P.pos);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -255,7 +282,7 @@ void main(){
   const emit = (i, P) => {
     const ch = letters[i], hr = hero.getBoundingClientRect(), r = ch.getBoundingClientRect();
     // The tail of the plane, in hero pixels, is where this letter is born.
-    const [tx, ty] = project(add(P.pos, P.head, -1.05));
+    const [tx, ty] = project(add(P.pos, P.head, -0.75));
     const fx = r.left - hr.left + r.width / 2, fy = r.top - hr.top + r.height / 2;
     const dx = tx - fx, dy = ty - fy, ang = Math.atan2(-P.head[1], P.head[0]);
     ch.style.opacity = "1";
@@ -294,7 +321,7 @@ void main(){
         letters.forEach((_, i) => { if (!emitted[i] && P.u >= T.emit[0] + (T.emit[1] - T.emit[0]) * (i / (letters.length - 1))) { emitted[i] = s; emit(i, P); } });
       }
       draw(freeze);
-      window.__intro = { S, draw, inv, norm, ortho };
+      window.__intro = { S, draw };
       anims.forEach((x, k) => { x.pause(); x.currentTime = Math.min((freeze - emitted.filter(Boolean)[k]) * 1000, T.settle * 1000); });
     });
     return;
