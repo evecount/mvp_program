@@ -58,6 +58,7 @@
     let dh = H * 1.04, dw = dh * ar;
     if (portrait) { dw = W * 1.35; dh = dw / ar; }
     const dx = portrait ? W - dw * 0.86 : Math.max(W - dw + W * 0.04, W * 0.34), dy = portrait ? H * 0.02 : 0;
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
     g.drawImage(study, dx, dy, dw, dh);
     // Copy stays legible: feathered clearings around the small text and buttons.
     g.globalCompositeOperation = "destination-out";
