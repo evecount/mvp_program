@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=DM+Sans:wght@500;700&display=block" rel="stylesheet">
+<style>
+body{margin:0;background:#f4f2ee;font-family:"DM Sans",sans-serif;color:#0c0c0e}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;padding:36px}
+.c{display:grid;gap:12px;align-content:start}
+.big{width:100%;aspect-ratio:1;border-radius:22%;overflow:hidden;box-shadow:0 10px 30px -18px rgba(0,0,0,.5)}
+.small{display:flex;gap:14px;align-items:end}
+.small svg{border-radius:22%;box-shadow:0 2px 6px -3px rgba(0,0,0,.4)}
+h3{margin:4px 0 0;font-size:17px}p{margin:0;font-size:13.5px;color:#3a3a40;line-height:1.45}
+</style></head><body><div class="grid" id="g"></div>
+<script>
+/* Mamba M: the emblem's three strokes (580-unit box). */
+const M = (color, sw, tf) => `<g transform="${tf}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="26" y1="26" x2="554" y2="554"/><polyline points="26,554 26,192 198,364"/><polyline points="382,216 554,26 554,388"/></g>`;
+/* Cybrdeck block: solid block with the d knocked out (bowl ring + ascender
+   curling up to the top edge). Rotated 180 degrees it reads as a p. */
+const D = (block, knock, x, y, w, h, flip) => {
+  const r = w * 0.27, cx = x + w * 0.5, cy = y + h * 0.66, sw = w * 0.11;
+  const g = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w*0.04}" fill="${block}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${knock}" stroke-width="${sw}"/>
+    <path d="M${cx + r} ${cy} V${y + h*0.42} C${cx + r} ${y + h*0.2} ${x + w*0.7} ${y + h*0.08} ${x + w*0.42} ${y + sw*0.5}" fill="none" stroke="${knock}" stroke-width="${sw}" stroke-linecap="butt"/>`;
+  return flip ? `<g transform="rotate(180 ${x + w/2} ${y + h/2})">${g}</g>` : g;
+};
+const V = (color, sw, x, y, w, h) => `<polyline points="${x},${y} ${x + w/2},${y + h} ${x + w},${y}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+const C = {
+ E: { t:"E · M·V·P lockup", d:"Mamba's M, a V in the same line weight, and Cybrdeck's d-block turned upside down so it reads as p. Both brands spell the program's name.", svg:`
+   <rect width="512" height="512" fill="#fc6736"/>
+   ${M("#0c0c0e", 40, "translate(40 178) scale(0.27)")}
+   ${V("#0c0c0e", 11, 214, 185, 110, 145)}
+   ${D("#0c0c0e", "#fc6736", 346, 178, 120, 158, true)}`},
+ F: { t:"F · Print-plate lockup", d:"The same MVP lockup in the cohort posters' two-ink print: vermilion on cream, ink extrusion, border. One family with the COHORT#n posters.", svg:`
+   <rect width="512" height="512" fill="#eee8ce"/><rect x="22" y="22" width="468" height="468" fill="none" stroke="#c83b2b" stroke-width="12"/>
+   <g transform="translate(8 -8)">${M("#0b0b0c", 40, "translate(40 178) scale(0.27)")}${V("#0b0b0c", 11, 214, 185, 110, 145)}${D("#0b0b0c", "#0b0b0c", 346, 178, 120, 158, true)}</g>
+   ${M("#c83b2b", 40, "translate(40 178) scale(0.27)")}
+   ${V("#c83b2b", 11, 214, 185, 110, 145)}
+   ${D("#c83b2b", "#eee8ce", 346, 178, 120, 158, true)}`},
+ G: { t:"G · Mamba M + Cybrdeck seal", d:"Mamba's M carries the tile; Cybrdeck's d-block sits in the corner like a maker's seal, with MVP set small. Clear hierarchy: Mamba leads, Cybrdeck builds.", svg:`
+   <rect width="512" height="512" fill="#0c0c0e"/>
+   ${M("#fc6736", 34, "translate(86 70) scale(0.5)")}
+   ${D("#f4f2ee", "#0c0c0e", 382, 356, 62, 82, false)}
+   <text x="86" y="436" font-family="Big Shoulders Display" font-weight="800" font-size="62" letter-spacing="8" fill="#f4f2ee">MVP</text>`},
+ H: { t:"H · Interlock", d:"Mamba's long diagonal runs straight into Cybrdeck's block, which closes the M like a full stop. Compact mark for the favicon; MVP rides beneath.", svg:`
+   <rect width="512" height="512" fill="#fc6736"/>
+   ${M("#0c0c0e", 30, "translate(96 78) scale(0.46)")}
+   ${D("#0c0c0e", "#fc6736", 318, 270, 104, 136, false)}
+   <text x="256" y="462" text-anchor="middle" font-family="Big Shoulders Display" font-weight="800" font-size="56" letter-spacing="10" fill="#0c0c0e">MVP</text>`},
+};
+const g = document.getElementById("g");
+for (const k of Object.keys(C)) {
+  const s = (w) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="${w}" height="${w}">${C[k].svg}</svg>`;
+  g.insertAdjacentHTML("beforeend", `<div class="c"><div class="big">${s("100%")}</div><div class="small">${s(64)}${s(32)}${s(16)}</div><h3>${C[k].t}</h3><p>${C[k].d}</p></div>`);
+}
+</script></body></html>
