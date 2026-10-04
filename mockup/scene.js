@@ -186,10 +186,13 @@
     scene.raf = requestAnimationFrame(tick);
   }
 
-  /* ── Countdown: the dial's ring sweeps a third per beat, then GO ── */
+  /* ── Countdown: 3, 2, 1, each beat sweeping a third of the ring, then GO.
+     The ring is full exactly when GO lands and then holds still; on phones
+     the whole count finishes well inside the card's 2s. ── */
   function countdown(scene, li) {
     const text = scene.svg.querySelector(".count"), arc = scene.svg.querySelector(".dial-arc");
     const seq = ["3", "2", "1", "GO"];
+    const BEAT = matchMedia("(max-width: 900px)").matches ? 380 : 560;
     clearTimeout(scene.timer);
     if (reduced()) { text.textContent = "GO"; text.classList.add("go"); arc.style.strokeDashoffset = "0"; return; }
     let i = 0;
@@ -197,11 +200,11 @@
       if (!li.classList.contains("on")) return;
       text.textContent = seq[i];
       text.classList.toggle("go", seq[i] === "GO");
-      arc.style.strokeDashoffset = String(1 - Math.min(i + 1, 3) / 3);
-      text.animate?.([{ opacity: 0, transform: "translateY(4px) scale(.9)" }, { opacity: 1, transform: "none" }], { duration: 300, easing: "cubic-bezier(.2,.9,.3,1.2)" });
-      if (++i < seq.length) scene.timer = setTimeout(next, 560);
+      if (i < 3) { arc.style.transition = `stroke-dashoffset ${BEAT}ms linear`; arc.style.strokeDashoffset = String(1 - (i + 1) / 3); }
+      text.animate?.([{ opacity: 0, transform: "translateY(4px) scale(.9)" }, { opacity: 1, transform: "none" }], { duration: 260, easing: "cubic-bezier(.2,.9,.3,1.2)" });
+      if (++i < seq.length) scene.timer = setTimeout(next, BEAT);
     };
-    scene.timer = setTimeout(next, 250);
+    next();
   }
 
   function reset(scene, li, index) {
@@ -210,7 +213,9 @@
     li.classList.remove("landed", "burning");
     if (index === 1) {
       const t = scene.svg.querySelector(".count"); t.textContent = "3"; t.classList.remove("go");
-      scene.svg.querySelector(".dial-arc").style.strokeDashoffset = "";
+      // Snap the ring back empty, no rewind animation while the card leaves.
+      const arc = scene.svg.querySelector(".dial-arc");
+      arc.style.transition = "none"; arc.style.strokeDashoffset = "";
     }
     if (index === 2) {
       const ship = scene.svg.querySelector(".ship");
