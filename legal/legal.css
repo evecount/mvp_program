@@ -6,7 +6,7 @@ a { color: inherit; text-decoration-color: rgba(12,12,14,.35); text-underline-of
 a:hover { text-decoration-color: var(--orange-text); }
 :focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; border-radius: 4px; }
 .legal-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px var(--gutter); border-bottom: 1px solid var(--hair); }
-.legal-top img { width: 112px; height: auto; display: block; }
+.legal-top img { height: 42px; width: auto; display: block; }
 .legal-top nav { display: flex; gap: 20px; font-size: .92rem; font-weight: 500; }
 .legal-top nav a { text-decoration: none; }
 .legal-top nav a[aria-current] { color: var(--orange-text); }
