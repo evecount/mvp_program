@@ -3343,3 +3343,5 @@ html { caret-color: var(--accent-orange-text); accent-color: var(--accent-orange
   .apply-choice:hover, .apply-choice:active { transform: none; }
   .apply-progress-bar .apply-seg.is-current { transform: none; }
 }
+.apply-consent a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.apply-consent a:hover { color: var(--accent-orange-hover); }
