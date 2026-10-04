@@ -2890,13 +2890,8 @@ body[data-screen="screen-apply"] .header-apply-btn { visibility: hidden; }
 
 /* Co-brand lockup: Cybrdeck × Mamba Partners */
 .brand-lockup { gap: 10px; min-width: 0; }
-.lockup-cybrdeck { height: 20px; width: auto; display: block; }
-.lockup-x { color: var(--text-muted); font-weight: 400; font-size: 0.95rem; }
-.lockup-mamba { display: inline-flex; align-items: center; gap: 6px; }
-.lockup-mamba img { width: 24px; height: 24px; display: block; }
-.lockup-mamba-text, .eco-logo--mamba > span { display: flex; flex-direction: column; line-height: 1; color: var(--text-primary); }
-.lockup-mamba-text strong { font-family: var(--font-heading); font-weight: 900; font-size: 0.82rem; letter-spacing: 0.16em; }
-.lockup-mamba-text small { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.3em; margin-top: 2px; color: var(--text-muted); }
+.lockup-wordmark { height: 42px; width: auto; display: block; }
+.eco-logo--mamba > span { display: flex; flex-direction: column; line-height: 1; color: var(--text-primary); }
 .lockup-divider { width: 2px; height: 26px; background: var(--border-subtle); margin: 0 4px; }
 .lockup-program { font-family: var(--font-heading); font-weight: 800; font-size: 0.98rem; color: var(--text-primary); white-space: nowrap; }
 
@@ -2945,9 +2940,7 @@ body[data-screen="screen-apply"] .header-apply-btn { visibility: hidden; }
 }
 @media (max-width: 760px) {
   .ecosystem-grid { grid-template-columns: 1fr; }
-  .lockup-cybrdeck { height: 15px; }
-  .lockup-mamba img { width: 20px; height: 20px; }
-  .lockup-mamba-text strong { font-size: 0.7rem; }
+  .lockup-wordmark { height: 36px; }
   .brand-lockup { gap: 6px; }
 }
 @media (max-width: 760px) { .hero-secondary-row { justify-content: center; } }
