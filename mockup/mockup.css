@@ -441,14 +441,13 @@ a { color: inherit; text-decoration: none; }
   .panel-cols > div { grid-template-columns: 1fr; gap: 6px; }
   .partner-grid > div { border-right: 0; border-bottom: 1px solid var(--hair); padding: 24px 0 !important; }
 
-  /* Mobile: pin the steps and let scroll walk through them. */
-  .journey { padding-bottom: 0; }
-  .journey-track { height: 300svh; }
-  .journey-sticky { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: center; padding-top: 72px; }
-  .journey-grid { grid-template-columns: 1fr; border: 0; }
-  .jstep { grid-area: 1 / 1; border: 0; padding: 0; opacity: 0; transform: translateY(28px); pointer-events: none;
-           transition: opacity .35s var(--ease-out-expo), transform .55s var(--spring-sheet); }
-  .jstep.on, .journey-grid:not(:has(.on)) .jstep:first-child { opacity: 1; transform: none; pointer-events: auto; }
+  /* Mobile: a horizontal card-by-card sequence that plays itself (2s a stage)
+     and can be swiped; the page scrolls normally past it. */
+  .journey { padding-bottom: 56px; }
+  .journey-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border: 0; gap: 16px;
+                  margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); scroll-padding: 0 var(--gutter); }
+  .journey-grid::-webkit-scrollbar { display: none; }
+  .jstep { flex: 0 0 100%; scroll-snap-align: center; border: 1px solid var(--hair); border-radius: 20px; padding: 28px 20px 32px; background: var(--paper); }
   .scene { width: min(66vw, 240px); margin: 16px auto; }
   .journey-rail { display: flex; justify-content: center; gap: 8px; margin-top: 28px; }
   .journey-rail span { width: 28px; height: 4px; border-radius: 2px; background: var(--hair); transition: background-color .3s var(--ease-out-expo); }
@@ -476,9 +475,7 @@ a { color: inherit; text-decoration: none; }
   .js .hero-title .line > span, .js .reveal { transform: none; opacity: 1; }
   .jstep.on .hose-flow, .jstep.on .vent, .jstep.burning .flame { animation: none; }
   .journey .scene-svg .ink { stroke-dashoffset: 0; } .journey .scene-svg .wash { opacity: 1; }
-  .journey-track { height: auto; }
-  .journey-sticky { position: static; height: auto; }
-  .journey-grid .jstep { grid-area: auto; opacity: 1; transform: none; pointer-events: auto; padding: 24px 0; }
+
 }
 
 /* Application deadline (js/countdown.js) */

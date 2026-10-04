@@ -139,7 +139,9 @@
     canvas.width = r.width * dpr; canvas.height = r.height * dpr;
     const ctx = canvas.getContext("2d"), k = r.width / 200;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const IGN = 420, DUR = 2400, parts = [];
+    // Phones give each stage 2s, so the flight is tightened to land inside it.
+    const quick = matchMedia("(max-width: 900px)").matches;
+    const IGN = quick ? 220 : 420, DUR = quick ? 1350 : 2400, parts = [];
     const start = performance.now();
     let last = start, n = 0;
     li.classList.add("burning");
@@ -253,18 +255,39 @@
   });
   document.querySelector(".journey-grid").addEventListener("pointerleave", () => !mobile.matches && setActive(-1));
 
-  const track = document.getElementById("journey-track");
-  let ticking = false;
-  const onScroll = () => {
-    ticking = false;
-    if (!mobile.matches) return;
-    const r = track.getBoundingClientRect();
-    const span = r.height - innerHeight;
-    const p = Math.min(Math.max(-r.top / (span || 1), 0), 0.999);
-    setActive(r.top > innerHeight * 0.4 ? -1 : Math.floor(p * steps.length));
+  /* Phones: the stages sit side by side as cards. While the section is on
+     screen they play one after another, 2s each, looping; a swipe takes over
+     and the sequence resumes from that card a moment later. */
+  const grid = document.querySelector(".journey-grid");
+  const STAGE_MS = 2000;
+  let cur = 0, timer = 0, inView = false, auto = false, swipeT = 0;
+  const show = (i, smooth = true) => {
+    cur = (i + steps.length) % steps.length;
+    auto = true;
+    grid.scrollTo({ left: steps[cur].offsetLeft - grid.offsetLeft - parseFloat(getComputedStyle(grid).paddingLeft), behavior: smooth && !reduced() ? "smooth" : "auto" });
+    setActive(cur);
+    setTimeout(() => (auto = false), 600);
   };
-  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-  mobile.addEventListener("change", () => { setActive(-1); onScroll(); });
+  const play = () => {
+    clearTimeout(timer);
+    if (!mobile.matches || !inView || document.hidden || reduced()) return;
+    timer = setTimeout(() => { show(cur + 1); play(); }, STAGE_MS);
+  };
+  grid.addEventListener("scroll", () => {
+    if (!mobile.matches || auto) return;
+    clearTimeout(timer); clearTimeout(swipeT);
+    swipeT = setTimeout(() => {
+      const i = Math.round(grid.scrollLeft / (steps[1].offsetLeft - steps[0].offsetLeft));
+      cur = Math.max(0, Math.min(steps.length - 1, i)); setActive(cur); play();
+    }, 160);
+  }, { passive: true });
+  if ("IntersectionObserver" in window) new IntersectionObserver(([e]) => {
+    inView = e.isIntersecting;
+    if (!mobile.matches) return;
+    if (inView) { show(cur, false); play(); } else { clearTimeout(timer); }
+  }, { threshold: 0.45 }).observe(grid);
+  mobile.addEventListener("change", () => { clearTimeout(timer); setActive(-1); if (mobile.matches && inView) { show(0, false); play(); } });
   document.addEventListener("visibilitychange", () => document.hidden && scenes.forEach((s) => cancelAnimationFrame(s.raf)));
-  onScroll();
+  document.addEventListener("visibilitychange", () => (document.hidden ? clearTimeout(timer) : play()));
+  if (mobile.matches && reduced()) setActive(0);
 })();
