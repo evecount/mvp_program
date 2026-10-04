@@ -127,4 +127,23 @@
     g.addEventListener("pointerenter", () => { g.classList.remove("stepped"); void g.getBoundingClientRect(); g.classList.add("stepped", "hover"); });
     g.addEventListener("pointerleave", () => g.classList.remove("hover"));
   });
+
+  // Easter egg: tap the furthest stone ten times (no more than 2s between
+  // taps) and a checkered flag on a pole rises out of it: you made it across.
+  const far = host.querySelector(".stone"), s = STONES[0], top = 34, fx = s.x + 0.6, fy = top + 2, SQ = 4;
+  let checks = "";
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 8; c++) if ((r + c) % 2 === 0) checks += `M${f(fx + c * SQ)} ${f(fy + r * SQ)}h${SQ}v${SQ}h-${SQ}Z`;
+  far.querySelector(".stone-body").insertAdjacentHTML("beforeend", `
+    <clipPath id="egg-clip"><rect x="${s.x - 40}" y="-40" width="120" height="${s.y + 42}"/></clipPath>
+    <g class="egg" clip-path="url(#egg-clip)"><g class="egg-rise">
+      <path class="egg-pole" d="M${s.x} ${s.y + 2}V${top}"/><circle class="egg-knob" cx="${s.x}" cy="${top - 1.6}" r="1.8"/>
+      <g class="egg-flag"><rect class="egg-cloth" x="${fx}" y="${fy}" width="${8 * SQ}" height="${5 * SQ}"/><path class="egg-checks" d="${checks}"/></g>
+    </g></g>`);
+  let taps = 0, last = 0;
+  far.addEventListener("click", () => {
+    if (far.classList.contains("won")) return;
+    const now = performance.now();
+    taps = now - last < 2000 ? taps + 1 : 1; last = now;
+    if (taps >= 10) far.classList.add("won");
+  });
 })();
