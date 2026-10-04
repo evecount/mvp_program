@@ -25,14 +25,51 @@
     : null;
   document.querySelectorAll(".reveal").forEach((n) => (io ? io.observe(n) : n.classList.add("in")));
 
-  /* Segmented control: the orange indicator morphs between tabs on a spring;
-     the panel slides in from the direction of travel. */
+  /* Segmented control (Apple motion): the pill's two edges ride their own
+     springs. The leading edge is stiffer, so the pill stretches toward the new
+     tab and the trailing edge catches up; a tap mid-flight retargets with the
+     velocity it already has. The dark label is a copy of the row clipped to
+     the pill, so text changes colour exactly where the pill is, mid-move too.
+     The panel slides in from the direction of travel. */
   const seg = document.getElementById("seg");
   const tabs = [...seg.querySelectorAll('[role="tab"]')];
   const indicator = seg.querySelector(".seg-indicator");
-  const place = (tab) => {
-    indicator.style.width = `${tab.offsetWidth}px`;
-    indicator.style.transform = `translateX(${tab.offsetLeft}px)`;
+  const ink = document.createElement("div");
+  ink.className = "seg-ink"; ink.setAttribute("aria-hidden", "true");
+  tabs.forEach((t) => { const c = t.cloneNode(true); c.removeAttribute("id"); c.removeAttribute("role"); c.removeAttribute("aria-controls"); c.removeAttribute("aria-selected"); c.tabIndex = -1; ink.append(c); });
+  seg.append(ink);
+  const twins = [...ink.children];
+  tabs.forEach((t, i) => {
+    t.addEventListener("pointerdown", () => twins[i].classList.add("press"));
+    ["pointerup", "pointerleave", "pointercancel"].forEach((ev) => t.addEventListener(ev, () => twins[i].classList.remove("press")));
+  });
+
+  const edge = (k, zeta) => ({ x: 0, v: 0, to: 0, k, c: 2 * zeta * Math.sqrt(k) });
+  let L = edge(300, 0.92), R = edge(300, 0.92), raf = 0, last = 0;
+  const render = () => {
+    const l = L.x, r = Math.max(R.x, l + 24), W = seg.clientWidth, H = seg.clientHeight;
+    indicator.style.transform = `translateX(${l}px)`; indicator.style.width = `${r - l}px`;
+    ink.style.clipPath = `inset(6px ${W - r}px ${6}px ${l}px round ${(H - 12) / 2}px)`;
+  };
+  const step = (now) => {
+    const dt = Math.min((now - (last || now)) / 1000, 1 / 30); last = now;
+    let moving = false;
+    for (const e of [L, R]) {
+      for (let i = 0; i < 4; i++) { const h = dt / 4, a = -e.k * (e.x - e.to) - e.c * e.v; e.v += a * h; e.x += e.v * h; }
+      if (Math.abs(e.x - e.to) > 0.05 || Math.abs(e.v) > 0.5) moving = true; else { e.x = e.to; e.v = 0; }
+    }
+    render();
+    raf = moving ? requestAnimationFrame(step) : (last = 0, 0);
+  };
+  const place = (tab, animate) => {
+    const l = tab.offsetLeft, r = l + tab.offsetWidth;
+    if (!animate) { L.x = L.to = l; R.x = R.to = r; L.v = R.v = 0; cancelAnimationFrame(raf); raf = 0; render(); return; }
+    // The edge heading toward the new tab leads; the other follows softer.
+    const right = (l + r) / 2 > (L.to + R.to) / 2;
+    const lead = edge(520, 0.78), trail = edge(230, 0.9);
+    Object.assign(L, right ? trail : lead, { x: L.x, v: L.v, to: l });
+    Object.assign(R, right ? lead : trail, { x: R.x, v: R.v, to: r });
+    if (!raf) raf = requestAnimationFrame(step);
   };
   const select = (tab, focus) => {
     const from = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
@@ -44,30 +81,15 @@
       t.tabIndex = on ? 0 : -1;
       document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
     });
-    // Rubber band (Apple motion): the leading edge shoots ahead to the new tab
-    // while the trailing edge holds, then the trailing edge snaps across, the
-    // pill overshoots a hair and recoils into place.
-    const x0 = tabs[from]?.offsetLeft ?? tab.offsetLeft, w0 = tabs[from]?.offsetWidth ?? tab.offsetWidth;
-    const x1 = tab.offsetLeft, w1 = tab.offsetWidth;
-    indicator.style.transition = "none";
-    place(tab);
-    if (!reduced() && indicator.animate && from >= 0) {
-      const k = (x, w) => ({ transform: `translateX(${x}px)`, width: `${w}px` });
-      const frames = to > from
-        ? [k(x0, w0), { ...k(x0, x1 + w1 - x0 + 10), offset: 0.42 }, { ...k(x1 + 6, w1 - 4), offset: 0.74 }, { ...k(x1 - 2, w1 + 2), offset: 0.88 }, k(x1, w1)]
-        : [k(x0, w0), { ...k(x1 - 10, x0 + w0 - x1 + 10), offset: 0.42 }, { ...k(x1 - 2, w1 - 4), offset: 0.74 }, { ...k(x1, w1 + 2), offset: 0.88 }, k(x1, w1)];
-      frames.forEach((f, i) => { if (i < frames.length - 1) f.easing = i === 0 ? "cubic-bezier(.4,0,.2,1)" : "cubic-bezier(.3,0,.3,1)"; });
-      indicator.animate(frames, { duration: 560 });
-    }
-    requestAnimationFrame(() => (indicator.style.transition = ""));
+    place(tab, !reduced() && from >= 0);
     if (focus) tab.focus();
     tab.scrollIntoView({ block: "nearest", inline: "center", behavior: reduced() ? "auto" : "smooth" });
     const panel = document.getElementById(tab.getAttribute("aria-controls"));
     if (!reduced() && panel.animate) {
       const dir = to > from ? 1 : -1;
       panel.animate(
-        [{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: "none" }],
-        { duration: 460, easing: "cubic-bezier(0.16, 1, 0.3, 1)" },
+        [{ opacity: 0, transform: `translateX(${dir * 18}px)` }, { opacity: 1, transform: "none" }],
+        { duration: 520, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
       );
     }
   };
@@ -80,10 +102,8 @@
     e.preventDefault();
     select(tabs[(next + tabs.length) % tabs.length], true);
   });
-  const settle = () => place(tabs.find((t) => t.getAttribute("aria-selected") === "true"));
-  indicator.style.transition = "none";
+  const settle = () => place(tabs.find((t) => t.getAttribute("aria-selected") === "true"), false);
   settle();
-  requestAnimationFrame(() => (indicator.style.transition = ""));
   addEventListener("resize", settle);
   document.fonts?.ready.then(settle);
 
