@@ -43,7 +43,46 @@
      sits just behind the end of the headline and the sky stays under the header. */
   const study = new Image();
   study.src = new URL("../assets/art/range-study.png", document.currentScript.src).href;
-  const ready = study.decode().catch(() => null);
+  const ready = Promise.all([study.decode().catch(() => null), document.fonts?.ready]);
+
+  /* Phones: the ink clears in a halo that follows the copy's own letterforms
+     (each glyph redrawn as a blurred, swollen mask) so black type never sits
+     on black hatching, and no box or oval shows. A tight core clears almost
+     fully; a wider, softer pass thins the ink around it. */
+  const clearAroundCopy = (g, r) => {
+    const OFF = 10000;                                        // glyphs go off canvas; only their shadow lands
+    const glyphs = [];
+    hero.querySelectorAll(".hero-kicker, .hero-title, .hero-lede").forEach((el) => {
+      const cs = getComputedStyle(el), font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`, size = parseFloat(cs.fontSize);
+      g.font = font;
+      const m = g.measureText("H"), asc = m.fontBoundingBoxAscent ?? size * 0.8;
+      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let n; (n = walk.nextNode());) {
+        for (let i = 0; i < n.length; i++) {
+          const c = n.data[i];
+          if (!c.trim()) continue;
+          const range = document.createRange(); range.setStart(n, i); range.setEnd(n, i + 1);
+          const b = range.getBoundingClientRect();
+          if (!b.width) continue;
+          glyphs.push({ c, font, size, x: b.left - r.left, y: b.top - r.top + asc, w: b.width });
+        }
+      }
+    });
+    const pass = (blur, swell, alpha) => {
+      g.save(); g.globalCompositeOperation = "destination-out"; g.globalAlpha = alpha;
+      g.shadowColor = "#000"; g.shadowBlur = blur * dpr; g.shadowOffsetX = OFF * dpr;
+      g.fillStyle = g.strokeStyle = "#000"; g.lineJoin = "round"; g.textBaseline = "alphabetic";
+      for (const q of glyphs) {
+        g.font = q.font; g.lineWidth = q.size * swell;
+        const x = q.x - OFF + (q.w - g.measureText(q.c).width) / 2;
+        g.fillText(q.c, x, q.y); g.strokeText(q.c, x, q.y);
+      }
+      g.restore();
+    };
+    pass(22, 0.5, 0.55);                                      // soft surround
+    pass(7, 0.22, 0.95);                                      // the clearing that hugs each letter
+  };
+
   const draw = () => {
     const nav = document.getElementById("nav"), hr = hero.getBoundingClientRect();
     const top = Math.max(0, Math.round((nav ? nav.getBoundingClientRect().bottom - hr.top : 0) + 8));
@@ -110,24 +149,8 @@
       g.fillStyle = o; g.fillRect(-W * 3, -H * 6, W * 6, H * 12);
       g.restore();
     }
-    if (portrait) {
-      // Phones: the ink thins (never a box) behind each line of the lede, in
-      // soft ovals hugging the words, so the three steps read cleanly.
-      g.save(); g.globalCompositeOperation = "destination-out";
-      hero.querySelectorAll(".hero-lede > span").forEach((sp) => {
-        const range = document.createRange(); range.selectNodeContents(sp);
-        const b = range.getBoundingClientRect();
-        const cx = b.left - r.left + b.width / 2, cy = b.top - r.top + b.height / 2, rx = b.width / 2 + 22, ry = b.height * 0.85;
-        g.save(); g.translate(cx, cy); g.scale(1, ry / rx);
-        const o = g.createRadialGradient(0, 0, 0, 0, 0, rx);
-        o.addColorStop(0, "rgba(0,0,0,.78)"); o.addColorStop(0.7, "rgba(0,0,0,.65)"); o.addColorStop(1, "rgba(0,0,0,0)");
-        g.fillStyle = o; g.beginPath(); g.arc(0, 0, rx, 0, Math.PI * 2); g.fill();
-        g.restore();
-      });
-      g.restore();
-    }
-    // No clearings: the range runs on under the copy. The copy carries its own
-    // halo (mockup.css) so it reads over the ink without boxing the drawing.
+    if (portrait) clearAroundCopy(g, r);
+    // Wider screens: no clearings, the range runs on under the copy.
     // Flakes: short ink dashes sampled from where the drawing has ink.
     const data = g.getImageData(0, 0, W * dpr, H * dpr).data;
     frags = [];
