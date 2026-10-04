@@ -148,6 +148,17 @@ const steps: Array<{ id: string; title: string; intro?: string; fields: Field[] 
           'I confirm these answers are my own and accurate, and I agree to the Cybrdeck founders and the Mamba Venture Program partners reviewing them for this cohort.',
         kind: 'checkbox', required: true,
       },
+      {
+        id: 'acceptTerms',
+        label: 'I have read and agree to the [Terms and conditions](/legal/terms.html).',
+        kind: 'checkbox', required: true,
+      },
+      {
+        id: 'acceptPrivacy',
+        label:
+          'I have read the [Privacy policy](/legal/privacy.html) and [Data protection notice](/legal/data-protection.html), and I consent to Mamba JJ Partners Pte. Ltd. collecting, using and disclosing my personal data as they describe, including through Cybrdeck as its technology partner, to assess this application.',
+        kind: 'checkbox', required: true,
+      },
     ],
   },
 ];
@@ -232,7 +243,7 @@ service cloud.firestore {
         && d.email.matches('^[^\\\\s@]+@[^\\\\s@]+\\\\.[^\\\\s@]+$')
         && d.track in ${list(MAMBA_TRACKS.map((t) => t.id), '                      ')}
         && d.intake in ${list(MAMBA_INTAKE_TRACKS, '                       ')}
-        && d.consent == true
+${fields.filter((f) => f.kind === 'checkbox' && f.required).map((f) => `        && d.${f.id} == true`).join('\n')}
         && (${openGate})
         && d.status == 'pending'
         && d.schemaVersion == ${SCHEMA_VERSION}

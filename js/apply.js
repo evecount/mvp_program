@@ -95,6 +95,15 @@ function el(tag, attrs = {}, ...children) {
   return node;
 }
 
+/* Checkbox labels may carry [text](/path) links to the policies; they open in
+   a new tab so the half-filled form stays put. */
+function linked(label) {
+  return label.split(/(\[[^\]]+\]\(\/[^)\s]+\))/).filter(Boolean).map((part) => {
+    const m = part.match(/^\[([^\]]+)\]\((\/[^)\s]+)\)$/);
+    return m ? el("a", { href: m[2], target: "_blank", rel: "noopener", text: m[1] }) : document.createTextNode(part);
+  });
+}
+
 function renderField(f) {
   const value = data[f.id] ?? (f.kind === "checkbox" ? false : "");
   const errId = `err-${f.id}`;
@@ -106,7 +115,7 @@ function renderField(f) {
     return el(
       "div",
       { class: "apply-field apply-field--full", "data-field": f.id },
-      el("label", { class: "checkbox-label apply-consent" }, input, el("span", { text: f.label })),
+      el("label", { class: "checkbox-label apply-consent" }, input, el("span", {}, ...linked(f.label))),
       el("p", { class: "apply-field-error", id: errId, hidden: true }),
     );
   }

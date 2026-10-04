@@ -659,6 +659,18 @@ window.MVP_APPLICATION = {
           "label": "I confirm these answers are my own and accurate, and I agree to the Cybrdeck founders and the Mamba Venture Program partners reviewing them for this cohort.",
           "kind": "checkbox",
           "required": true
+        },
+        {
+          "id": "acceptTerms",
+          "label": "I have read and agree to the [Terms and conditions](/legal/terms.html).",
+          "kind": "checkbox",
+          "required": true
+        },
+        {
+          "id": "acceptPrivacy",
+          "label": "I have read the [Privacy policy](/legal/privacy.html) and [Data protection notice](/legal/data-protection.html), and I consent to Mamba JJ Partners Pte. Ltd. collecting, using and disclosing my personal data as they describe, including through Cybrdeck as its technology partner, to assess this application.",
+          "kind": "checkbox",
+          "required": true
         }
       ]
     }
