@@ -364,7 +364,8 @@ export const contactEnquiry = onRequest(
     if (!ENQUIRY_TOPICS.includes(topic) && !network) reasons.push('topic');
     if (linkedin && !/^https?:\/\/\S+$/.test(linkedin)) reasons.push('linkedin');
     if (message.length < 10) reasons.push('message');
-    if (b.consent !== true) reasons.push('consent');
+    if (b.acceptTerms !== true) reasons.push('acceptTerms');
+    if (b.acceptPrivacy !== true) reasons.push('acceptPrivacy');
     if (reasons.length) { res.status(400).json({ ok: false, reasons }); return; }
 
     const ip = String(req.headers['x-forwarded-for'] ?? req.ip ?? '').split(',')[0].trim();
@@ -376,7 +377,7 @@ export const contactEnquiry = onRequest(
     const recent = (s: FirebaseFirestore.QuerySnapshot) => s.docs.filter((d) => { const t = d.get('createdAt'); return t instanceof Timestamp && t >= since; }).length;
     if (recent(byEmail) >= 3 || recent(byIp) >= 10) { res.status(429).json({ ok: false, reasons: ['rate'] }); return; }
 
-    const ref = await db.collection(ENQUIRIES).add({ name, email, organisation, topic, linkedin, kind: network ? 'network' : 'enquiry', message, ip, createdAt: FieldValue.serverTimestamp() });
+    const ref = await db.collection(ENQUIRIES).add({ name, email, organisation, topic, linkedin, kind: network ? 'network' : 'enquiry', message, ip, acceptedTerms: true, acceptedPrivacy: true, createdAt: FieldValue.serverTimestamp() });
     const to = REVIEWER_EMAILS.value().split(',').map((s) => s.trim()).filter(Boolean);
     try {
       await transport().sendMail({
