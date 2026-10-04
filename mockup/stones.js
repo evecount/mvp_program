@@ -146,4 +146,72 @@
     taps = now - last < 2000 ? taps + 1 : 1; last = now;
     if (taps >= 10) far.classList.add("won");
   });
+
+  // A frog, inked like the stones, hops up the stones to the far one and back
+  // down again, sending a ripple out from each stone it lands on. It only moves
+  // while the section is on screen; reduced motion leaves it sitting on the
+  // nearest stone.
+  const svgEl = host.querySelector("svg");
+  svgEl.insertAdjacentHTML("beforeend", `<g class="frog" aria-hidden="true"><g class="frog-body">
+    <circle class="frog-wash" cx="6" cy="-18" r="3.2"/><circle class="frog-ink" cx="6" cy="-18" r="3.2"/>
+    <path class="frog-wash" d="M-16 0C-19-9-11-17 0-18C8-19 15-16 19-10C22-6 21-1 16 0Z"/>
+    <path class="frog-ink" d="M-16 0C-19-9-11-17 0-18C8-19 15-16 19-10C22-6 21-1 16 0Z"/>
+    <path class="frog-ink frog-h" d="M-11-1C-3 1 6 1 13 0M20-7C16-6.5 12-7.5 9-9"/>
+    <circle class="frog-spot" cx="-6" cy="-13.5" r="1.3"/><circle class="frog-spot" cx="0" cy="-15.2" r="1"/><circle class="frog-spot" cx="-10" cy="-9" r=".9"/><circle class="frog-spot" cx="19" cy="-11.2" r=".5"/>
+    <path class="frog-wash" d="M-15-2C-18-10-6-14-2-7C0-3-5 1-12 0Z"/>
+    <path class="frog-ink" d="M-15-2C-18-10-6-14-2-7C0-3-5 1-12 0ZM-7 .5L3 1M1 1L5-.5M1 1L5 2M12-2L13 .5M10.5 .5L16 .5M14 .5L16-1"/>
+    <circle class="frog-wash" cx="11" cy="-17" r="3.8"/><circle class="frog-ink" cx="11" cy="-17" r="3.8"/><ellipse class="frog-eye" cx="12" cy="-17.3" rx="1.7" ry="1.1"/>
+  </g></g>`);
+  const frog = svgEl.querySelector(".frog"), body = frog.querySelector(".frog-body");
+  const stoneEls = [...host.querySelectorAll(".stone")];
+  // Where the frog sits on each stone (nearest first), smaller as the stones recede.
+  // On the far stone it sits left of centre, clear of the flagpole.
+  const SEATS = [
+    { x: STONES[2].x - 8, y: STONES[2].y + 5, k: 1.8, g: stoneEls[2] },
+    { x: STONES[1].x - 6, y: STONES[1].y + 4, k: 1.45, g: stoneEls[1] },
+    { x: STONES[0].x - 28, y: STONES[0].y + 3, k: 1.1, g: stoneEls[0] },
+  ];
+  let pos = { x: SEATS[0].x, y: SEATS[0].y, k: SEATS[0].k, dir: 1, sx: 1, sy: 1, rot: 0 };
+  const draw = () => {
+    frog.setAttribute("transform", `translate(${f(pos.x)} ${f(pos.y)}) scale(${f(pos.k)})`);
+    body.setAttribute("transform", `rotate(${f(pos.rot)}) scale(${f(pos.dir * pos.sx)} ${f(pos.sy)})`);
+  };
+  draw();
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduced) return;
+
+  let visible = false, wake = null;
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible && wake) { wake(); wake = null; } }, { threshold: 0.2 }).observe(host);
+  const onScreen = () => (visible && !document.hidden ? Promise.resolve() : new Promise((r) => (wake = r)));
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && visible && wake) { wake(); wake = null; } });
+  const tween = (ms, fn) => new Promise((done) => { const t0 = performance.now();
+    const step = (now) => { const t = Math.min((now - t0) / ms, 1); fn(t); draw(); t < 1 ? requestAnimationFrame(step) : done(); };
+    requestAnimationFrame(step); });
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const ease = (t) => t * t * (3 - 2 * t);
+
+  const hop = async (to) => {
+    const from = { ...pos }, dir = to.x > from.x ? 1 : -1, dist = Math.hypot(to.x - from.x, to.y - from.y);
+    if (pos.dir !== dir) { await tween(160, (t) => { pos.sx = 1 - 2 * ease(t); }); pos.dir = dir; pos.sx = 1; }
+    await tween(140, (t) => { pos.sy = 1 - 0.2 * ease(t); pos.sx = 1 + 0.08 * ease(t); });       // crouch
+    const H = 40 + dist * 0.25;
+    await tween(560, (t) => {                                                                 // the arc
+      pos.x = from.x + (to.x - from.x) * t; pos.y = from.y + (to.y - from.y) * t - H * 4 * t * (1 - t);
+      pos.k = from.k + (to.k - from.k) * t; pos.rot = dir * (t - 0.5) * 24;
+      pos.sy = 1.1 - 0.1 * Math.abs(t - 0.5) * 2; pos.sx = 0.94;
+    });
+    pos.rot = 0;
+    to.g.classList.remove("stepped"); void to.g.getBoundingClientRect(); to.g.classList.add("stepped");
+    await tween(180, (t) => { pos.sy = 0.84 + 0.16 * ease(t); pos.sx = 1.06 - 0.06 * ease(t); }); // land
+  };
+
+  (async () => {
+    await wait(1800);
+    for (let i = 0, step = 1; ; i += step) {
+      await onScreen(); await wait(i === 0 || i === SEATS.length - 1 ? 1600 : 900);
+      await onScreen();
+      if (i + step < 0 || i + step >= SEATS.length) step = -step;
+      await hop(SEATS[i + step]);
+    }
+  })();
 })();
