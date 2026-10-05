@@ -102,7 +102,7 @@ const steps: Array<{ id: string; title: string; intro?: string; fields: Field[] 
       },
       {
         id: 'intake', label: 'Which intake are you applying for?', kind: 'select', required: true,
-        options: MAMBA_INTAKE_TRACKS.map((i) => ({ value: i, label: `${i} track` })),
+        options: MAMBA_INTAKE_TRACKS.map((i) => ({ value: i, label: `${i.replace(' Month', '-month')} track` })),
       },
     ],
   },
