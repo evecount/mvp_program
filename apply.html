@@ -16,7 +16,10 @@
   <meta name="twitter:title" content="Mamba Venture Program (MVP) — Build a venture that sells">
   <meta name="twitter:description" content="Turn industry insight into a working product. 1-month sprint or 3-month venture build. Applications for the January 2027 intake are open.">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/apply.css">
   <link rel="stylesheet" href="legal/footer.css">
   <!-- The application lives here; the program page is the site root. -->
   <script>if (!location.hash) history.replaceState(null, "", "#apply");</script>
@@ -25,44 +28,21 @@
   <link rel="apple-touch-icon" href="/assets/brand/mvp/apple-touch-icon.png">
 </head>
 <body ontouchstart="">
-  <div class="grid-overlay"></div>
-
   <div class="app-wrapper">
-    <!-- Top Studio Header Bar -->
-    <header class="studio-header">
-      <a href="./" class="brand-badge brand-lockup" aria-label="Home: Mamba Venture Program" title="Home">
-        <span class="home-btn"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v11h4.5v-6h4v6h4.5V9"/></svg></span>
-        <span class="lockup-program">Mamba Venture Program</span>
-      </a>
-
-      <!-- Audience Navigation Links for Landing Page -->
-      <!-- Live banner: what's coming up next. Each item hides itself once its
-           data-until moment has passed (js/live-banner.js); edit dates here. -->
+    <header class="ap-top">
+      <a class="home-btn" href="/" aria-label="Home: Mamba Venture Program" title="Home"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v11h4.5v-6h4v6h4.5V9"/></svg></a>
+      <!-- The next info session, kept current from Luma (mockup/info-session.js); hides once it has passed (js/live-banner.js). -->
       <div class="live-banner" id="live-banner" aria-label="Coming up">
-        <a class="live-item live-item--event" data-until="2026-10-16T16:00:00+08:00" data-info="link"
-           href="https://luma.com/vetnk204" target="_blank" rel="noopener">
+        <a class="live-item" data-until="2026-10-16T16:00:00+08:00" data-info="link" href="https://luma.com/vetnk204" target="_blank" rel="noopener">
           <span class="live-dot" aria-hidden="true"></span>
           <span class="live-kicker" data-info="kicker">Info session #2</span>
           <span class="live-text" data-info="when">16 Oct, 2pm &middot; Aspire</span>
-          <span class="live-cta">RSVP &rarr;</span>
+          <span class="live-cta">RSVP</span>
         </a>
-        <span class="live-item" data-until="2027-01-26T23:59:59+08:00">
-          <span class="live-kicker">Next cohort</span>
-          <span class="live-text">Starts 26 Jan 2027</span>
-        </span>
       </div>
-
-      <!-- Action Controls -->
-      <div class="header-actions">
-        <a href="#apply" class="header-apply-btn" id="header-apply-btn">Apply to MVP</a>
-        <button type="button" class="icon-btn active" id="btn-toggle-sound" title="Sound effects on" aria-label="Sound effects" aria-pressed="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
-        </button>
-
-      </div>
+      <button type="button" class="ap-icon active" id="btn-toggle-sound" title="Sound effects on" aria-label="Sound effects" aria-pressed="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      </button>
     </header>
 
     <!-- Main Content Area -->
@@ -73,30 +53,17 @@
            ==================================================================== -->
       <section class="screen active" id="screen-apply" aria-labelledby="apply-title">
         <div class="apply-shell">
-          <a href="./" class="apply-back">&larr; Back to the program</a>
-
-          <!-- Same editorial banner as the landing hero (.deck-hero-banner). -->
-          <header class="apply-intro deck-hero-banner">
-            <div class="deck-pillars-row">
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">About 20 minutes</span>
-                <p class="pillar-text">Up to 10 short steps. Founders answer a few more about the venture.</p>
-              </div>
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">Saves as you go</span>
-                <p class="pillar-text">Your answers stay on this device, so you can stop and come back.</p>
-              </div>
-              <div class="deck-pillar-col">
-                <span class="pillar-number-title">Evidence beats polish</span>
-                <p class="pillar-text">Answer the way you would in the room with our partners: specific, honest, your own words.</p>
-              </div>
-            </div>
-            <div class="deck-headline-group">
-              <h1 class="deck-huge-title" id="apply-title">Apply to MVP</h1>
-              <div class="deck-sub-tagline">Cohort starting <span data-cohort="start">26 Jan 2027</span> &middot; 1-month or 3-month track</div>
-              <div class="deck-sub-tagline apply-deadline" data-countdown-open>Applications close <span data-countdown="date">23 Jan 2027, 9am SGT</span> &middot; <span data-countdown="days">soon</span></div>
-              <div class="deck-sub-tagline apply-deadline" data-countdown-closed hidden>Applications are closed until the next cohort is announced</div>
-            </div>
+          <header class="ap-hero">
+            <p class="ap-kicker">Mamba Venture Program &middot; Singapore</p>
+            <h1 class="ap-title" id="apply-title">Apply to MVP</h1>
+            <p class="ap-meta">Cohort starting <span data-cohort="start">26 Jan 2027</span> &middot; 1-month or 3-month track</p>
+            <p class="ap-meta ap-deadline" data-countdown-open>Applications close <span data-countdown="date">23 Jan 2027, 9am SGT</span> &middot; <span data-countdown="days">soon</span></p>
+            <p class="ap-meta ap-deadline" data-countdown-closed hidden>Applications are closed until the next cohort is announced</p>
+            <ul class="ap-points">
+              <li><b>About 20 minutes</b><span>Up to 10 short steps. Founders answer a few more about the venture.</span></li>
+              <li><b>Saves as you go</b><span>Your answers stay on this device, so you can stop and come back.</span></li>
+              <li><b>Evidence beats polish</b><span>Answer the way you would in the room with our partners: specific, honest, your own words.</span></li>
+            </ul>
           </header>
 
           <div class="apply-card" id="apply-card">
@@ -121,7 +88,7 @@
           </div>
 
           <div class="apply-card apply-done" id="apply-done" hidden tabindex="-1">
-            <img src="assets/stickers/sticker_rocket.jpg" alt="" class="apply-done-sticker" width="1024" height="1024">
+            <span class="apply-done-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
             <h2>Your application is in.</h2>
             <p id="apply-done-copy"></p>
             <ul class="apply-done-next">
@@ -129,7 +96,7 @@
               <li><strong>Next, we discuss your stage.</strong> Shortlisted applicants meet the partners to find the right track.</li>
             </ul>
             <div class="apply-done-actions">
-              <a href="./" class="btn-secondary">Back to the program</a>
+              <a href="./" class="btn-secondary">Back to the homepage</a>
             </div>
           </div>
         </div>

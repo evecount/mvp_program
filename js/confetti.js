@@ -7,7 +7,7 @@ class ConfettiLauncher {
     this.ctx = null;
     this.particles = [];
     this.animationId = null;
-    this.colors = ["#00f2fe", "#4facfe", "#10b981", "#34d399", "#f59e0b", "#ec4899", "#a855f7"];
+    this.colors = ["#fc6736", "#e2431a", "#0c0c0e", "#f4f2ee", "#ffb38f"];   // the site's orange, ink and paper
   }
 
   init() {
