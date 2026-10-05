@@ -390,8 +390,8 @@ export function matchGrants(answers: Answers, track: string): GrantMatch[] {
   const stage = str(answers, 'stage');
   const hasRevenue = stage.includes('Revenue');
   const signal = str(answers, 'outsideSignal');
-  const paying = signal === 'Yes — someone is paying';
-  const piloting = paying || signal === 'Yes — an unpaid pilot is running';
+  const paying = signal === 'Yes, someone is paying';
+  const piloting = paying || signal === 'Yes, an unpaid pilot is running';
   const capital = str(answers, 'capitalToMatch');
   const canMatch = capital === 'Yes, it is already banked' || capital === 'Yes, I could raise it';
   const overseas = str(answers, 'overseasAmbition');
@@ -625,7 +625,7 @@ const RISK_PROBE: Record<string, (answer: string) => string | null> = {
       : null,
 };
 
-const HOURS_FREE = 'Those hours are already mine — nothing conflicts with them';
+const HOURS_FREE = 'Those hours are already mine; nothing conflicts with them';
 const GIVE_NOTICE = 'I would have to give notice or end something first';
 const SHORT_RUNWAY = ['Under 3 months', '3–6 months'];
 const SALARY_INTENT = 'My own salary so I can go full-time';
@@ -677,7 +677,7 @@ export function interviewSheet(
     );
   }
   if (
-    at('outsideSignal') === 'Yes — someone is paying' &&
+    at('outsideSignal') === 'Yes, someone is paying' &&
     (at('stage') === 'Idea only' || at('stage') === 'Building a prototype')
   ) {
     push(
@@ -750,7 +750,7 @@ export function interviewSheet(
 
   /* 5 — Claims worth seeing with our own eyes. */
   const signal = at('outsideSignal');
-  if (signal === 'Yes — someone is paying' || signal === 'Yes — an unpaid pilot is running') {
+  if (signal === 'Yes, someone is paying' || signal === 'Yes, an unpaid pilot is running') {
     push(
       'verify-signal',
       'Verification',

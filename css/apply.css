@@ -161,7 +161,7 @@ textarea.form-input { min-height: 140px; resize: vertical; line-height: 1.55; }
 .apply-done-next { list-style: none; text-align: left; max-width: 560px; width: 100%; margin-top: 8px; border-top: 1px solid var(--hair); }
 .apply-done-next li { padding: 14px 0; border-bottom: 1px solid var(--hair); color: var(--ink-2); }
 .apply-done-next strong { color: var(--ink); }
-.apply-done-actions { margin-top: 10px; }
+.apply-done-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 
 @media (max-width: 720px) {
   .apply-grid { grid-template-columns: 1fr; }

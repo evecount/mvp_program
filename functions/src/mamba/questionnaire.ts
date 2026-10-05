@@ -120,7 +120,7 @@ export const QUESTIONS: readonly Question[] = [
       { label: 'I worked in it before', weight: 0.8 },
       { label: 'I am an adjacent specialist', weight: 0.55 },
       { label: 'I am an outsider to it', weight: 0.2 },
-      { label: 'No venture yet — this is about my own career', weight: 0.35 },
+      { label: 'No venture yet, this is about my own career', weight: 0.35 },
     ],
   },
   {
@@ -149,7 +149,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'alreadyDone',
     label: 'What have you already done about it?',
-    help: 'Name the artifact — a repo, a deck, a pilot, a customer, a spreadsheet. Work done before this program counts for most.',
+    help: 'Name the artifact: a repo, a deck, a pilot, a customer, a spreadsheet. Work done before this program counts for most.',
     kind: 'textarea',
     required: true,
     min: 100,
@@ -160,7 +160,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'teamGaps',
     label: 'What can you personally build or execute today without hiring anyone, and which specific capability is missing from the team as it stands?',
-    help: 'Name the gap precisely — "engineering" is not an answer, "nobody who can close enterprise deals" is.',
+    help: 'Name the gap precisely. "Engineering" is not an answer; "nobody who can close enterprise deals" is.',
     kind: 'textarea',
     tracks: ['founder'],
     required: true,
@@ -191,8 +191,8 @@ export const QUESTIONS: readonly Question[] = [
     axis: 'traction',
     weight: 1,
     options: [
-      { label: 'Yes — someone is paying', weight: 1 },
-      { label: 'Yes — an unpaid pilot is running', weight: 0.75 },
+      { label: 'Yes, someone is paying', weight: 1 },
+      { label: 'Yes, an unpaid pilot is running', weight: 0.75 },
       { label: 'Verbal interest only', weight: 0.45 },
       { label: 'Not yet', weight: 0.2 },
       NOT_APPLICABLE,
@@ -218,7 +218,7 @@ export const QUESTIONS: readonly Question[] = [
        as grant-liability risk: no income plus a grant to replace it is the
        profile that walks away in month two. */
     options: [
-      { label: 'Those hours are already mine — nothing conflicts with them', weight: 1 },
+      { label: 'Those hours are already mine; nothing conflicts with them', weight: 1 },
       { label: 'My employer or client has agreed the hours in writing', weight: 0.9 },
       { label: 'I am rearranging existing commitments to free them', weight: 0.6 },
       { label: 'I would have to give notice or end something first', weight: 0.4, risk: 0.5 },
@@ -297,7 +297,7 @@ export const QUESTIONS: readonly Question[] = [
     axis: 'accountability',
     weight: 1,
     options: [
-      { label: 'Yes — set them with me', weight: 1 },
+      { label: 'Yes, set them with me', weight: 1 },
       { label: 'Yes, if I help set them', weight: 0.9 },
       { label: 'I would need to see them first', weight: 0.5 },
       { label: 'No', weight: 0 },
@@ -368,7 +368,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'failureMode',
     label:
-      'What is the strongest reason this could fail — not a generic startup risk, the specific one that applies to what you are building — and what would you need to see in the next 90 days to know it is happening?',
+      'What is the strongest reason this could fail? Not a generic startup risk: the specific one that applies to what you are building. What would you need to see in the next 90 days to know it is happening?',
     help: 'A reason we could have written for any applicant does not count. Name the one that is actually yours.',
     kind: 'textarea',
     required: true,
@@ -379,7 +379,7 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: 'firstThirtyDays',
-    label: 'If you started tomorrow, what are the first three things you would do in the next 30 days — specific actions, not goals?',
+    label: 'If you started tomorrow, what are the first three things you would do in the next 30 days? Specific actions, not goals.',
     help: '"Validate the market" is a goal. "Call the 5 operations leads I already know and ask what they pay for this today" is an action.',
     kind: 'textarea',
     required: true,
@@ -393,7 +393,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'ventureOneLiner',
     label: 'Your venture, in one line',
-    help: 'A sentence is enough — this is a triage note, not a pitch deck.',
+    help: 'A sentence is enough. This is a triage note, not a pitch deck.',
     kind: 'text',
     tracks: ['founder'],
     required: true,
@@ -420,7 +420,7 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: 'firstCustomers',
-    label: 'Name your first 10 customers as specifically as you can — who they are, and exactly how you would reach them this month, not eventually.',
+    label: 'Name your first 10 customers as specifically as you can: who they are, and exactly how you would reach them this month, not eventually.',
     help: 'A named company or persona beats a segment. "SMEs" is not an answer; "the ops manager at a 20-truck logistics operator like the one I worked at" is.',
     kind: 'textarea',
     tracks: ['founder'],
@@ -432,7 +432,7 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: 'businessModel',
-    label: 'Who pays, for what exactly, and how much — walk through the transaction as it actually happens, not the business model slide version.',
+    label: 'Who pays, for what exactly, and how much? Walk through the transaction as it actually happens, not the business model slide version.',
     help: 'If you do not know yet, say what you would charge the first paying customer and why that number.',
     kind: 'textarea',
     tracks: ['founder'],
@@ -445,7 +445,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'residency',
     label: 'What is your residency status?',
-    help: 'Drives which schemes you can actually reach — several are closed to non-citizens and non-PRs.',
+    help: 'Drives which schemes you can actually reach. Several are closed to non-citizens and non-PRs.',
     kind: 'select',
     tracks: ['founder'],
     required: true,
@@ -477,7 +477,7 @@ export const QUESTIONS: readonly Question[] = [
     required: true,
     options: [
       { label: 'Two or more', weight: 1 },
-      { label: 'One — just me', weight: 0.4 },
+      { label: 'One, just me', weight: 0.4 },
       { label: 'None', weight: 0 },
     ],
   },
@@ -520,7 +520,7 @@ export const QUESTIONS: readonly Question[] = [
       { label: 'Yes, and we own it', weight: 1 },
       { label: 'Yes, licensed from someone else', weight: 0.5 },
       { label: 'In development', weight: 0.6 },
-      { label: 'No — it is a services or business-model play', weight: 0.2 },
+      { label: 'No, it is a services or business-model play', weight: 0.2 },
     ],
   },
   {
@@ -548,7 +548,7 @@ export const QUESTIONS: readonly Question[] = [
       { label: 'Yes, and we have a partner or lead', weight: 1 },
       { label: 'Yes, a market but no partner yet', weight: 0.6 },
       { label: 'Not yet', weight: 0.3 },
-      { label: 'No — Singapore only', weight: 0.1 },
+      { label: 'No, Singapore only', weight: 0.1 },
     ],
   },
 ];
@@ -582,7 +582,7 @@ export const QUESTION_SECTIONS: ReadonlyArray<{
     id: 'bringing',
     title: 'What you are bringing',
     intro:
-      'Not the pitch — the evidence. We read these answers against what you have already done, so specifics beat ambition here.',
+      'Not the pitch, the evidence. We read these answers against what you have already done, so specifics beat ambition here.',
     questions: [
       'ideaTitle',
       'domainProximity',
