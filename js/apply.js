@@ -521,6 +521,20 @@ document.addEventListener("mvp:route", (e) => {
 
 loadDraft();
 render();
+
+/* Review mode: apply.html?preview=submitted opens straight on the success
+   screen with sample details and a Replay button, so the animation can be
+   checked without filing an application. Nothing is sent or saved. */
+if (new URLSearchParams(location.search).get("preview") === "submitted") {
+  els.doneCopy.textContent = "Thanks, Alex. Your application is with the Mamba MVP team, and we'll reply to alex@example.com.";
+  els.card.hidden = true;
+  if (els.hero) els.hero.hidden = true;
+  els.done.hidden = false;
+  const replay = el("button", { type: "button", class: "btn-secondary apply-replay", text: "Replay animation" });
+  replay.addEventListener("click", () => { window.scrollTo({ top: 0 }); window.soundEngine?.pass?.(); celebrate(); });
+  els.done.querySelector(".apply-done-actions")?.append(replay);
+  setTimeout(celebrate, 300);
+}
 // Tell an applicant up front when no cohort is taking applications.
 if (!(window.MVP_COHORTS || []).some((c) => c.closesAt > Date.now())) {
   showBanner("Applications are closed until the next cohort is announced. You can still fill this in; your answers are saved on this device.");

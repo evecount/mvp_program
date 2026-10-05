@@ -136,7 +136,7 @@ window.MVP_APPLICATION = {
     {
       "id": "bringing",
       "title": "What you are bringing",
-      "intro": "Not the pitch — the evidence. We read these answers against what you have already done, so specifics beat ambition here.",
+      "intro": "Not the pitch, the evidence. We read these answers against what you have already done, so specifics beat ambition here.",
       "fields": [
         {
           "id": "ideaTitle",
@@ -157,7 +157,7 @@ window.MVP_APPLICATION = {
             "I worked in it before",
             "I am an adjacent specialist",
             "I am an outsider to it",
-            "No venture yet — this is about my own career"
+            "No venture yet, this is about my own career"
           ]
         },
         {
@@ -182,7 +182,7 @@ window.MVP_APPLICATION = {
           "id": "alreadyDone",
           "label": "What have you already done about it?",
           "kind": "textarea",
-          "hint": "Name the artifact — a repo, a deck, a pilot, a customer, a spreadsheet. Work done before this program counts for most.",
+          "hint": "Name the artifact: a repo, a deck, a pilot, a customer, a spreadsheet. Work done before this program counts for most.",
           "required": true,
           "min": 100,
           "max": 2000
@@ -191,7 +191,7 @@ window.MVP_APPLICATION = {
           "id": "teamGaps",
           "label": "What can you personally build or execute today without hiring anyone, and which specific capability is missing from the team as it stands?",
           "kind": "textarea",
-          "hint": "Name the gap precisely — \"engineering\" is not an answer, \"nobody who can close enterprise deals\" is.",
+          "hint": "Name the gap precisely. \"Engineering\" is not an answer; \"nobody who can close enterprise deals\" is.",
           "required": true,
           "min": 80,
           "max": 1200,
@@ -219,8 +219,8 @@ window.MVP_APPLICATION = {
           "required": true,
           "max": 200,
           "options": [
-            "Yes — someone is paying",
-            "Yes — an unpaid pilot is running",
+            "Yes, someone is paying",
+            "Yes, an unpaid pilot is running",
             "Verbal interest only",
             "Not yet",
             "Not applicable to my track"
@@ -237,7 +237,7 @@ window.MVP_APPLICATION = {
           "id": "ventureOneLiner",
           "label": "Your venture, in one line",
           "kind": "text",
-          "hint": "A sentence is enough — this is a triage note, not a pitch deck.",
+          "hint": "A sentence is enough. This is a triage note, not a pitch deck.",
           "required": true,
           "max": 500,
           "tracks": [
@@ -264,7 +264,7 @@ window.MVP_APPLICATION = {
         },
         {
           "id": "firstCustomers",
-          "label": "Name your first 10 customers as specifically as you can — who they are, and exactly how you would reach them this month, not eventually.",
+          "label": "Name your first 10 customers as specifically as you can: who they are, and exactly how you would reach them this month, not eventually.",
           "kind": "textarea",
           "hint": "A named company or persona beats a segment. \"SMEs\" is not an answer; \"the ops manager at a 20-truck logistics operator like the one I worked at\" is.",
           "required": true,
@@ -276,7 +276,7 @@ window.MVP_APPLICATION = {
         },
         {
           "id": "businessModel",
-          "label": "Who pays, for what exactly, and how much — walk through the transaction as it actually happens, not the business model slide version.",
+          "label": "Who pays, for what exactly, and how much? Walk through the transaction as it actually happens, not the business model slide version.",
           "kind": "textarea",
           "hint": "If you do not know yet, say what you would charge the first paying customer and why that number.",
           "required": true,
@@ -290,7 +290,7 @@ window.MVP_APPLICATION = {
           "id": "residency",
           "label": "What is your residency status?",
           "kind": "select",
-          "hint": "Drives which schemes you can actually reach — several are closed to non-citizens and non-PRs.",
+          "hint": "Drives which schemes you can actually reach. Several are closed to non-citizens and non-PRs.",
           "required": true,
           "max": 200,
           "options": [
@@ -327,7 +327,7 @@ window.MVP_APPLICATION = {
           "max": 200,
           "options": [
             "Two or more",
-            "One — just me",
+            "One, just me",
             "None"
           ],
           "tracks": [
@@ -379,7 +379,7 @@ window.MVP_APPLICATION = {
             "Yes, and we own it",
             "Yes, licensed from someone else",
             "In development",
-            "No — it is a services or business-model play"
+            "No, it is a services or business-model play"
           ],
           "tracks": [
             "founder"
@@ -411,7 +411,7 @@ window.MVP_APPLICATION = {
             "Yes, and we have a partner or lead",
             "Yes, a market but no partner yet",
             "Not yet",
-            "No — Singapore only"
+            "No, Singapore only"
           ],
           "tracks": [
             "founder"
@@ -459,7 +459,7 @@ window.MVP_APPLICATION = {
           "required": true,
           "max": 200,
           "options": [
-            "Those hours are already mine — nothing conflicts with them",
+            "Those hours are already mine; nothing conflicts with them",
             "My employer or client has agreed the hours in writing",
             "I am rearranging existing commitments to free them",
             "I would have to give notice or end something first",
@@ -534,7 +534,7 @@ window.MVP_APPLICATION = {
           "required": true,
           "max": 200,
           "options": [
-            "Yes — set them with me",
+            "Yes, set them with me",
             "Yes, if I help set them",
             "I would need to see them first",
             "No"
@@ -566,7 +566,7 @@ window.MVP_APPLICATION = {
         },
         {
           "id": "failureMode",
-          "label": "What is the strongest reason this could fail — not a generic startup risk, the specific one that applies to what you are building — and what would you need to see in the next 90 days to know it is happening?",
+          "label": "What is the strongest reason this could fail? Not a generic startup risk: the specific one that applies to what you are building. What would you need to see in the next 90 days to know it is happening?",
           "kind": "textarea",
           "hint": "A reason we could have written for any applicant does not count. Name the one that is actually yours.",
           "required": true,
@@ -575,7 +575,7 @@ window.MVP_APPLICATION = {
         },
         {
           "id": "firstThirtyDays",
-          "label": "If you started tomorrow, what are the first three things you would do in the next 30 days — specific actions, not goals?",
+          "label": "If you started tomorrow, what are the first three things you would do in the next 30 days? Specific actions, not goals.",
           "kind": "textarea",
           "hint": "\"Validate the market\" is a goal. \"Call the 5 operations leads I already know and ask what they pay for this today\" is an action.",
           "required": true,
