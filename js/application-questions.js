@@ -308,6 +308,7 @@ window.MVP_APPLICATION = {
           "id": "firstTimeFounder",
           "label": "Have you founded a company before?",
           "kind": "select",
+          "hint": "For Startup SG Founder, a first-time founder has never registered a private limited company with ACRA.",
           "required": true,
           "max": 200,
           "options": [
@@ -387,7 +388,7 @@ window.MVP_APPLICATION = {
         },
         {
           "id": "capitalToMatch",
-          "label": "Startup SG Founder needs 1:1 matching capital, at least half of it paid up when you apply. Could you put that in?",
+          "label": "Startup SG Founder gives S$20,000 to S$50,000, matched 1:1 by the founders. At least half of your share must already be paid-up capital on ACRA when the application is submitted. Could you put that in?",
           "kind": "select",
           "hint": "This is the real gate on that grant, not the pitch.",
           "required": true,
