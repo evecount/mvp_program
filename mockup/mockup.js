@@ -25,6 +25,22 @@
     : null;
   document.querySelectorAll(".reveal").forEach((n) => (io ? io.observe(n) : n.classList.add("in")));
 
+  /* Keep the address bar in step with the page: the nav section in view goes
+     in the hash, and back at the top the hash clears, so the URL never names
+     a section you have scrolled away from. */
+  const spots = [...document.querySelectorAll('.nav-glass a[href^="#"]')].map((a) => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  let shownHash = location.hash.slice(1), spyQueued = false;
+  const spy = () => {
+    spyQueued = false;
+    // The nav's order isn't the page's order, so take the section nearest above the reading line.
+    let id = "", best = -Infinity;
+    for (const s of spots) { const t = s.getBoundingClientRect().top; if (t <= innerHeight * 0.35 && t > best) { best = t; id = s.id; } }
+    if (id === shownHash) return;
+    shownHash = id;
+    history.replaceState(history.state, "", id ? `#${id}` : location.pathname + location.search);
+  };
+  addEventListener("scroll", () => { if (!spyQueued) { spyQueued = true; requestAnimationFrame(spy); } }, { passive: true });
+
   /* Segmented control (Apple motion): the pill's two edges ride their own
      springs. The leading edge is stiffer, so the pill stretches toward the new
      tab and the trailing edge catches up; a tap mid-flight retargets with the

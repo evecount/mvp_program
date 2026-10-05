@@ -6,7 +6,11 @@ a { color: inherit; text-decoration-color: rgba(12,12,14,.35); text-underline-of
 a:hover { text-decoration-color: var(--orange-text); }
 :focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; border-radius: 4px; }
 .legal-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px var(--gutter); border-bottom: 1px solid var(--hair); }
-.legal-top img { width: 112px; height: auto; display: block; }
+.home-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--paper); color: var(--ink); transition: background-color .2s, color .2s, border-color .2s, transform .2s; }
+.home-btn svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.home-btn:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.home-btn:active { transform: scale(.94); }
+.home-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 .legal-top nav { display: flex; gap: 20px; font-size: .92rem; font-weight: 500; }
 .legal-top nav a { text-decoration: none; }
 .legal-top nav a[aria-current] { color: var(--orange-text); }
