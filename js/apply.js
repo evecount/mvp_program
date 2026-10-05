@@ -48,6 +48,7 @@ const els = {
   banner: $("apply-error-banner"),
   done: $("apply-done"),
   doneCopy: $("apply-done-copy"),
+  hero: document.querySelector(".ap-hero"),
 };
 
 let data = {};
@@ -474,9 +475,11 @@ function finish() {
   clearDraft();
   data = {};
   stepIndex = 0;
+  // The intro banner goes too, so the celebration is the first thing on the page.
   els.card.hidden = true;
+  if (els.hero) els.hero.hidden = true;
   els.done.hidden = false;
-  els.done.focus();
+  els.done.focus({ preventScroll: true });
   window.scrollTo({ top: 0, behavior: "smooth" });
   window.soundEngine?.pass?.();
   celebrate();
@@ -509,6 +512,7 @@ document.addEventListener("mvp:route", (e) => {
   if (!els.done.hidden && !Object.keys(data).length) {
     els.done.hidden = true;
     els.card.hidden = false;
+    if (els.hero) els.hero.hidden = false;
     render();
   }
 });
