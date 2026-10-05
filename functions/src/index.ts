@@ -149,7 +149,7 @@ export const onApplicationFiled = onDocumentCreated(
         track: submission.track,
         assessment: baseline,
         grants: flatGrants,
-        deterministic: interviewSheet(answers, submission.track, flatGrants),
+        deterministic: interviewSheet(answers, submission.track, flatGrants, submission.intake),
         redactedAnswers,
       }).catch((err: Error) => ({ ok: false as const, reason: `drafting threw: ${err?.message ?? err}` })),
       new Promise((resolve) => setTimeout(resolve, 300))

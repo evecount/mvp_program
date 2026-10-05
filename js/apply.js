@@ -105,6 +105,14 @@ function linked(label) {
   });
 }
 
+/* Copy that depends on the intake says {length} / {Length}; fill it from the
+   intake picked on step 2 (same wording as fillTrackLength in questionnaire.ts). */
+function fillLength(text) {
+  if (!text) return text;
+  const len = data.intake === "1 Month" ? "one month" : data.intake === "3 Month" ? "three months" : "the length of your track";
+  return text.replace(/\{length\}/g, len).replace(/\{Length\}/g, len[0].toUpperCase() + len.slice(1));
+}
+
 function renderField(f) {
   const value = data[f.id] ?? (f.kind === "checkbox" ? false : "");
   const errId = `err-${f.id}`;
@@ -176,11 +184,11 @@ function renderField(f) {
       "div",
       { class: "apply-label-row" },
       asChoices(f)
-        ? el("span", { class: "form-label", id: `label-${f.id}`, text: f.label + (f.required ? " *" : "") })
-        : el("label", { class: "form-label", for: f.id, text: f.label + (f.required ? " *" : "") }),
+        ? el("span", { class: "form-label", id: `label-${f.id}`, text: fillLength(f.label) + (f.required ? " *" : "") })
+        : el("label", { class: "form-label", for: f.id, text: fillLength(f.label) + (f.required ? " *" : "") }),
       counter,
     ),
-    f.hint ? el("p", { class: "apply-hint", text: f.hint }) : null,
+    f.hint ? el("p", { class: "apply-hint", text: fillLength(f.hint) }) : null,
     input,
     f.options?.some((o) => o.hint) && !asChoices(f)
       ? el("p", { class: "apply-hint", id: `opt-hint-${f.id}`, text: chosen?.hint || "" })
@@ -207,7 +215,7 @@ function render() {
   els.body.replaceChildren(
     ...[
       el("h2", { class: "apply-step-title", text: step.title, tabindex: "-1" }),
-      step.intro ? el("p", { class: "apply-step-intro", text: step.intro }) : null,
+      step.intro ? el("p", { class: "apply-step-intro", text: fillLength(step.intro) }) : null,
       el("div", { class: "apply-grid" }, ...visibleFields(step).map(renderField)),
       last ? honeypot() : null,
     ].filter(Boolean),

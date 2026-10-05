@@ -26,7 +26,7 @@ import {
   COHORTS,
   cohortClosesAt,
 } from './mamba/program';
-import { QUESTION_SECTIONS, getQuestion, type Question } from './mamba/questionnaire';
+import { QUESTION_SECTIONS_RAW, getRawQuestion, type Question } from './mamba/questionnaire';
 
 const ROOT = join(__dirname, '..', '..');
 const SCHEMA_VERSION = 2;
@@ -60,14 +60,14 @@ const fromCatalogue = (q: Question): Field => ({
 });
 
 const section = (id: string) => {
-  const s = QUESTION_SECTIONS.find((x) => x.id === id);
+  const s = QUESTION_SECTIONS_RAW.find((x) => x.id === id);
   if (!s) throw new Error(`no section ${id}`);
   return {
     id: s.id,
     title: s.title,
     intro: s.intro,
     fields: s.questions.map((qid) => {
-      const q = getQuestion(qid);
+      const q = getRawQuestion(qid);
       if (!q) throw new Error(`section ${id} names unknown question ${qid}`);
       return fromCatalogue(q);
     }),
