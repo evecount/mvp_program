@@ -1,0 +1,69 @@
+{
+  "origin": "https://mambaventureprogram.web.app",
+  "siteName": "Mamba Venture Program",
+  "shortName": "MVP",
+  "locale": "en_SG",
+  "language": "en-SG",
+  "summary": "The Mamba Venture Program (MVP) is a venture-building program in Singapore that helps working professionals, SME owners and aspiring founders turn industry insight into a working product: validate the problem, build the MVP and test demand. It runs as a 1-month sprint (S$2,500) or a 3-month venture build (S$5,999). No equity is taken to join. It is run by Mamba Partners and Cybrdeck, with SG Innovation as ecosystem partner.",
+  "image": {
+    "path": "/assets/brand/mvp/mvp-og.png?v=2",
+    "width": 1200,
+    "height": 630,
+    "alt": "Mamba Venture Program: build a venture that scales"
+  },
+  "logo": "/assets/brand/mvp/mvp-icon-512.png",
+  "organization": {
+    "name": "Mamba Partners",
+    "legalName": "Mamba JJ Partners Pte. Ltd.",
+    "streetAddress": "10 Anson Road, #20-05 International Plaza",
+    "postalCode": "079903",
+    "addressLocality": "Singapore",
+    "addressCountry": "SG",
+    "sameAs": []
+  },
+  "partners": [
+    { "name": "Cybrdeck", "url": "https://cybrdeck.com", "role": "Program lead" },
+    { "name": "SG Innovation", "role": "Ecosystem partner" }
+  ],
+  "programs": [
+    {
+      "id": "sprint",
+      "name": "MVP 1-month sprint",
+      "description": "Test the problem, define your MVP and decide what to build next.",
+      "timeToComplete": "P1M",
+      "price": 2500
+    },
+    {
+      "id": "build",
+      "name": "MVP 3-month venture build",
+      "description": "Develop the MVP, test with users and work toward commercial readiness.",
+      "timeToComplete": "P3M",
+      "price": 5999
+    }
+  ],
+  "currency": "SGD",
+  "cohortsFile": "js/cohorts.js",
+  "faqPage": "index.html",
+  "hashRoutes": ["apply"],
+  "pages": [
+    { "file": "index.html", "path": "/", "type": "home", "priority": 1.0, "changefreq": "weekly",
+      "ogTitle": "Mamba Venture Program (MVP): build a venture that scales",
+      "ogDescription": "Validate the problem. Build the MVP. Test demand. A 1-month sprint or 3-month venture build in Singapore. Applications for the January 2027 cohort are open." },
+    { "file": "apply.html", "path": "/apply.html", "priority": 0.9, "changefreq": "weekly",
+      "ogTitle": "Apply to the Mamba Venture Program (MVP)" },
+    { "file": "partner.html", "path": "/partner.html", "priority": 0.6, "changefreq": "monthly" },
+    { "file": "contact.html", "path": "/contact.html", "priority": 0.5, "changefreq": "monthly" },
+    { "file": "legal/privacy.html", "path": "/legal/privacy.html", "priority": 0.2, "changefreq": "yearly" },
+    { "file": "legal/terms.html", "path": "/legal/terms.html", "priority": 0.2, "changefreq": "yearly" },
+    { "file": "legal/data-protection.html", "path": "/legal/data-protection.html", "priority": 0.2, "changefreq": "yearly" },
+    { "file": "404.html", "path": "/404.html", "noindex": true }
+  ],
+  "robots": {
+    "disallow": ["/assets/icon-concepts/", "/api/"],
+    "aiCrawlers": ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot", "Claude-User", "PerplexityBot", "Google-Extended", "Applebot-Extended", "CCBot"]
+  },
+  "review": {
+    "model": "claude-opus-5-5",
+    "effort": "high"
+  }
+}
