@@ -27,23 +27,23 @@ export interface MambaTrackOption {
 export const MAMBA_TRACKS: readonly MambaTrackOption[] = [
   {
     id: 'employee',
-    label: 'Prospective Employee',
+    label: 'Prospective employee',
     audience: 'You want to work inside a company, not run one.',
   },
   {
     id: 'founder',
-    label: 'Startup Founder',
+    label: 'Startup founder',
     audience: 'You have a company, or a conviction about one.',
   },
   {
     id: 'transition',
-    label: 'Currently Employed / Mid-Transition',
+    label: 'Currently employed or mid-transition',
     audience: 'You have a role and are reconsidering it.',
   },
   {
     id: 'cybrdeck-engineer',
-    label: 'Cybrdeck Dev / Engineer',
-    audience: 'You build WITH us.',
+    label: 'Cybrdeck developer or engineer',
+    audience: 'You build with us.',
   },
 ] as const;
 

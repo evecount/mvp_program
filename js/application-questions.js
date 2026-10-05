@@ -54,23 +54,23 @@ window.MVP_APPLICATION = {
           "options": [
             {
               "value": "employee",
-              "label": "Prospective Employee",
+              "label": "Prospective employee",
               "hint": "You want to work inside a company, not run one."
             },
             {
               "value": "founder",
-              "label": "Startup Founder",
+              "label": "Startup founder",
               "hint": "You have a company, or a conviction about one."
             },
             {
               "value": "transition",
-              "label": "Currently Employed / Mid-Transition",
+              "label": "Currently employed or mid-transition",
               "hint": "You have a role and are reconsidering it."
             },
             {
               "value": "cybrdeck-engineer",
-              "label": "Cybrdeck Dev / Engineer",
-              "hint": "You build WITH us."
+              "label": "Cybrdeck developer or engineer",
+              "hint": "You build with us."
             }
           ]
         },
@@ -82,11 +82,11 @@ window.MVP_APPLICATION = {
           "options": [
             {
               "value": "1 Month",
-              "label": "1 Month track"
+              "label": "1-month track"
             },
             {
               "value": "3 Month",
-              "label": "3 Month track"
+              "label": "3-month track"
             }
           ]
         }
