@@ -61,12 +61,39 @@ class ConfettiLauncher {
     }
   }
 
+  /* A party popper: a short burst from (x, y) in viewport pixels, fanned
+     upwards, with ribbons and dots among the squares. */
+  burst(x, y, count = 70) {
+    this.init();
+    for (let i = 0; i < count; i++) {
+      const angle = (-90 + (Math.random() - 0.5) * 150) * (Math.PI / 180);
+      const speed = 6 + Math.random() * 11;
+      const kind = Math.random();
+      this.particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        size: Math.random() * 6 + 4,
+        shape: kind < 0.25 ? "dot" : kind < 0.55 ? "ribbon" : "square",
+        color: this.colors[Math.floor(Math.random() * this.colors.length)],
+        rotation: Math.random() * 360,
+        rSpeed: (Math.random() - 0.5) * 18,
+        gravity: 0.32,
+        drag: 0.985,
+        opacity: 1,
+        life: 0
+      });
+    }
+    if (!this.animationId) this.loop();
+  }
+
   loop() {
     if (!this.ctx || !this.canvas) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
+      if (p.drag) { p.vx *= p.drag; p.vy *= p.drag; }
       p.x += p.vx;
       p.vy += p.gravity;
       p.y += p.vy;
@@ -87,7 +114,9 @@ class ConfettiLauncher {
       this.ctx.rotate((p.rotation * Math.PI) / 180);
       this.ctx.globalAlpha = Math.max(0, p.opacity);
       this.ctx.fillStyle = p.color;
-      this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
+      if (p.shape === "dot") { this.ctx.beginPath(); this.ctx.arc(0, 0, p.size / 2.6, 0, Math.PI * 2); this.ctx.fill(); }
+      else if (p.shape === "ribbon") this.ctx.fillRect(-p.size, -1.2, p.size * 2, 2.4);
+      else this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.7);
       this.ctx.restore();
     }
 

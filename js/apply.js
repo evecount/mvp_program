@@ -479,7 +479,24 @@ function finish() {
   els.done.focus();
   window.scrollTo({ top: 0, behavior: "smooth" });
   window.soundEngine?.pass?.();
-  window.confetti?.fire?.();
+  celebrate();
+}
+
+/* The check rides up from below, ticks itself and pops confetti out of the
+   top like a party popper. Reduced motion: the check simply sits there. */
+function celebrate() {
+  const mark = els.done.querySelector(".apply-done-mark");
+  if (!mark || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  els.done.classList.remove("pop");
+  void mark.offsetWidth;
+  // Let the smooth scroll settle so the popper fires where the check lands.
+  setTimeout(() => {
+    els.done.classList.add("pop");
+    setTimeout(() => {
+      const r = mark.getBoundingClientRect();
+      window.confetti?.burst?.(r.left + r.width / 2, r.top + r.height * 0.35);
+    }, 430);
+  }, 380);
 }
 
 /* ── Boot ──────────────────────────────────────────────────────────── */
