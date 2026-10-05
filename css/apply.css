@@ -144,13 +144,16 @@ textarea.form-input { min-height: 140px; resize: vertical; line-height: 1.55; }
 .apply-done:focus { outline: none; }
 .apply-done-mark { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--orange); }
 .apply-done-mark svg { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-/* Submitted: the check rides up on a spring, draws its tick, and a ring pops (js/apply.js celebrate). */
-.apply-done-mark { position: relative; }
+/* Submitted: the check is hidden until it rises out from behind the headline
+   (clipped at the headline's top edge), ticks itself and a ring pops before
+   the confetti (js/apply.js celebrate). */
+.apply-done-rise { display: block; clip-path: inset(-200px -200px -14px -200px); }
+.apply-done-mark { position: relative; opacity: 0; }
 .apply-done-mark::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--orange); opacity: 0; pointer-events: none; }
-.apply-done.pop .apply-done-mark { animation: mark-rise .62s cubic-bezier(.22, 1.45, .4, 1) both; }
+.apply-done.pop .apply-done-mark { opacity: 1; animation: mark-rise .62s cubic-bezier(.22, 1.4, .4, 1) both; }
 .apply-done.pop .apply-done-mark::after { animation: mark-ring .6s cubic-bezier(.16, 1, .3, 1) .42s both; }
 .apply-done.pop .apply-done-mark path { stroke-dasharray: 22; animation: mark-tick .32s cubic-bezier(.65, 0, .35, 1) .38s both; }
-@keyframes mark-rise { 0% { transform: translateY(90px) scale(.55); opacity: 0; } 35% { opacity: 1; } 100% { transform: none; opacity: 1; } }
+@keyframes mark-rise { from { transform: translateY(calc(100% + 16px)); } to { transform: none; } }
 @keyframes mark-tick { from { stroke-dashoffset: 22; } to { stroke-dashoffset: 0; } }
 @keyframes mark-ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.9); opacity: 0; } }
 .apply-done h2 { font-family: var(--display); font-weight: 800; text-transform: uppercase; line-height: .9; font-size: clamp(2.4rem, 6vw, 3.6rem); }

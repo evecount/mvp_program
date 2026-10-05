@@ -482,12 +482,14 @@ function finish() {
   celebrate();
 }
 
-/* The check rides up from below, ticks itself and pops confetti out of the
-   top like a party popper. Reduced motion: the check simply sits there. */
+/* The check rises out from behind the headline, ticks itself and pops
+   confetti out of the top like a party popper. Reduced motion: the check
+   simply appears. */
 function celebrate() {
   const mark = els.done.querySelector(".apply-done-mark");
-  if (!mark || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (!mark) return;
   els.done.classList.remove("pop");
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return els.done.classList.add("pop");
   void mark.offsetWidth;
   // Let the smooth scroll settle so the popper fires where the check lands.
   setTimeout(() => {
