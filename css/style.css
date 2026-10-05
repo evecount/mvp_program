@@ -2893,7 +2893,7 @@ body[data-screen="screen-apply"] .header-apply-btn { visibility: hidden; }
 .eco-logo--mamba > span { display: flex; flex-direction: column; line-height: 1; color: var(--text-primary); }
 .home-btn { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-subtle); background: #fff; color: var(--text-primary); transition: background-color .2s, color .2s, border-color .2s, transform .2s; }
 .home-btn svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.brand-lockup:hover .home-btn { background: var(--text-primary); border-color: var(--text-primary); color: #fff; }
+.brand-lockup:hover .home-btn { background: var(--accent-orange); border-color: var(--accent-orange); color: var(--text-primary); }
 .brand-lockup:active .home-btn { transform: scale(.94); }
 .lockup-program { font-family: var(--font-heading); font-weight: 800; font-size: 0.98rem; color: var(--text-primary); white-space: nowrap; }
 
