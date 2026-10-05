@@ -31,7 +31,7 @@ th { font-weight: 600; }
 .todo { background: #ffe1d3; padding: 0 4px; border-radius: 3px; font-weight: 600; }
 .toc { margin-top: 28px; padding: 16px 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); columns: 2; column-gap: 32px; font-size: .95rem; }
 .toc a { text-decoration: none; display: block; padding: 3px 0; }
-@media (max-width: 600px) { .toc { columns: 1; } .legal-top nav { display: none; } table, thead, tbody, tr, th, td { display: block; } thead { display: none; } td { padding: 4px 0; border: 0; } tr { padding: 10px 0; border-bottom: 1px solid var(--hair); } }
+@media (max-width: 600px) { .toc { columns: 1; } .toc a { padding: 10px 0; } .legal-top nav { display: none; } table, thead, tbody, tr, th, td { display: block; } thead { display: none; } td { padding: 4px 0; border: 0; } tr { padding: 10px 0; border-bottom: 1px solid var(--hair); } }
 
 /* Contact form */
 .contact { margin-top: 32px; display: grid; gap: 18px; }
