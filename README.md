@@ -29,6 +29,7 @@ python3 -m http.server 8080
 | `firestore.rules` | Database security rules: the public can only *create* a valid application. **Generated**, like the form. |
 | `functions/` | The Cloud Function that scores each application, builds the dossier PDF and sends the emails. |
 | `assets/brand/` | Cybrdeck, Mamba Partners and SG Innovation logos. |
+| `gaseo/` | **GASEO**, the SEO/AEO/GEO agent. It generates each page's search metadata and JSON-LD, plus `robots.txt`, `sitemap.xml` and `llms.txt` (see below). |
 
 ## Application pipeline (Firebase)
 
@@ -76,6 +77,29 @@ Secret Manager secrets (`SMTP_PASSWORD`, `DASHSCOPE_API_KEY`, copied from the cy
 cd functions && npm install && npm run build:form && cd ..
 npx firebase-tools deploy --only hosting,firestore:rules,functions
 ```
+
+## Search, answer engines and AI (GASEO)
+
+`gaseo/` is the site's headless SEO, AEO and GEO agent. See [gaseo/README.md](gaseo/README.md) for details. In short:
+
+```bash
+node gaseo/gaseo.mjs fix     # after changing a page title, description, the FAQ, a cohort, or config
+node gaseo/gaseo.mjs check   # what CI runs on every PR
+```
+
+Each page's head block, `robots.txt`, `sitemap.xml` and `llms.txt` are generated. Don't edit them by hand.
+
+### When the new domain is connected
+
+1. In the Firebase console, go to Hosting → Add custom domain and finish the DNS steps.
+2. Run `node gaseo/gaseo.mjs domain https://<the-domain>`, commit, then deploy hosting.
+3. Run `node gaseo/gaseo.mjs live` until every check reads `ok`.
+4. In Google Search Console, add a Domain property and submit `https://<the-domain>/sitemap.xml`. Then use Import from
+   Google Search Console in Bing Webmaster Tools, which also feeds ChatGPT search and Copilot.
+5. Point the Luma events, LinkedIn and other profiles at the new domain, and add those profiles to
+   `organization.sameAs` in `gaseo/config.json`.
+6. The `web.app` address and the GitHub Pages copy keep serving the site. Every page's canonical tag points search
+   engines at the new domain, so they don't compete with it.
 
 ## Deployment
 

@@ -1,0 +1,84 @@
+name: GASEO (SEO, AEO, GEO)
+
+# On every PR GASEO regenerates the site's search files and commits them back to the branch,
+# then fails the check on any audit error. Weekly it crawls the live site and, when the
+# ANTHROPIC_API_KEY secret is set, writes a Claude review of the site to the run summary.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 1 * * 1" # Mondays 09:17 Singapore time
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gaseo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.head_ref || '' }}
+          fetch-depth: 0 # sitemap lastmod comes from git history
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Regenerate and commit (PRs from this repo only)
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          node gaseo/gaseo.mjs fix || true
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "gaseo[bot]"
+            git config user.email "gaseo-bot@users.noreply.github.com"
+            git add -A
+            git commit -m "GASEO: regenerate search metadata, sitemap and llms.txt"
+            git push
+          fi
+      - name: Check
+        run: node gaseo/gaseo.mjs check
+
+  weekly:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Crawl the live site
+        id: live
+        continue-on-error: true
+        run: node gaseo/gaseo.mjs live | tee live.txt
+      - name: Claude review
+        if: env.ANTHROPIC_API_KEY != ''
+        run: |
+          npm ci --prefix gaseo
+          node gaseo/gaseo.mjs review
+      - name: Summary
+        if: always()
+        run: |
+          { echo '## GASEO live crawl'; echo '```'; cat live.txt 2>/dev/null; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          for f in gaseo/reports/*.md; do [ -f "$f" ] && cat "$f" >> "$GITHUB_STEP_SUMMARY"; done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gaseo-report
+          path: |
+            live.txt
+            gaseo/reports/
+          if-no-files-found: ignore
+      - name: Fail if the live site is broken
+        if: steps.live.outcome == 'failure'
+        run: exit 1

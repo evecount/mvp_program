@@ -1,0 +1,17 @@
+{
+  "name": "gaseo",
+  "private": true,
+  "description": "GASEO: headless SEO, AEO and GEO agent for the Mamba Venture Program site.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "fix": "node gaseo.mjs fix",
+    "check": "node gaseo.mjs check",
+    "audit": "node gaseo.mjs audit",
+    "live": "node gaseo.mjs live",
+    "review": "node gaseo.mjs review"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0"
+  }
+}
