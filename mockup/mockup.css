@@ -504,6 +504,7 @@ a { color: inherit; text-decoration: none; }
 .countdown { display: grid; gap: 10px; }
 .countdown-label { font-weight: 600; }
 .countdown-clock { display: flex; gap: clamp(14px, 3vw, 36px); }
+.strip-wrap { display: contents; }
 .cd-unit { display: grid; justify-items: start; }
 .cd-unit b { font-family: var(--display); font-weight: 800; font-size: clamp(2.6rem, 6vw, 5rem); line-height: .9; font-variant-numeric: tabular-nums; min-width: 2ch; }
-.cd-unit small { font-size: .85rem; font-weight: 600; color: rgba(12,12,14,.7); }
+.cd-unit small { font-size: .85rem; font-weight: 600; color: var(--ink); }
