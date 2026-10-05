@@ -102,7 +102,7 @@ const NOTE_CAP = 300;
 const clip = (v: unknown, cap: number): string =>
     typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, cap) : '';
 
-const SYSTEM_PROMPT = `You prepare interview questions for a three-month, full-time venture cohort in Singapore. Two founders will read your output before a 45-minute interview with one applicant.
+const SYSTEM_PROMPT = `You prepare interview questions for a full-time venture cohort in Singapore (a one-month or three-month track, 9am to 6pm on weekdays). Two founders will read your output before a 45-minute interview with one applicant.
 
 You are given one application: every answer, de-identified (names, companies, contact details and links appear as [name], [company], [email], [phone], [link]), plus the readiness scores and the questions a rule-based pass already produced.
 

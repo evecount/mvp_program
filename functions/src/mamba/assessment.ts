@@ -596,10 +596,10 @@ const axisOf = (q: Question): string => (q.axis ? AXIS_LABEL[q.axis] : 'Grant co
  * means the option they chose needs no follow-up. Kept here rather than on the
  * catalogue options because most of them depend on a SECOND answer as well.
  */
-const RISK_PROBE: Record<string, (answer: string) => string | null> = {
-  grantIntent: (a) =>
+const RISK_PROBE: Record<string, (answer: string, intake?: string) => string | null> = {
+  grantIntent: (a, intake) =>
     a === 'My own salary so I can go full-time'
-      ? 'You expect grant money to pay your salary. Walk us through your household budget for the three months of the program, without the grant in it.'
+      ? `You expect grant money to pay your salary. Walk us through your household budget for the ${intake === '1 Month' ? 'month' : 'three months'} of the program, without the grant in it.`
       : a === 'I have not thought about it yet'
         ? 'You have not thought about what grant money would pay for, on an application whose grants are taxpayer money. What do you believe we are accountable for, in your case?'
         : null,
@@ -607,8 +607,8 @@ const RISK_PROBE: Record<string, (answer: string) => string | null> = {
     a === 'I have not worked out how yet'
       ? 'The program meets 9am to 6pm on weekdays, and you have not worked out how those hours become yours. What is the first arrangement you would make, and what does it cost you?'
       : null,
-  runway: (a) =>
-    a === 'Under 3 months'
+  runway: (a, intake) =>
+    a === 'Under 3 months' && intake !== '1 Month'
       ? 'You stated under three months of runway for a three-month program. What happens in the week the money runs out, in detail?'
       : null,
   shippedBefore: (a) =>
@@ -642,6 +642,7 @@ export function interviewSheet(
   answers: Answers,
   track: string,
   grants: readonly GrantScreen[] = [],
+  intake?: string,
 ): InterviewQuestion[] {
   const applicable = questionsForTrack(track);
   const at = (id: string) => str(answers, id);
@@ -660,7 +661,8 @@ export function interviewSheet(
       `"${at('availability')}" against "${at('employerAware')}"`,
     );
   }
-  if (at('availability') === GIVE_NOTICE && SHORT_RUNWAY.includes(at('runway'))) {
+  // On the one-month track three to six months of runway covers it; only the three-month track is at risk.
+  if (at('availability') === GIVE_NOTICE && SHORT_RUNWAY.includes(at('runway')) && intake !== '1 Month') {
     push(
       'consistency-notice-runway',
       'Consistency',
@@ -672,7 +674,7 @@ export function interviewSheet(
     push(
       'consistency-salary-worth',
       'Consistency',
-      `You expect the grant to pay your salary, and on what makes three months worthwhile without funding you wrote: "${excerpt(at('worthwhileIfNotFunded'))}". If the salary never materialises, what is left?`,
+      `You expect the grant to pay your salary, and on what makes the program worthwhile without funding you wrote: "${excerpt(at('worthwhileIfNotFunded'))}". If the salary never materialises, what is left?`,
       `"${at('grantIntent')}" against a thin answer on "${questionLabel('worthwhileIfNotFunded')}"`,
     );
   }
@@ -721,7 +723,7 @@ export function interviewSheet(
     const probe = RISK_PROBE[q.id];
     const answer = at(q.id);
     if (!probe || !answer) continue;
-    const question = probe(answer);
+    const question = probe(answer, intake);
     if (!question) continue;
     if (q.id === 'grantIntent' && answer === SALARY_INTENT && has('consistency-salary-worth')) continue;
     if (q.id === 'runway' && has('consistency-notice-runway')) continue;

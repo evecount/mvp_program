@@ -449,13 +449,13 @@ window.MVP_APPLICATION = {
     {
       "id": "commitment",
       "title": "Commitment and follow-through",
-      "intro": "Three months is short only if you are actually there for it. We would rather hear the constraint now than discover it in week four.",
+      "intro": "{Length} is short only if you are actually there for it. We would rather hear the constraint now than discover it in week two.",
       "fields": [
         {
           "id": "availability",
-          "label": "The program meets 9am–6pm, Monday to Friday, for three months. What is already true about those hours for you?",
+          "label": "The program meets 9am–6pm, Monday to Friday, for {length}. What is already true about those hours for you?",
           "kind": "select",
-          "hint": "What is arranged, not what you intend to arrange. This is the first answer we check when someone goes quiet in week four.",
+          "hint": "What is arranged, not what you intend to arrange. This is the first answer we check when someone goes quiet in week two.",
           "required": true,
           "max": 200,
           "options": [
@@ -591,7 +591,7 @@ window.MVP_APPLICATION = {
       "fields": [
         {
           "id": "worthwhileIfNotFunded",
-          "label": "Suppose three months pass and no grant, no funding and no offer lands. What would have made it worth the time?",
+          "label": "Suppose the program ends and no grant, no funding and no offer lands. What would have made it worth the time?",
           "kind": "textarea",
           "required": true,
           "min": 80,

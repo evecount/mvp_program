@@ -98,7 +98,7 @@ export interface Question {
 /** Answer options reused by more than one question. */
 const NOT_APPLICABLE: QuestionOption = { label: 'Not applicable to my track', weight: 0.3 };
 
-export const QUESTIONS: readonly Question[] = [
+export const QUESTIONS_RAW: readonly Question[] = [
   /* ── What they are bringing ─────────────────────────────────────── */
   {
     id: 'ideaTitle',
@@ -203,9 +203,9 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: 'availability',
     label:
-      'The program meets 9am–6pm, Monday to Friday, for three months. What is already true about those hours for you?',
+      'The program meets 9am–6pm, Monday to Friday, for {length}. What is already true about those hours for you?',
     help:
-      'What is arranged, not what you intend to arrange. This is the first answer we check when someone goes quiet in week four.',
+      'What is arranged, not what you intend to arrange. This is the first answer we check when someone goes quiet in week two.',
     kind: 'select',
     required: true,
     axis: 'commitment',
@@ -315,7 +315,7 @@ export const QUESTIONS: readonly Question[] = [
   },
   {
     id: 'worthwhileIfNotFunded',
-    label: 'Suppose three months pass and no grant, no funding and no offer lands. What would have made it worth the time?',
+    label: 'Suppose the program ends and no grant, no funding and no offer lands. What would have made it worth the time?',
     kind: 'textarea',
     required: true,
     min: 80,
@@ -553,6 +553,25 @@ export const QUESTIONS: readonly Question[] = [
   },
 ];
 
+/**
+ * Copy that depends on the applicant's intake says {length} / {Length}. The
+ * form fills it from the intake they picked ("one month" / "three months");
+ * everything server-side reads the neutral wording below.
+ */
+export const trackLength = (intake?: string, capital = false): string => {
+  const s = intake === '1 Month' ? 'one month' : intake === '3 Month' ? 'three months' : 'the length of your track';
+  return capital ? s[0].toUpperCase() + s.slice(1) : s;
+};
+export const fillTrackLength = (text: string, intake?: string): string =>
+  text.replace(/\{length\}/g, trackLength(intake)).replace(/\{Length\}/g, trackLength(intake, true));
+
+/** The catalogue with intake wording filled neutrally, for the scorer, dossier and drafts. */
+export const QUESTIONS: readonly Question[] = QUESTIONS_RAW.map((q) => ({
+  ...q,
+  label: fillTrackLength(q.label),
+  ...(q.help ? { help: fillTrackLength(q.help) } : {}),
+}));
+
 /** Every question id, for the check script. */
 export const QUESTION_IDS = QUESTIONS.map((q) => q.id);
 
@@ -572,7 +591,7 @@ export const questionsForTrack = (track: string): Question[] =>
  * Sections the form renders, in reading order. Each names question ids from the
  * catalogue so the form cannot show a question the scorer does not know about.
  */
-export const QUESTION_SECTIONS: ReadonlyArray<{
+export const QUESTION_SECTIONS_RAW: ReadonlyArray<{
   id: string;
   title: string;
   intro?: string;
@@ -618,7 +637,7 @@ export const QUESTION_SECTIONS: ReadonlyArray<{
     id: 'commitment',
     title: 'Commitment and follow-through',
     intro:
-      'Three months is short only if you are actually there for it. We would rather hear the constraint now than discover it in week four.',
+      '{Length} is short only if you are actually there for it. We would rather hear the constraint now than discover it in week two.',
     questions: [
       'availability',
       'weekPlan',
@@ -645,6 +664,15 @@ export const QUESTION_SECTIONS: ReadonlyArray<{
     questions: ['worthwhileIfNotFunded', 'grantIntent', 'priorPublicFunding'],
   },
 ];
+
+/** Sections with intake wording filled neutrally (server-side use). */
+export const QUESTION_SECTIONS = QUESTION_SECTIONS_RAW.map((section) => ({
+  ...section,
+  ...(section.intro ? { intro: fillTrackLength(section.intro) } : {}),
+}));
+
+/** The raw catalogue entry, {length} tokens intact, for the form generator. */
+export const getRawQuestion = (id: string): Question | undefined => QUESTIONS_RAW.find((q) => q.id === id);
 
 /** The track list, re-exported so the form has one import for both. */
 export { MAMBA_TRACKS };

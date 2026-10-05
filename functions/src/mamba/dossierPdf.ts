@@ -314,7 +314,7 @@ const IDENTITY: Array<{ key: string; label: string }> = [
 
 const ESSAYS: Array<{ key: string; label: string }> = [
   { key: 'currentSituation', label: 'What they are working on today, and what they want to change' },
-  { key: 'motivation', label: 'What they want out of three months, and what they will bring' },
+  { key: 'motivation', label: 'What they want out of the program, and what they will bring' },
 ];
 
 function applicationPages(sheet: Sheet, record: Record<string, unknown>, answers: Record<string, string>, track: string) {
@@ -714,6 +714,7 @@ function assessmentPage(sheet: Sheet, input: DossierInput) {
       verdict: match.verdict,
       gap: match.gap ?? null,
     })),
+    typeof input.record.intake === 'string' ? input.record.intake : undefined,
   );
   const cards = questions.map((item) => {
     const qLines = sheet.measure(item.question, CW - 14, 8.4);
