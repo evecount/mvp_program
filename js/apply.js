@@ -471,7 +471,9 @@ async function submit() {
 
 function finish() {
   const first = String(data.fullName || "").trim().split(/\s+/)[0];
-  els.doneCopy.textContent = `Thanks${first ? `, ${first}` : ""}. Your application for ${data.ideaTitle || "the program"} is with the Mamba MVP team. We'll reply to ${data.email}.`;
+  els.doneCopy.textContent = first
+    ? `Thanks, ${first}. Your application is with the Mamba MVP team, and we'll reply to ${data.email}.`
+    : `Thanks. Your application is with the Mamba MVP team, and we'll reply to ${data.email}.`;
   clearDraft();
   data = {};
   stepIndex = 0;
