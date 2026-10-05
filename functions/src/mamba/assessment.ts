@@ -284,7 +284,7 @@ export const GRANT_PROGRAMS: readonly GrantProgram[] = [
     agency: 'EnterpriseSG',
     name: 'Startup SG Founder',
     support: 'S$20,000–S$50,000, matched 1:1 by the founder',
-    what: 'First-time founder grant plus at least 12 months of mentorship through an Accredited Mentor Partner.',
+    what: 'First-time founder grant plus up to 12 months of mentorship through an Accredited Mentor Partner (AMP), which submits the application.',
   },
   {
     id: 'ssgt-poc',
@@ -359,6 +359,10 @@ export const GRANT_PROGRAMS: readonly GrantProgram[] = [
 ];
 
 const byId = new Map(GRANT_PROGRAMS.map((p) => [p.id, p]));
+
+/** Startup SG Founder gates the form does not ask about, to settle at interview. */
+const SSGF_CONFIRM =
+  'Confirm at interview: the SC/PR main applicants hold at least 30% of the company together, both work on it full-time with no outside employment, and neither has had a Startup SG Founder grant before.';
 const program = (id: string) => byId.get(id)!;
 
 const isLocal = (residency: string) =>
@@ -402,23 +406,35 @@ export function matchGrants(answers: Answers, track: string): GrantMatch[] {
 
   /* Startup SG Founder — the one the landing page promises, and the one with
    * the strictest arithmetic. The company must be under six months old at the
-   * point of AMP application, which cannot be repaired later. */
+   * point of AMP application, which cannot be repaired later.
+   * Terms as revised from 1 April 2024, cross-checked October 2026 against
+   * SUTD's Startup SG Founder page, Grantla, Wise, Dollars and Sense and
+   * Causo (enterprisesg.gov.sg and startupsg.gov.sg block automated reading):
+   * S$20k–S$50k matched 1:1, at least half of the founders' match paid up on
+   * ACRA when the application goes to EnterpriseSG; at least two SC/PR main
+   * applicants holding 30%+ together; the FIRST applicant a first-time
+   * founder (no prior private limited company on ACRA), the second need not
+   * be; 51%+ SC/PR shareholding; company under 6 months at AMP application;
+   * full-time key executives; no other government funding for the idea and
+   * no previous Startup SG Founder grant. */
   {
     const missing: string[] = [];
     if (!local) missing.push('First applicant must be a Singapore Citizen or PR');
-    if (!firstTime) missing.push('First applicant must be a first-time founder');
+    if (!firstTime) missing.push('First applicant must be a first-time founder (no prior private limited company on ACRA); the second applicant need not be');
     if (!twoLocalFounders) missing.push('Needs at least two SC/PR main applicants');
     if (!youngEnough) missing.push(`Company must be under 6 months old at AMP application — stated: ${incorporation || 'not given'}`);
     if (!equity51) missing.push('At least 51% SC/PR shareholding');
-    if (!canMatch) missing.push('Must provide 1:1 matching capital, half of it paid up on ACRA when applying');
+    if (!canMatch) missing.push('Must co-match the grant 1:1, with at least half of the match paid up on ACRA when the application is submitted');
+    const priorFunding = str(answers, 'priorPublicFunding');
+    if (priorFunding.startsWith('Yes')) missing.push(`No government funding already received for this business idea — stated: ${priorFunding.toLowerCase()} (check whether it was for this idea)`);
 
     matches.push({
       program: program('ssgf'),
       verdict: missing.length === 0 ? 'eligible' : missing.length <= 2 ? 'conditional' : 'not-now',
       reasons:
         missing.length === 0
-          ? ['All published eligibility gates are met on these answers. Apply through an Accredited Mentor Partner, not directly to EnterpriseSG.']
-          : missing,
+          ? ['All published eligibility gates the form asks about are met. Apply through an Accredited Mentor Partner, not directly to EnterpriseSG.', SSGF_CONFIRM]
+          : [...missing, SSGF_CONFIRM],
       gap: missing[0],
     });
   }
