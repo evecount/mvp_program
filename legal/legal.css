@@ -8,8 +8,10 @@ a:hover { text-decoration-color: var(--orange-text); }
 .legal-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px var(--gutter); border-bottom: 1px solid var(--hair); }
 .home-btn { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--paper); color: var(--ink); transition: background-color .2s, color .2s, border-color .2s, transform .2s; }
 .home-btn svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.home-btn:hover { background: var(--orange); border-color: var(--orange); color: var(--ink); }
-.home-btn:active { transform: scale(.94); }
+/* Orange on hover; on touch screens (no hover) the same orange shows the moment it's pressed. */
+.home-btn { -webkit-tap-highlight-color: transparent; }
+@media (hover: hover) { .home-btn:hover { background: var(--orange); border-color: var(--orange); color: var(--ink); } }
+.home-btn:active { background: var(--orange); border-color: var(--orange); color: var(--ink); transform: scale(.94); transition-duration: 0s; }
 .home-btn:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
 .legal-top nav { display: flex; gap: 20px; font-size: .92rem; font-weight: 500; }
 .legal-top nav a { text-decoration: none; }
