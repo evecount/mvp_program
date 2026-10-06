@@ -528,6 +528,12 @@ document.addEventListener("mvp:route", (e) => {
 });
 
 loadDraft();
+// The homepage's audience panels link here with ?track=…: preselect it unless the draft already chose one.
+{
+  const pick = new URLSearchParams(location.search).get("track");
+  const trackField = APP.steps.flatMap((s) => s.fields).find((f) => f.id === "track");
+  if (pick && !data.track && trackField?.options.some((o) => o.value === pick)) data.track = pick;
+}
 render();
 
 /* Review mode: apply.html?preview=submitted opens straight on the success
