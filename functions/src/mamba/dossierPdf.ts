@@ -24,6 +24,8 @@
  * drawn in pre-blended brass tones before the top face, so no transparency
  * group is needed against the known dark page.
  */
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { jsPDF } from 'jspdf';
 import {
   ASSESSMENT_AXES,
@@ -113,6 +115,22 @@ const stamp = (value: unknown): string => {
   return date.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
 };
 
+/* The site's own palette (css/apply.css), for the page styled like the site. */
+const SITE = {
+  paper: [244, 242, 238] as [number, number, number],
+  card: [250, 249, 247] as [number, number, number],
+  ink: [12, 12, 14] as [number, number, number],
+  muted: [102, 102, 108] as [number, number, number],
+  hair: [220, 218, 214] as [number, number, number],
+  orange: [252, 103, 54] as [number, number, number],
+  orangeText: [194, 65, 12] as [number, number, number],
+  orangeWash: [255, 241, 234] as [number, number, number],
+  green: [31, 122, 77] as [number, number, number],
+  greenWash: [227, 241, 232] as [number, number, number],
+  greyWash: [235, 232, 226] as [number, number, number],
+  white: [255, 255, 255] as [number, number, number],
+};
+
 /* ── The drawing surface ─────────────────────────────────────────────── */
 
 interface DossierInput {
@@ -142,15 +160,20 @@ class Sheet {
   y = 0;
   private page = 0;
 
-  constructor(private readonly footerNote: string) {
+  /** Site-styled paper page (the ICP screen) rather than the editorial dark. */
+  light: boolean;
+
+  constructor(private readonly footerNote: string, light = false) {
+    this.light = light;
     this.doc = new jsPDF({ unit: 'mm', format: 'a4' });
     this.page = 1;
     this.paint();
     this.y = M + 4;
   }
 
-  newPage() {
+  newPage(light = this.light) {
     if (this.page > 0) this.finish();
+    this.light = light;
     this.page += 1;
     this.doc.addPage();
     this.paint();
@@ -159,10 +182,10 @@ class Sheet {
 
   private paint() {
     const { doc } = this;
-    doc.setFillColor(...BG);
+    doc.setFillColor(...(this.light ? SITE.paper : BG));
     doc.rect(0, 0, W, H, 'F');
-    // Brass hairline across the top: the house accent, used once.
-    doc.setFillColor(...BRASS);
+    // Hairline across the top: the house accent, used once.
+    doc.setFillColor(...(this.light ? SITE.orange : BRASS));
     doc.rect(0, 0, W, 2.4, 'F');
   }
 
@@ -172,12 +195,12 @@ class Sheet {
    */
   finish() {
     const { doc } = this;
-    doc.setDrawColor(...PANEL_EDGE);
+    doc.setDrawColor(...(this.light ? SITE.hair : PANEL_EDGE));
     doc.setLineWidth(0.2);
     doc.line(M, H - 14, W - M, H - 14);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(6.5);
-    doc.setTextColor(...FAINT);
+    doc.setTextColor(...(this.light ? SITE.muted : FAINT));
     doc.text(pdfText(this.footerNote), M, H - 9.5);
     doc.text(`Page ${this.page}`, W - M, H - 9.5, { align: 'right' });
   }
@@ -813,37 +836,315 @@ function assessmentPage(sheet: Sheet, input: DossierInput) {
   }
 }
 
-/* ── Page 0: the ICP screen ──────────────────────────────────────────── */
+/* ── Page 0: the ICP screen, styled like the site ────────────────────────
+ * The rest of the dossier is the dashboard's editorial dark; this page is
+ * the one a reviewer reads first and decides on, so it wears the site:
+ * paper, ink, the orange accent, Big Shoulders for the headline, DM Sans
+ * for copy and DM Mono for labels. The fonts ship in functions/assets/fonts
+ * (SIL Open Font License); if they cannot be read the page still renders,
+ * in Helvetica, rather than costing the reviewer the dossier. */
 
-const REC_COLOR: Record<string, [number, number, number]> = { interview: GOOD, maybe: WARN, pass: BAD };
-const VERDICT_MARK: Record<string, string> = { yes: 'Yes', unclear: 'Unclear', no: 'No' };
+const FONT_DIR = join(__dirname, '..', '..', 'assets', 'fonts');
+const FONT_FILES = {
+  display: 'BigShouldersDisplay-ExtraBold.ttf',
+  sans: 'DMSans-Regular.ttf',
+  sansBold: 'DMSans-SemiBold.ttf',
+  mono: 'DMMono-Medium.ttf',
+} as const;
+type Face = keyof typeof FONT_FILES;
+
+let fontData: Record<string, string> | null | undefined;
+function siteFontData(): Record<string, string> | null {
+  if (fontData !== undefined) return fontData;
+  try {
+    fontData = Object.fromEntries(Object.values(FONT_FILES).map((f) => [f, readFileSync(join(FONT_DIR, f)).toString('base64')]));
+  } catch {
+    fontData = null;
+  }
+  return fontData;
+}
+
+/** The embedded fonts carry real glyphs, so only control characters need stripping. */
+const siteText = (value: unknown): string =>
+  value == null
+    ? ''
+    : String(value)
+        .replace(/[\u00a0\u2028\u2029\t]/g, ' ')
+        .replace(/[^\x20-\x7E\u00a3\u00b7\u2013\u2014\u2018\u2019\u201c\u201d\u2026\u2192]/g, '')
+        .replace(/ {2,}/g, ' ')
+        .trim();
+
+class SitePen {
+  readonly fonts: boolean;
+  constructor(readonly sheet: Sheet) {
+    const data = siteFontData();
+    if (data) {
+      for (const [face, file] of Object.entries(FONT_FILES)) {
+        sheet.doc.addFileToVFS(file, data[file]);
+        sheet.doc.addFont(file, face, 'normal');
+      }
+    }
+    this.fonts = Boolean(data);
+  }
+  face(f: Face, size: number) {
+    const { doc } = this.sheet;
+    if (this.fonts) doc.setFont(f, 'normal');
+    else doc.setFont('helvetica', f === 'sans' || f === 'mono' ? 'normal' : 'bold');
+    doc.setFontSize(size);
+  }
+  clean(v: unknown) {
+    return this.fonts ? siteText(v) : pdfText(v);
+  }
+  lines(v: unknown, width: number, f: Face, size: number): string[] {
+    this.face(f, size);
+    return this.sheet.doc.splitTextToSize(this.clean(v) || '-', width) as string[];
+  }
+  width(v: string, f: Face, size: number, charSpace = 0) {
+    this.face(f, size);
+    const t = this.clean(v);
+    return this.sheet.doc.getTextWidth(t) + charSpace * Math.max(0, t.length - 1);
+  }
+  text(v: unknown, x: number, y: number, f: Face, size: number, color: [number, number, number], charSpace = 0) {
+    this.face(f, size);
+    this.sheet.ink(color);
+    this.sheet.doc.text(this.clean(v), x, y, charSpace ? { charSpace } : undefined);
+  }
+  /** Wrapped lines from the top-left baseline; returns the y after the block. */
+  block(lines: string[], x: number, y: number, f: Face, size: number, color: [number, number, number], leading: number) {
+    this.face(f, size);
+    this.sheet.ink(color);
+    for (const line of lines) {
+      this.sheet.doc.text(line, x, y);
+      y += leading;
+    }
+    return y;
+  }
+}
+
+type Tone = { fill: [number, number, number]; text: [number, number, number] };
+const TONE = {
+  good: { fill: SITE.greenWash, text: SITE.green },
+  caution: { fill: SITE.orangeWash, text: SITE.orangeText },
+  bad: { fill: SITE.ink, text: SITE.white },
+  neutral: { fill: SITE.greyWash, text: SITE.muted },
+} satisfies Record<string, Tone>;
+const VERDICT_TONE: Record<string, Tone> = { yes: TONE.good, unclear: TONE.caution, no: TONE.bad };
+const CHECK_TONE: Record<string, Tone> = { confirmed: TONE.good, unverified: TONE.neutral, contradicted: TONE.bad };
+const MARKET_TONE: Record<string, Tone> = { promising: TONE.good, unproven: TONE.caution, weak: TONE.bad };
+const REC_FILL: Record<string, [number, number, number]> = { interview: SITE.green, maybe: SITE.orange, pass: SITE.ink };
+
+const MONO_SPACE = 0.35;
+
+function chip(pen: SitePen, label: string, x: number, top: number, w: number, tone: Tone) {
+  const { doc } = pen.sheet;
+  const h = 4.8;
+  doc.setFillColor(...tone.fill);
+  doc.roundedRect(x, top, w, h, h / 2, h / 2, 'F');
+  const t = label.toUpperCase();
+  const tw = pen.width(t, 'mono', 6.2, MONO_SPACE);
+  pen.text(t, x + (w - tw) / 2, top + 3.35, 'mono', 6.2, tone.text, MONO_SPACE);
+}
+
+function card(sheet: Sheet, x: number, top: number, w: number, h: number) {
+  sheet.doc.setFillColor(...SITE.card);
+  sheet.doc.setDrawColor(...SITE.hair);
+  sheet.doc.setLineWidth(0.25);
+  sheet.doc.roundedRect(x, top, w, h, 2.5, 2.5, 'DF');
+}
+
+/** A mono label like the site's `.mono.label`, kept on the page with the card under it. */
+function siteHead(pen: SitePen, title: string, firstBlock: number, aside?: () => void) {
+  const { sheet } = pen;
+  sheet.need(9 + Math.min(firstBlock, 120));
+  pen.text(title.toUpperCase(), M, sheet.y + 3, 'mono', 7, SITE.muted, 0.5);
+  aside?.();
+  sheet.y += 6.5;
+}
+
+const SANS = 8.6;
+const LEAD = 3.9;
 
 function screenPage(sheet: Sheet, record: Record<string, unknown>, s: IcpScreen) {
-  masthead(sheet, 'Internal - not shared with the applicant', `ICP screen: ${s.recommendation}`, [
-    pdfText(record.fullName) || 'Unknown applicant',
-    pdfText(record.trackLabel),
-    `${s.model} - a triage read, not a verdict`,
-  ]);
-  const override = s.modelRecommendation !== s.recommendation ? [`One said ${s.modelRecommendation}; a hard gate from the form overrode it.`] : [];
-  callout(sheet, `Recommendation: ${s.recommendation}`, REC_COLOR[s.recommendation] ?? WARN, [...override, ...s.reasons.map((r) => `- ${r}`)]);
-  callout(
-    sheet,
-    'Ideal applicant fit',
-    BRASS,
-    ICP_CRITERIA.map(({ id, label }) => `${VERDICT_MARK[s.icp[id].verdict]} - ${label}${s.icp[id].evidence ? `: ${s.icp[id].evidence}` : ''}`),
-  );
-  if (s.overstatements.length)
-    callout(sheet, 'Possible overstatement', WARN, s.overstatements.flatMap((o) => [`- ${bare(o.claim)}. ${o.concern}`, `  Ask: ${o.ask}`]));
-  callout(sheet, `Market viability: ${s.market.verdict}`, s.market.verdict === 'promising' ? GOOD : s.market.verdict === 'weak' ? BAD : WARN, [
-    ...(s.market.whoPays ? [`Who pays: ${s.market.whoPays}`] : []),
-    ...(s.market.competition ? [`Competition: ${s.market.competition}`] : []),
-    ...(s.market.sizeSignal ? [`Demand signal: ${s.market.sizeSignal}`] : []),
-    ...s.market.risks.map((r) => `Risk: ${r}`),
-  ]);
-  if (s.claimChecks.length)
-    callout(sheet, 'Claim checks against the links they gave', BRASS, s.claimChecks.map((c) => `${c.status[0].toUpperCase()}${c.status.slice(1)}: ${bare(c.claim)}${c.basis ? `. ${c.basis}` : ''}`));
-  if (s.redFlags.length) callout(sheet, 'Red flags', BAD, s.redFlags.map((f) => `- ${f}`));
-  if (s.greenFlags.length) callout(sheet, 'Green flags', GOOD, s.greenFlags.map((f) => `- ${f}`));
+  const pen = new SitePen(sheet);
+  const { doc } = sheet;
+  const ink = SITE.ink;
+
+  /* Masthead: kicker, the headline in the site's display face, the verdict as a pill. */
+  pen.text('INTERNAL · NOT SHARED WITH THE APPLICANT', M, sheet.y + 3, 'mono', 6.8, SITE.muted, 0.5);
+  const brand = 'MAMBA VENTURE PROGRAM';
+  pen.text(brand, W - M - pen.width(brand, 'mono', 6.8, 0.5), sheet.y + 3, 'mono', 6.8, SITE.muted, 0.5);
+  sheet.y += 8;
+
+  pen.text('ICP SCREEN', M, sheet.y + 13, 'display', 42, ink);
+  const rec = s.recommendation.toUpperCase();
+  const pillW = pen.width(rec, 'display', 19) + 14;
+  const pillTop = sheet.y + 2;
+  doc.setFillColor(...(REC_FILL[s.recommendation] ?? ink));
+  doc.roundedRect(W - M - pillW, pillTop, pillW, 12, 6, 6, 'F');
+  pen.text(rec, W - M - pillW + 7, pillTop + 8.7, 'display', 19, SITE.white);
+  sheet.y += 20;
+
+  const meta = [pdfText(record.fullName) || 'Unknown applicant', pdfText(record.trackLabel), `Read by ${s.model}`, 'a triage read, not a verdict']
+    .filter(Boolean)
+    .join('  ·  ');
+  pen.text(meta, M, sheet.y, 'sans', 8.4, SITE.muted);
+  sheet.y += 4.5;
+  if (s.modelRecommendation !== s.recommendation) {
+    pen.text(`One said ${s.modelRecommendation}; a hard gate from the form set it to ${s.recommendation}.`, M, sheet.y, 'sansBold', 8.4, SITE.orangeText);
+    sheet.y += 4.5;
+  }
+  sheet.y += 1.5;
+  doc.setDrawColor(...ink);
+  doc.setLineWidth(0.35);
+  doc.line(M, sheet.y, W - M, sheet.y);
+  sheet.y += 7;
+
+  /* Why. */
+  if (s.reasons.length) {
+    const rows = s.reasons.map((r) => pen.lines(r, CW - 17, 'sans', 9.2));
+    const h = 5 + rows.reduce((n, l) => n + l.length * 4.2 + 1.8, 0) + 2.4;
+    siteHead(pen, 'Why', h);
+    sheet.need(h);
+    card(sheet, M, sheet.y, CW, h);
+    let y = sheet.y + 8.2;
+    for (const lines of rows) {
+      doc.setFillColor(...SITE.orange);
+      doc.rect(M + 6, y - 2.2, 1.8, 1.8, 'F');
+      y = pen.block(lines, M + 11, y, 'sans', 9.2, ink, 4.2) + 1.8;
+    }
+    sheet.y += h + 6;
+  }
+
+  /* Fit with the ideal applicant: one row per criterion. */
+  {
+    const rows = ICP_CRITERIA.map(({ id, label }) => {
+      const l = pen.lines(label, 50, 'sansBold', SANS);
+      const e = pen.lines(s.icp[id].evidence || '-', CW - 90, 'sans', 8.2);
+      return { l, e, verdict: s.icp[id].verdict, h: Math.max(l.length * LEAD, e.length * 3.7, 4.8) + 5.4 };
+    });
+    const h = rows.reduce((n, r) => n + r.h, 0) + 2;
+    siteHead(pen, 'Fit with the ideal applicant', h);
+    sheet.need(h);
+    card(sheet, M, sheet.y, CW, h);
+    let top = sheet.y + 1;
+    rows.forEach((r, i) => {
+      if (i) {
+        doc.setDrawColor(...SITE.hair);
+        doc.setLineWidth(0.2);
+        doc.line(M + 6, top, W - M - 6, top);
+      }
+      pen.block(r.l, M + 6, top + 6, 'sansBold', SANS, ink, LEAD);
+      chip(pen, r.verdict, M + 60, top + 2.9, 20, VERDICT_TONE[r.verdict] ?? TONE.neutral);
+      pen.block(r.e, M + 84, top + 6, 'sans', 8.2, SITE.muted, 3.7);
+      top += r.h;
+    });
+    sheet.y += h + 6;
+  }
+
+  /* Possible overstatement: the claim, why it does not hold up, what to ask. */
+  if (s.overstatements.length) {
+    const items = s.overstatements.map((o) => {
+      const c = pen.lines(o.claim, CW - 12, 'sansBold', SANS);
+      const w = pen.lines(o.concern, CW - 12, 'sans', 8.2);
+      const a = pen.lines(o.ask, CW - 26, 'sans', SANS);
+      return { c, w, a, h: c.length * LEAD + w.length * 3.7 + a.length * LEAD + 9 };
+    });
+    const h = items.reduce((n, it) => n + it.h, 0) + 3;
+    siteHead(pen, 'Possible overstatement', h);
+    sheet.need(h);
+    card(sheet, M, sheet.y, CW, h);
+    let top = sheet.y + 1.5;
+    items.forEach((it, i) => {
+      if (i) {
+        doc.setDrawColor(...SITE.hair);
+        doc.setLineWidth(0.2);
+        doc.line(M + 6, top, W - M - 6, top);
+      }
+      let y = pen.block(it.c, M + 6, top + 5.4, 'sansBold', SANS, ink, LEAD);
+      y = pen.block(it.w, M + 6, y + 0.2, 'sans', 8.2, SITE.muted, 3.7);
+      pen.text('ASK', M + 6, y + 1.6, 'mono', 6.8, SITE.orangeText, 0.5);
+      pen.block(it.a, M + 20, y + 1.6, 'sans', SANS, ink, LEAD);
+      top += it.h;
+    });
+    sheet.y += h + 6;
+  }
+
+  /* Market viability. */
+  {
+    const m = s.market;
+    const rows = [
+      ['Who pays', m.whoPays],
+      ['Competition', m.competition],
+      ['Demand signal', m.sizeSignal],
+      ...m.risks.map((r) => ['Risk', r]),
+    ]
+      .filter(([, v]) => v)
+      .map(([k, v]) => ({ k, v: pen.lines(v, CW - 48, 'sans', SANS) }));
+    const h = rows.reduce((n, r) => n + r.v.length * LEAD + 2.6, 0) + 8;
+    siteHead(pen, 'Market viability', h, () => chip(pen, m.verdict, W - M - 24, sheet.y - 0.2, 24, MARKET_TONE[m.verdict] ?? TONE.neutral));
+    sheet.need(h);
+    card(sheet, M, sheet.y, CW, h);
+    let y = sheet.y + 7;
+    for (const r of rows) {
+      pen.text(r.k.toUpperCase(), M + 6, y, 'mono', 6.6, SITE.muted, 0.4);
+      y = pen.block(r.v, M + 42, y, 'sans', SANS, ink, LEAD) + 2.6;
+    }
+    sheet.y += h + 6;
+  }
+
+  /* Claim checks against the links they gave. */
+  if (s.claimChecks.length) {
+    const rows = s.claimChecks.map((c) => {
+      const cl = pen.lines(bare(c.claim), CW - 42, 'sansBold', SANS);
+      const b = c.basis ? pen.lines(c.basis, CW - 42, 'sans', 8.2) : [];
+      return { status: c.status, cl, b, h: cl.length * LEAD + b.length * 3.7 + 5.4 };
+    });
+    const h = rows.reduce((n, r) => n + r.h, 0) + 2;
+    siteHead(pen, 'Claim checks against the links they gave', h);
+    sheet.need(h);
+    card(sheet, M, sheet.y, CW, h);
+    let top = sheet.y + 1;
+    rows.forEach((r, i) => {
+      if (i) {
+        doc.setDrawColor(...SITE.hair);
+        doc.setLineWidth(0.2);
+        doc.line(M + 6, top, W - M - 6, top);
+      }
+      chip(pen, r.status, M + 6, top + 2.9, 26, CHECK_TONE[r.status] ?? TONE.neutral);
+      const y = pen.block(r.cl, M + 36, top + 6, 'sansBold', SANS, ink, LEAD);
+      pen.block(r.b, M + 36, y, 'sans', 8.2, SITE.muted, 3.7);
+      top += r.h;
+    });
+    sheet.y += h + 6;
+  }
+
+  /* Flags, side by side. */
+  {
+    const colW = (CW - 5) / 2;
+    const col = (items: string[]) => (items.length ? items : ['None noted.']).map((f) => pen.lines(f, colW - 15, 'sans', 8.4));
+    const red = col(s.redFlags);
+    const green = col(s.greenFlags);
+    const height = (ls: string[][]) => 12 + ls.reduce((n, l) => n + l.length * 3.8 + 1.6, 0) + 2;
+    const h = Math.max(height(red), height(green));
+    sheet.need(h + 2);
+    const draw = (x: number, title: string, dot: [number, number, number], ls: string[][], empty: boolean) => {
+      card(sheet, x, sheet.y, colW, h);
+      doc.setFillColor(...dot);
+      doc.circle(x + 7, sheet.y + 6.4, 1.2, 'F');
+      pen.text(title, x + 10.5, sheet.y + 7.4, 'mono', 7, ink, 0.5);
+      let y = sheet.y + 13.6;
+      for (const lines of ls) {
+        if (!empty) {
+          doc.setFillColor(...SITE.muted);
+          doc.rect(x + 6.4, y - 1.8, 1.2, 1.2, 'F');
+        }
+        y = pen.block(lines, x + 10.5, y, 'sans', 8.4, empty ? SITE.muted : ink, 3.8) + 1.6;
+      }
+    };
+    draw(M, 'RED FLAGS', [214, 69, 54], red, !s.redFlags.length);
+    draw(M + colW + 5, 'GREEN FLAGS', SITE.green, green, !s.greenFlags.length);
+    sheet.y += h + 4;
+  }
 }
 
 /* ── Entry point ─────────────────────────────────────────────────────── */
@@ -851,11 +1152,11 @@ function screenPage(sheet: Sheet, record: Record<string, unknown>, s: IcpScreen)
 /** Build the dossier and return the PDF bytes, ready to hand to Drive. */
 export function buildDossierPdf(input: DossierInput): ArrayBuffer {
   const applicant = pdfText(input.record.fullName) || 'Unknown applicant';
-  const sheet = new Sheet(`Mamba Venture Program - ${applicant} - internal review copy`);
+  const sheet = new Sheet(`Mamba Venture Program - ${applicant} - internal review copy`, Boolean(input.screen));
 
   if (input.screen) {
     screenPage(sheet, input.record, input.screen);
-    sheet.newPage();
+    sheet.newPage(false);
   }
   applicationPages(sheet, input.record, input.answers, input.assessment.track);
   assessmentPage(sheet, input);
