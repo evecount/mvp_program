@@ -263,6 +263,10 @@
       <path d="M7.7 12.2 5 14.6l.9 3.4 3.3-2M16.3 12.2 19 14.6l-.9 3.4-3.3-2"/>
       <path d="M10.4 18.4c.4 1.4.9 2.5 1.6 2.8.7-.3 1.2-1.4 1.6-2.8"/>
     </symbol>
+    <symbol id="i-idea" viewBox="0 0 24 24">
+      <path d="M12 3a6 6 0 0 0-3.6 10.8c.6.5 1 1.2 1 2v.4h5.2v-.4c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>
+      <path d="M9.6 19h4.8M10.6 21.4h2.8"/>
+    </symbol>
     <symbol id="i-schools" viewBox="0 0 24 24">
       <path d="M2 9.2 12 4.4l10 4.8-10 4.8z"/>
       <path d="M6.2 11.3v4.6c0 1.5 2.6 3 5.8 3s5.8-1.5 5.8-3v-4.6"/>
@@ -433,30 +437,48 @@
       <div class="seg-wrap">
         <div class="seg glass" role="tablist" aria-label="Audiences" id="seg">
           <span class="seg-indicator" aria-hidden="true"></span>
-          <button role="tab" aria-selected="true" aria-controls="p-founders" id="t-founders"><svg class="i"><use href="#i-founders"/></svg>Founders</button>
+          <button role="tab" aria-selected="true" aria-controls="p-aspiring" id="t-aspiring"><svg class="i"><use href="#i-idea"/></svg>Aspiring founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-existing" id="t-existing" tabindex="-1"><svg class="i"><use href="#i-founders"/></svg>Existing founders</button>
           <button role="tab" aria-selected="false" aria-controls="p-schools" id="t-schools" tabindex="-1"><svg class="i"><use href="#i-schools"/></svg>Schools</button>
           <button role="tab" aria-selected="false" aria-controls="p-enterprise" id="t-enterprise" tabindex="-1"><svg class="i"><use href="#i-enterprise"/></svg>Enterprise</button>
-          <button role="tab" aria-selected="false" aria-controls="p-operators" id="t-operators" tabindex="-1"><svg class="i"><use href="#i-operators"/></svg>Experienced founders</button>
+          <button role="tab" aria-selected="false" aria-controls="p-operators" id="t-operators" tabindex="-1"><svg class="i"><use href="#i-operators"/></svg>Operators</button>
           <button role="tab" aria-selected="false" aria-controls="p-partners" id="t-partners" tabindex="-1"><svg class="i"><use href="#i-partners"/></svg>Partners</button>
         </div>
       </div>
 
       <div class="panels">
-        <div class="panel" role="tabpanel" id="p-founders" aria-labelledby="t-founders">
+        <div class="panel" role="tabpanel" id="p-aspiring" aria-labelledby="t-aspiring">
           <div class="panel-head">
-            <div class="icon-tile glass"><svg class="i"><use href="#i-founders"/></svg></div>
+            <div class="icon-tile glass"><svg class="i"><use href="#i-idea"/></svg></div>
             <div>
-              <h3 class="display h3 h3--xl">Founders</h3>
-              <p class="panel-desc">Working professionals, SME owners and aspiring founders with industry insight, an idea or an early prototype.</p>
+              <h3 class="display h3 h3--xl">Aspiring founders</h3>
+              <p class="panel-desc">An idea or a problem you know well, and no company yet. Built for working professionals with industry insight.</p>
             </div>
           </div>
           <div class="panel-cols">
-            <div><p class="mono step">1-month sprint</p><h4>Test the problem</h4><p>Test the problem, define your MVP and decide what to build next.</p></div>
-            <div><p class="mono step">3-month build</p><h4>Build the MVP</h4><p>Develop the MVP, test with users and work toward commercial readiness.</p></div>
-            <div><p class="mono step">Both tracks</p><h4>Shared support</h4><p>Workspace, engineering guidance, commercial support, investor sessions and ecosystem connections.</p></div>
+            <div><p class="mono step">1-month sprint</p><h4>Test the problem</h4><p>Check the problem is real, define your MVP and decide what to build.</p></div>
+            <div><p class="mono step">3-month build</p><h4>Build the MVP</h4><p>Develop the MVP, test it with users and work toward commercial readiness.</p></div>
+            <div><p class="mono step">Before you incorporate</p><h4>No company needed</h4><p>Apply as you are. We point you to the grants open to first-time founders when it is time to set up.</p></div>
             <div><p class="mono step">After the program</p><h4>First look from Mamba</h4><p>Mamba Partners evaluates every venture that completes the program as an investment opportunity, and always gets the first look. No equity is taken to join.</p></div>
           </div>
-          <a class="pill pill--orange" href="apply.html#apply">Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="pill pill--orange" href="apply.html?track=aspiring-founder#apply">Apply as an aspiring founder <svg class="i"><use href="#i-arrow"/></svg></a>
+        </div>
+
+        <div class="panel" role="tabpanel" id="p-existing" aria-labelledby="t-existing" hidden>
+          <div class="panel-head">
+            <div class="icon-tile glass"><svg class="i"><use href="#i-founders"/></svg></div>
+            <div>
+              <h3 class="display h3 h3--xl">Existing founders</h3>
+              <p class="panel-desc">You already have a company, from SME owners to founders with an early product, and want to build or test what comes next.</p>
+            </div>
+          </div>
+          <div class="panel-cols">
+            <div><p class="mono step">1-month sprint</p><h4>Test the next bet</h4><p>Pressure-test a new product or market before you commit the team to it.</p></div>
+            <div><p class="mono step">3-month build</p><h4>Build it with us</h4><p>Develop the MVP alongside your business, test it with users and get it commercially ready.</p></div>
+            <div><p class="mono step">1 or 3 months</p><h4>Shared support</h4><p>Workspace, engineering guidance, commercial support, investor sessions and ecosystem connections.</p></div>
+            <div><p class="mono step">After the program</p><h4>First look from Mamba</h4><p>Mamba Partners evaluates every venture that completes the program as an investment opportunity, and always gets the first look. No equity is taken to join.</p></div>
+          </div>
+          <a class="pill pill--orange" href="apply.html?track=existing-founder#apply">Apply as an existing founder <svg class="i"><use href="#i-arrow"/></svg></a>
         </div>
 
         <div class="panel" role="tabpanel" id="p-schools" aria-labelledby="t-schools" hidden>
@@ -495,7 +517,7 @@
           <div class="panel-head">
             <div class="icon-tile glass"><svg class="i"><use href="#i-operators"/></svg></div>
             <div>
-              <h3 class="display h3 h3--xl">Experienced founders</h3>
+              <h3 class="display h3 h3--xl">Operators</h3>
               <p class="panel-desc">Founded before, navigated procurement or closed B2B deals? Bring the distribution instincts; we bring the engineering and early-stage ventures.</p>
             </div>
           </div>
