@@ -110,7 +110,8 @@ function linked(label) {
 function fillLength(text) {
   if (!text) return text;
   const len = data.intake === "1 Month" ? "one month" : data.intake === "3 Month" ? "three months" : "the length of your track";
-  return text.replace(/\{length\}/g, len).replace(/\{Length\}/g, len[0].toUpperCase() + len.slice(1));
+  const fee = data.intake === "1 Month" ? "S$2,500" : data.intake === "3 Month" ? "S$5,999" : "S$2,500 for one month or S$5,999 for three";
+  return text.replace(/\{length\}/g, len).replace(/\{Length\}/g, len[0].toUpperCase() + len.slice(1)).replace(/\{fee\}/g, fee);
 }
 
 function renderField(f) {

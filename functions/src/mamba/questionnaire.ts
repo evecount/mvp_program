@@ -337,6 +337,21 @@ export const QUESTIONS_RAW: readonly Question[] = [
     ],
   },
   {
+    id: 'affordability',
+    label: 'The program fee is {fee}. You can pay 50% before the cohort starts and the rest before it ends. Which is true for you?',
+    help: 'Applying is free. We ask now so nobody spends an interview on a place they cannot take up.',
+    kind: 'select',
+    required: true,
+    axis: 'commitment',
+    weight: 0.6,
+    options: [
+      { label: 'I can pay in full before the cohort starts', weight: 1 },
+      { label: 'I can pay 50% upfront and the rest before it ends', weight: 0.9 },
+      { label: 'My employer or a sponsor would pay', weight: 0.7 },
+      { label: 'I cannot afford it right now', weight: 0, risk: 0.4 },
+    ],
+  },
+  {
     id: 'priorPublicFunding',
     label: 'Have you or your company ever received a government grant or public funding?',
     kind: 'select',
@@ -548,8 +563,14 @@ export const trackLength = (intake?: string, capital = false): string => {
   const s = intake === '1 Month' ? 'one month' : intake === '3 Month' ? 'three months' : 'the length of your track';
   return capital ? s[0].toUpperCase() + s.slice(1) : s;
 };
+/** The fee for the intake, matching the terms page; both when no intake is picked yet. */
+export const trackFee = (intake?: string): string =>
+  intake === '1 Month' ? 'S$2,500' : intake === '3 Month' ? 'S$5,999' : 'S$2,500 for one month or S$5,999 for three';
 export const fillTrackLength = (text: string, intake?: string): string =>
-  text.replace(/\{length\}/g, trackLength(intake)).replace(/\{Length\}/g, trackLength(intake, true));
+  text
+    .replace(/\{length\}/g, trackLength(intake))
+    .replace(/\{Length\}/g, trackLength(intake, true))
+    .replace(/\{fee\}/g, trackFee(intake));
 
 /** The catalogue with intake wording filled neutrally, for the scorer, dossier and drafts. */
 export const QUESTIONS: readonly Question[] = QUESTIONS_RAW.map((q) => ({
@@ -647,7 +668,7 @@ export const QUESTION_SECTIONS_RAW: ReadonlyArray<{
     title: 'Expectations',
     intro:
       'Public money is involved, and we are accountable for how it is used. These answers are read alongside your grant options.',
-    questions: ['worthwhileIfNotFunded', 'grantIntent', 'priorPublicFunding'],
+    questions: ['worthwhileIfNotFunded', 'affordability', 'grantIntent', 'priorPublicFunding'],
   },
 ];
 

@@ -30,9 +30,9 @@ service cloud.firestore {
               'proprietaryTech', 'capitalToMatch', 'overseasAmbition', 'linkedin', 'portfolio',
               'github', 'availability', 'weekPlan', 'runway', 'dependents', 'employerAware',
               'setback', 'milestoneContract', 'accountableTo', 'wrongAssumption', 'failureMode',
-              'firstThirtyDays', 'worthwhileIfNotFunded', 'grantIntent', 'priorPublicFunding',
-              'motivation', 'howHeard', 'consent', 'acceptTerms', 'acceptPrivacy', 'cohort',
-              'status', 'schemaVersion', 'createdAt'];
+              'firstThirtyDays', 'worthwhileIfNotFunded', 'affordability', 'grantIntent',
+              'priorPublicFunding', 'motivation', 'howHeard', 'consent', 'acceptTerms',
+              'acceptPrivacy', 'cohort', 'status', 'schemaVersion', 'createdAt'];
     }
 
     // Inline size checks rather than a helper: a helper call per field pushes
@@ -96,6 +96,7 @@ service cloud.firestore {
         && d.dependents.size() <= 200
         && d.employerAware.size() <= 200
         && d.milestoneContract.size() <= 200
+        && d.affordability.size() <= 200
         && d.grantIntent.size() <= 200
         && d.priorPublicFunding.size() <= 200
         && d.howHeard.size() <= 200;

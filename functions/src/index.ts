@@ -44,6 +44,8 @@ import { dossierFilename, interviewSheet, matchGrants, scoreApplication } from '
 import { buildDossierPdf, pdfText } from './mamba/dossierPdf';
 import { buildConfirmationEmail } from './mamba/confirmationEmail';
 import { blendAssessment, reviewAssessmentWithOne } from './mamba/oneAssessment';
+import { gatherPublicEvidence } from './mamba/publicEvidence';
+import { icpGates, screenApplicant, screenText } from './mamba/oneScreen';
 import { redactAnswers } from './mamba/deidentify';
 import { draftInterviewQuestions } from './mamba/interviewDraft';
 import { fileDossier } from './mamba/drive';
@@ -142,7 +144,7 @@ export const onApplicationFiled = onDocumentCreated(
        workspace in the same instant. */
     const flatGrants = grants.map((m) => ({ id: m.program.id, name: m.program.name, verdict: m.verdict, gap: m.gap ?? null }));
     const redactedAnswers = redactAnswers(stored, answers, QUESTION_IDS);
-    const [draftOutcome, oneOutcome] = await Promise.all([
+    const [draftOutcome, oneOutcome, screenOutcome] = await Promise.all([
       draftInterviewQuestions({
         record: stored,
         answers,
@@ -157,7 +159,28 @@ export const onApplicationFiled = onDocumentCreated(
           reviewAssessmentWithOne({ record: stored, answers, track: submission.track, assessment: baseline, redactedAnswers }),
         )
         .catch((err: Error) => ({ ok: false as const, reason: `One's review threw: ${err?.message ?? err}` })),
+      /* The ICP screen reads the links they gave while the other two run,
+         then asks One whether this person is worth an interview at all. */
+      gatherPublicEvidence({ linkedin: submission.linkedin, portfolio: submission.portfolio, github: submission.github })
+        .then((evidence) =>
+          new Promise((resolve) => setTimeout(resolve, 600)).then(() =>
+            screenApplicant({
+              record: stored,
+              answers,
+              track: submission.track,
+              intake: submission.intake,
+              assessment: baseline,
+              evidence,
+              redactedAnswers,
+            }),
+          ),
+        )
+        .catch((err: Error) => ({ ok: false as const, reason: `screen threw: ${err?.message ?? err}` })),
     ]);
+    const screen = screenOutcome.ok ? screenOutcome.result : null;
+    if (!screenOutcome.ok) logger.warn('[mvp] ICP screen unavailable', { id: ref.id, reason: screenOutcome.reason });
+    const gateCap = icpGates(answers).some((g) => g.cap === 'pass') ? 'pass' : null;
+    const verdictTag = (screen?.recommendation ?? gateCap ?? 'unscreened').toUpperCase();
     const draft = draftOutcome.ok ? draftOutcome.draft : null;
     if (!draftOutcome.ok) logger.warn('[mvp] interview draft unavailable', { id: ref.id, reason: draftOutcome.reason });
     const oneReview = oneOutcome.ok ? oneOutcome.result : null;
@@ -172,7 +195,7 @@ export const onApplicationFiled = onDocumentCreated(
       pdfText(answers.ideaTitle),
       pdfText(submission.fullName) || 'Untitled application',
     );
-    const pdf = Buffer.from(buildDossierPdf({ record: stored, answers, assessment, grants, draft }));
+    const pdf = Buffer.from(buildDossierPdf({ record: stored, answers, assessment, grants, draft, screen }));
 
     let driveFileId: string | null = null;
     let driveError: string | null = null;
@@ -193,7 +216,7 @@ export const onApplicationFiled = onDocumentCreated(
         from,
         to: REVIEWER_EMAILS.value(),
         replyTo: submission.email,
-        subject: `MVP application: ${name} — ${idea} (${assessment.bandLabel}, ${pct(assessment.overall)})`,
+        subject: `[${verdictTag}] MVP application: ${name} — ${idea} (${assessment.bandLabel}, ${pct(assessment.overall)})`,
         text: [
           'A new Mamba Venture Program application came in through the MVP site.',
           '',
@@ -203,6 +226,9 @@ export const onApplicationFiled = onDocumentCreated(
           `Track:     ${trackLabel}`,
           `Intake:    ${submission.intake}`,
           `Idea:      ${idea}`,
+          `Fee:       ${answers.affordability || 'not answered'}`,
+          '',
+          ...screenText(screen, screenOutcome.ok ? '' : screenOutcome.reason, answers),
           '',
           `Readiness: ${pct(assessment.overall)} / 100 — ${assessment.bandLabel}${oneReview && moved.length ? ' (after One\'s review)' : ''}`,
           `Grant liability risk: ${assessment.grantRisk}`,
@@ -278,6 +304,8 @@ export const onApplicationFiled = onDocumentCreated(
           ? { summary: oneReview.summary, axes: oneReview.axes, model: oneReview.model, generatedAt: oneReview.generatedAt }
           : null,
         oneAssessmentReason: oneOutcome.ok ? null : oneOutcome.reason,
+        icpScreen: screen,
+        icpScreenReason: screenOutcome.ok ? null : screenOutcome.reason,
         interviewDraft: draft
           ? { questions: draft.questions, model: draft.model, generatedAt: draft.generatedAt, dropped: draft.dropped }
           : null,
