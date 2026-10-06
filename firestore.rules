@@ -43,7 +43,7 @@ service cloud.firestore {
       return d.keys().hasOnly(keys)
         && d.keys().hasAll(keys)
         && d.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
-        && d.track in ['employee', 'founder', 'transition', 'cybrdeck-engineer']
+        && d.track in ['aspiring-founder', 'existing-founder']
         && d.intake in ['1 Month', '3 Month']
         && d.consent == true
         && d.acceptTerms == true

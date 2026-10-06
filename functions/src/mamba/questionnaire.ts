@@ -120,7 +120,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
       { label: 'I worked in it before', weight: 0.8 },
       { label: 'I am an adjacent specialist', weight: 0.55 },
       { label: 'I am an outsider to it', weight: 0.2 },
-      { label: 'No venture yet, this is about my own career', weight: 0.35 },
     ],
   },
   {
@@ -162,7 +161,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'What can you personally build or execute today without hiring anyone, and which specific capability is missing from the team as it stands?',
     help: 'Name the gap precisely. "Engineering" is not an answer; "nobody who can close enterprise deals" is.',
     kind: 'textarea',
-    tracks: ['founder'],
     required: true,
     min: 80,
     max: 1200,
@@ -269,7 +267,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'employerAware',
     label: 'Does anyone who would be affected by your time already know you are applying?',
     kind: 'select',
-    tracks: ['employee', 'transition', 'cybrdeck-engineer'],
     axis: 'commitment',
     weight: 0.8,
     options: [
@@ -395,7 +392,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Your venture, in one line',
     help: 'A sentence is enough. This is a triage note, not a pitch deck.',
     kind: 'text',
-    tracks: ['founder'],
     required: true,
     max: 500,
     axis: 'domain',
@@ -405,7 +401,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'stage',
     label: 'Where is the venture?',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     axis: 'execution',
     weight: 1,
@@ -423,7 +418,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Name your first 10 customers as specifically as you can: who they are, and exactly how you would reach them this month, not eventually.',
     help: 'A named company or persona beats a segment. "SMEs" is not an answer; "the ops manager at a 20-truck logistics operator like the one I worked at" is.',
     kind: 'textarea',
-    tracks: ['founder'],
     required: true,
     min: 80,
     max: 1200,
@@ -435,7 +429,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Who pays, for what exactly, and how much? Walk through the transaction as it actually happens, not the business model slide version.',
     help: 'If you do not know yet, say what you would charge the first paying customer and why that number.',
     kind: 'textarea',
-    tracks: ['founder'],
     required: true,
     min: 80,
     max: 1200,
@@ -447,7 +440,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'What is your residency status?',
     help: 'Drives which schemes you can actually reach. Several are closed to non-citizens and non-PRs.',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: 'Singapore Citizen', weight: 1 },
@@ -462,7 +454,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Have you founded a company before?',
     help: 'For Startup SG Founder, a first-time founder has never registered a private limited company with ACRA.',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: 'No, this would be my first', weight: 1 },
@@ -474,7 +465,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'coFounderCount',
     label: 'Counting yourself, how many of the main applicants are Singapore Citizens or PRs?',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: 'Two or more', weight: 1 },
@@ -487,7 +477,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Is the company incorporated in Singapore, and how old is it?',
     help: 'Some schemes require the company to be under six months old, which is a clock you cannot rewind.',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: 'Not incorporated yet', weight: 0.6 },
@@ -501,7 +490,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'localEquity',
     label: 'What share of the company is held by Singapore Citizens or PRs?',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: '51% or more', weight: 1 },
@@ -515,7 +503,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'proprietaryTech',
     label: 'Is there proprietary technology or IP in the venture?',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     options: [
       { label: 'Yes, and we own it', weight: 1 },
@@ -529,7 +516,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     label: 'Startup SG Founder gives S$20,000 to S$50,000, matched 1:1 by the founders. At least half of your share must already be paid-up capital on ACRA when the application is submitted. Could you put that in?',
     help: 'This is the real gate on that grant, not the pitch.',
     kind: 'select',
-    tracks: ['founder'],
     required: true,
     axis: 'commitment',
     weight: 0.6,
@@ -544,7 +530,6 @@ export const QUESTIONS_RAW: readonly Question[] = [
     id: 'overseasAmbition',
     label: 'Do you have a specific overseas market or partner in mind?',
     kind: 'select',
-    tracks: ['founder'],
     options: [
       { label: 'Yes, and we have a partner or lead', weight: 1 },
       { label: 'Yes, a market but no partner yet', weight: 0.6 },

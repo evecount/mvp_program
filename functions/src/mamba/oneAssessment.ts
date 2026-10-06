@@ -101,7 +101,7 @@ function buildAssessmentPrompt(input: OneAssessmentInput): { system: string; use
   const lines: string[] = [];
 
   lines.push(
-    `TRACK: ${input.track === 'founder' ? 'Founder (building a company)' : 'Employed (bringing a venture from inside an organisation)'}`,
+    `TRACK: ${input.track === 'existing-founder' ? 'Existing founder (already has a company)' : 'Aspiring founder (no company yet)'}`,
   );
   lines.push('');
 

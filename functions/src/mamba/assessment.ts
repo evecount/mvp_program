@@ -31,6 +31,7 @@ import {
   type AxisId,
   type Question,
 } from './questionnaire';
+import { isMambaTrackId } from './program';
 
 /* ── Answers ─────────────────────────────────────────────────────────── */
 
@@ -376,7 +377,8 @@ const isLocal = (residency: string) =>
  * capital — and an applicant can usually fix one of them this month.
  */
 export function matchGrants(answers: Answers, track: string): GrantMatch[] {
-  if (track !== 'founder') return [];
+  // Both tracks are founders, so every applicant is screened.
+  if (!isMambaTrackId(track)) return [];
 
   const residency = str(answers, 'residency');
   const local = isLocal(residency);
