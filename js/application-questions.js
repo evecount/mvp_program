@@ -53,24 +53,14 @@ window.MVP_APPLICATION = {
           "required": true,
           "options": [
             {
-              "value": "employee",
-              "label": "Prospective employee",
-              "hint": "You want to work inside a company, not run one."
+              "value": "aspiring-founder",
+              "label": "Aspiring founder",
+              "hint": "You have an idea or a problem you know well, and no company yet."
             },
             {
-              "value": "founder",
-              "label": "Startup founder",
-              "hint": "You have a company, or a conviction about one."
-            },
-            {
-              "value": "transition",
-              "label": "Currently employed or mid-transition",
-              "hint": "You have a role and are reconsidering it."
-            },
-            {
-              "value": "cybrdeck-engineer",
-              "label": "Cybrdeck developer or engineer",
-              "hint": "You build with us."
+              "value": "existing-founder",
+              "label": "Existing founder",
+              "hint": "You already have a company and want to build or test what comes next."
             }
           ]
         },
@@ -156,8 +146,7 @@ window.MVP_APPLICATION = {
             "I work in this industry now",
             "I worked in it before",
             "I am an adjacent specialist",
-            "I am an outsider to it",
-            "No venture yet, this is about my own career"
+            "I am an outsider to it"
           ]
         },
         {
@@ -194,10 +183,7 @@ window.MVP_APPLICATION = {
           "hint": "Name the gap precisely. \"Engineering\" is not an answer; \"nobody who can close enterprise deals\" is.",
           "required": true,
           "min": 80,
-          "max": 1200,
-          "tracks": [
-            "founder"
-          ]
+          "max": 1200
         },
         {
           "id": "shippedBefore",
@@ -239,10 +225,7 @@ window.MVP_APPLICATION = {
           "kind": "text",
           "hint": "A sentence is enough. This is a triage note, not a pitch deck.",
           "required": true,
-          "max": 500,
-          "tracks": [
-            "founder"
-          ]
+          "max": 500
         },
         {
           "id": "stage",
@@ -257,9 +240,6 @@ window.MVP_APPLICATION = {
             "Live with users, pre-revenue",
             "Revenue under S$10k a month",
             "Revenue S$10k a month or more"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -269,10 +249,7 @@ window.MVP_APPLICATION = {
           "hint": "A named company or persona beats a segment. \"SMEs\" is not an answer; \"the ops manager at a 20-truck logistics operator like the one I worked at\" is.",
           "required": true,
           "min": 80,
-          "max": 1200,
-          "tracks": [
-            "founder"
-          ]
+          "max": 1200
         },
         {
           "id": "businessModel",
@@ -281,10 +258,7 @@ window.MVP_APPLICATION = {
           "hint": "If you do not know yet, say what you would charge the first paying customer and why that number.",
           "required": true,
           "min": 80,
-          "max": 1200,
-          "tracks": [
-            "founder"
-          ]
+          "max": 1200
         },
         {
           "id": "residency",
@@ -299,9 +273,6 @@ window.MVP_APPLICATION = {
             "EntrePass or Tech.Pass holder",
             "Another work pass",
             "Not based in Singapore"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -315,9 +286,6 @@ window.MVP_APPLICATION = {
             "No, this would be my first",
             "Yes, previously",
             "Yes, I am running another now"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -330,9 +298,6 @@ window.MVP_APPLICATION = {
             "Two or more",
             "One, just me",
             "None"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -348,9 +313,6 @@ window.MVP_APPLICATION = {
             "Singapore, 6–24 months old",
             "Singapore, over 2 years old",
             "Incorporated outside Singapore"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -365,9 +327,6 @@ window.MVP_APPLICATION = {
             "Under 30%",
             "Not incorporated yet",
             "Not sure"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -381,9 +340,6 @@ window.MVP_APPLICATION = {
             "Yes, licensed from someone else",
             "In development",
             "No, it is a services or business-model play"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -398,9 +354,6 @@ window.MVP_APPLICATION = {
             "Yes, I could raise it",
             "Maybe, with help",
             "No"
-          ],
-          "tracks": [
-            "founder"
           ]
         },
         {
@@ -413,9 +366,6 @@ window.MVP_APPLICATION = {
             "Yes, a market but no partner yet",
             "Not yet",
             "No, Singapore only"
-          ],
-          "tracks": [
-            "founder"
           ]
         }
       ]
@@ -513,11 +463,6 @@ window.MVP_APPLICATION = {
             "Yes, they do not know yet",
             "No",
             "Not applicable"
-          ],
-          "tracks": [
-            "employee",
-            "transition",
-            "cybrdeck-engineer"
           ]
         },
         {

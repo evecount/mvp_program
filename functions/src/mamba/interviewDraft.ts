@@ -137,7 +137,7 @@ export function buildInterviewPrompt(input: InterviewDraftInput): {
     const tokens = identityTokens(input.record ?? {}, input.answers ?? {});
     const lines: string[] = [];
 
-    lines.push(`TRACK: ${input.track === 'founder' ? 'Founder (building a company)' : 'Employed (bringing a venture from inside an organisation)'}`);
+    lines.push(`TRACK: ${input.track === 'existing-founder' ? 'Existing founder (already has a company)' : 'Aspiring founder (no company yet)'}`);
     lines.push('');
 
     for (const section of QUESTION_SECTIONS) {
