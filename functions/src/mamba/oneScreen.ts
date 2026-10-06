@@ -111,7 +111,7 @@ Rules:
 - "unclear" is the honest verdict when the application does not say. Do not guess "yes" to be kind or "no" to be tough.
 - recommendation: "interview" if they plausibly fit the ICP and nothing serious is unexplained; "maybe" if they could fit but something important needs checking first; "pass" if they clearly do not fit, or the overstatement is serious enough that an interview would be wasted.
 - Each overstatement needs a question the interviewer can ask to test it.
-- Keep every string short: one sentence, under 30 words.
+- Keep every string short: one sentence, under 30 words. Write numbers and money as digits (S$9k, 20 drivers), as the applicant did.
 - This read is not retained and does not enter your memory.
 
 Reply with ONLY a JSON object, no prose, no code fence:
@@ -170,6 +170,8 @@ function buildPrompt(input: IcpScreenInput): string {
 
 const S = 260;
 const coerce = (v: unknown) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
+/** Without its closing full stop, for joining two model strings into one sentence pair. */
+export const bare = (s: string) => s.replace(/[.\s]+$/, '');
 const clip = (v: unknown, cap = S) => scrub(coerce(v)).slice(0, cap);
 const list = (v: unknown, max: number) => (Array.isArray(v) ? v.map((x) => clip(x)).filter(Boolean).slice(0, max) : []);
 const pick = <T extends string>(v: unknown, allowed: readonly T[], fallback: T): T =>
@@ -207,7 +209,9 @@ export function parseIcpScreen(raw: string, model: string): Omit<IcpScreen, 'gat
       sizeSignal: clip(m.sizeSignal),
       risks: list(m.risks, 4),
     },
-    redFlags: list(src.redFlags, 6),
+    // Not sharing a link is the applicant's choice, and the prompt says so; this
+    // is the guarantee behind that instruction, which the model does not always keep.
+    redFlags: list(src.redFlags, 6).filter((f) => !/\b(no|without|missing|lack of)\b[^.]{0,30}\b(portfolio|github|linkedin|links?|website)\b/i.test(f)),
     greenFlags: list(src.greenFlags, 6),
     claimChecks: objs(src.claimChecks, 6)
       .map((c) => ({ claim: clip(c.claim), status: pick(c.status, ['confirmed', 'contradicted', 'unverified'] as const, 'unverified'), basis: clip(c.basis) }))
@@ -300,7 +304,7 @@ export function screenText(s: IcpScreen | null, fallbackReason: string, answers:
   ];
   if (s.overstatements.length) {
     out.push('', 'Possible overstatement:');
-    for (const o of s.overstatements) out.push(`  - ${o.claim} ${o.concern}`, `    Ask: ${o.ask}`);
+    for (const o of s.overstatements) out.push(`  - ${bare(o.claim)}. ${o.concern}`, `    Ask: ${o.ask}`);
   }
   out.push('', `Market: ${s.market.verdict}`);
   if (s.market.whoPays) out.push(`  Who pays: ${s.market.whoPays}`);
@@ -309,7 +313,7 @@ export function screenText(s: IcpScreen | null, fallbackReason: string, answers:
   for (const r of s.market.risks) out.push(`  Risk: ${r}`);
   if (s.claimChecks.length) {
     out.push('', 'Claim checks (from the links they gave):');
-    for (const c of s.claimChecks) out.push(`  ${c.status.toUpperCase()}: ${c.claim}${c.basis ? `. ${c.basis}` : ''}`);
+    for (const c of s.claimChecks) out.push(`  ${c.status.toUpperCase()}: ${bare(c.claim)}${c.basis ? `. ${c.basis}` : ''}`);
   }
   if (s.redFlags.length) out.push('', 'Red flags:', ...s.redFlags.map((f) => `  - ${f}`));
   if (s.greenFlags.length) out.push('', 'Green flags:', ...s.greenFlags.map((f) => `  - ${f}`));

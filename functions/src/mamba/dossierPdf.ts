@@ -42,7 +42,7 @@ import {
   type GrantMatch,
 } from './assessment';
 import type { InterviewDraft } from './interviewDraft';
-import { ICP_CRITERIA, type IcpScreen } from './oneScreen';
+import { ICP_CRITERIA, bare, type IcpScreen } from './oneScreen';
 
 /* ── Palette ───────────────────────────────────────────────────────────
  * The dashboard's editorial dark, as RGB triples. jsPDF has no reliable
@@ -833,7 +833,7 @@ function screenPage(sheet: Sheet, record: Record<string, unknown>, s: IcpScreen)
     ICP_CRITERIA.map(({ id, label }) => `${VERDICT_MARK[s.icp[id].verdict]} - ${label}${s.icp[id].evidence ? `: ${s.icp[id].evidence}` : ''}`),
   );
   if (s.overstatements.length)
-    callout(sheet, 'Possible overstatement', WARN, s.overstatements.flatMap((o) => [`- ${o.claim} ${o.concern}`, `  Ask: ${o.ask}`]));
+    callout(sheet, 'Possible overstatement', WARN, s.overstatements.flatMap((o) => [`- ${bare(o.claim)}. ${o.concern}`, `  Ask: ${o.ask}`]));
   callout(sheet, `Market viability: ${s.market.verdict}`, s.market.verdict === 'promising' ? GOOD : s.market.verdict === 'weak' ? BAD : WARN, [
     ...(s.market.whoPays ? [`Who pays: ${s.market.whoPays}`] : []),
     ...(s.market.competition ? [`Competition: ${s.market.competition}`] : []),
@@ -841,7 +841,7 @@ function screenPage(sheet: Sheet, record: Record<string, unknown>, s: IcpScreen)
     ...s.market.risks.map((r) => `Risk: ${r}`),
   ]);
   if (s.claimChecks.length)
-    callout(sheet, 'Claim checks against the links they gave', BRASS, s.claimChecks.map((c) => `${c.status}: ${c.claim}${c.basis ? `. ${c.basis}` : ''}`));
+    callout(sheet, 'Claim checks against the links they gave', BRASS, s.claimChecks.map((c) => `${c.status[0].toUpperCase()}${c.status.slice(1)}: ${bare(c.claim)}${c.basis ? `. ${c.basis}` : ''}`));
   if (s.redFlags.length) callout(sheet, 'Red flags', BAD, s.redFlags.map((f) => `- ${f}`));
   if (s.greenFlags.length) callout(sheet, 'Green flags', GOOD, s.greenFlags.map((f) => `- ${f}`));
 }
