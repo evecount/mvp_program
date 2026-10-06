@@ -42,6 +42,7 @@ import {
   type GrantMatch,
 } from './assessment';
 import type { InterviewDraft } from './interviewDraft';
+import { ICP_CRITERIA, type IcpScreen } from './oneScreen';
 
 /* ── Palette ───────────────────────────────────────────────────────────
  * The dashboard's editorial dark, as RGB triples. jsPDF has no reliable
@@ -127,6 +128,8 @@ interface DossierInput {
    * which is the correct outcome: a missing annotation is not a defect.
    */
   draft?: InterviewDraft | null;
+  /** One's ICP screen; printed first, since it decides whether the rest is read. */
+  screen?: IcpScreen | null;
 }
 
 /**
@@ -810,6 +813,39 @@ function assessmentPage(sheet: Sheet, input: DossierInput) {
   }
 }
 
+/* ── Page 0: the ICP screen ──────────────────────────────────────────── */
+
+const REC_COLOR: Record<string, [number, number, number]> = { interview: GOOD, maybe: WARN, pass: BAD };
+const VERDICT_MARK: Record<string, string> = { yes: 'Yes', unclear: 'Unclear', no: 'No' };
+
+function screenPage(sheet: Sheet, record: Record<string, unknown>, s: IcpScreen) {
+  masthead(sheet, 'Internal - not shared with the applicant', `ICP screen: ${s.recommendation}`, [
+    pdfText(record.fullName) || 'Unknown applicant',
+    pdfText(record.trackLabel),
+    `${s.model} - a triage read, not a verdict`,
+  ]);
+  const override = s.modelRecommendation !== s.recommendation ? [`One said ${s.modelRecommendation}; a hard gate from the form overrode it.`] : [];
+  callout(sheet, `Recommendation: ${s.recommendation}`, REC_COLOR[s.recommendation] ?? WARN, [...override, ...s.reasons.map((r) => `- ${r}`)]);
+  callout(
+    sheet,
+    'Ideal applicant fit',
+    BRASS,
+    ICP_CRITERIA.map(({ id, label }) => `${VERDICT_MARK[s.icp[id].verdict]} - ${label}${s.icp[id].evidence ? `: ${s.icp[id].evidence}` : ''}`),
+  );
+  if (s.overstatements.length)
+    callout(sheet, 'Possible overstatement', WARN, s.overstatements.flatMap((o) => [`- ${o.claim} ${o.concern}`, `  Ask: ${o.ask}`]));
+  callout(sheet, `Market viability: ${s.market.verdict}`, s.market.verdict === 'promising' ? GOOD : s.market.verdict === 'weak' ? BAD : WARN, [
+    ...(s.market.whoPays ? [`Who pays: ${s.market.whoPays}`] : []),
+    ...(s.market.competition ? [`Competition: ${s.market.competition}`] : []),
+    ...(s.market.sizeSignal ? [`Demand signal: ${s.market.sizeSignal}`] : []),
+    ...s.market.risks.map((r) => `Risk: ${r}`),
+  ]);
+  if (s.claimChecks.length)
+    callout(sheet, 'Claim checks against the links they gave', BRASS, s.claimChecks.map((c) => `${c.status}: ${c.claim}${c.basis ? `. ${c.basis}` : ''}`));
+  if (s.redFlags.length) callout(sheet, 'Red flags', BAD, s.redFlags.map((f) => `- ${f}`));
+  if (s.greenFlags.length) callout(sheet, 'Green flags', GOOD, s.greenFlags.map((f) => `- ${f}`));
+}
+
 /* ── Entry point ─────────────────────────────────────────────────────── */
 
 /** Build the dossier and return the PDF bytes, ready to hand to Drive. */
@@ -817,6 +853,10 @@ export function buildDossierPdf(input: DossierInput): ArrayBuffer {
   const applicant = pdfText(input.record.fullName) || 'Unknown applicant';
   const sheet = new Sheet(`Mamba Venture Program - ${applicant} - internal review copy`);
 
+  if (input.screen) {
+    screenPage(sheet, input.record, input.screen);
+    sheet.newPage();
+  }
   applicationPages(sheet, input.record, input.answers, input.assessment.track);
   assessmentPage(sheet, input);
   sheet.finish();

@@ -544,6 +544,20 @@ window.MVP_APPLICATION = {
           "max": 1200
         },
         {
+          "id": "affordability",
+          "label": "The program fee is {fee}. You can pay 50% before the cohort starts and the rest before it ends. Which is true for you?",
+          "kind": "select",
+          "hint": "Applying is free. We ask now so nobody spends an interview on a place they cannot take up.",
+          "required": true,
+          "max": 200,
+          "options": [
+            "I can pay in full before the cohort starts",
+            "I can pay 50% upfront and the rest before it ends",
+            "My employer or a sponsor would pay",
+            "I cannot afford it right now"
+          ]
+        },
+        {
           "id": "grantIntent",
           "label": "What do you expect grant money to pay for?",
           "kind": "select",
