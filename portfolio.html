@@ -58,7 +58,7 @@
           {
             "@type": "ListItem",
             "position": 2,
-            "name": "Portfolio",
+            "name": "Ventures built at MVP",
             "item": "https://mambaventureprogram.web.app/portfolio.html"
           }
         ]
@@ -69,39 +69,98 @@
   <!-- gaseo:end -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/legal/legal.css">
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mockup/mockup.css">
   <link rel="stylesheet" href="/legal/footer.css">
   <link rel="stylesheet" href="/css/portfolio.css">
   <link rel="icon" href="/assets/brand/mvp/mvp-favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/assets/brand/mvp/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/assets/brand/mvp/apple-touch-icon.png">
 </head>
-<body ontouchstart="">
-  <header class="legal-top">
-    <a class="home-btn" href="/" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9v11h4.5v-6h4v6h4.5V9"/></svg></a>
-    <nav aria-label="Site"><a href="/portfolio.html" aria-current="page">Portfolio</a><a href="/partner.html">Invest or partner</a><a href="/apply.html#apply">Apply</a></nav>
+<body>
+  <!-- Liquid glass lens (cybrdeck-liquid-glass): one displacement map, a filter per size tier. -->
+  <svg class="lens-defs" aria-hidden="true" width="0" height="0">
+    <defs>
+      <filter id="cd-lens-default" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-a" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="11" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="cd-lens-xl" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+        <feImage id="lens-map-b" preserveAspectRatio="none" result="map"/>
+        <feDisplacementMap in="SourceGraphic" in2="map" scale="15" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <svg class="icon-sprite" aria-hidden="true" width="0" height="0">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8.5 7H17v8.5"/></symbol>
+  </svg>
+
+  <!-- Announcement strip -->
+  <aside class="strip-wrap" aria-label="Next open house">
+  <a class="strip" href="https://luma.com/wbub6asg" target="_blank" rel="noopener" data-info="link">
+    <span class="strip-dot" aria-hidden="true"></span>
+    <span data-info="strip" data-until="2026-11-13T16:00:00+08:00"><b>Open House #3</b> · 13 Nov, 2pm · Chinatown</span>
+    <span class="strip-sep" aria-hidden="true">/</span>
+    <span class="strip-muted"><span data-countdown-tbc>Cohort #<span data-cohort="n">3</span> · dates to be announced · applications open</span><span data-countdown-open hidden>Next cohort starts <span data-cohort="start">soon</span> · applications close <span data-countdown="days">soon</span></span><span data-countdown-closed hidden>Applications reopen soon</span></span>
+    <span class="strip-cta">RSVP <svg class="i"><use href="#i-arrow"/></svg></span>
+  </a>
+  </aside>
+
+  <!-- Floating glass header -->
+  <header class="nav" id="nav">
+    <a class="nav-brand" href="/" aria-label="Mamba Venture Program home">
+      <img src="/assets/brand/cybrdeck-logo.png" alt="Cybrdeck" class="nav-cybrdeck" width="886" height="197">
+      <span class="nav-x" aria-hidden="true">×</span>
+      <img src="/assets/brand/mamba-emblem.svg" alt="" class="nav-mamba" width="24" height="24">
+      <span class="nav-mamba-word">Mamba<br><small>Partners</small></span>
+    </a>
+    <nav class="nav-glass glass" aria-label="Primary">
+      <a href="/#journey">How it works</a>
+      <a href="/#audiences">Who it's for</a>
+      <a href="/#mentors">Mentors</a>
+      <a href="/#partners">Partners</a>
+      <a href="/portfolio.html" aria-current="page">Portfolio</a>
+    </nav>
+    <a class="pill pill--black pill--orb is-hidden" href="/apply.html#apply" id="nav-cta"><span class="pill-shine" aria-hidden="true"></span><span class="pill-label"><span>Apply<span class="nav-cta-long"> to MVP</span></span></span><svg class="i"><use href="#i-arrow"/></svg></a>
+    <button class="nav-menu-btn" type="button" id="nav-menu-btn" aria-label="Menu" aria-expanded="false" aria-controls="nav-menu"><span aria-hidden="true"></span></button>
+    <div class="nav-menu" id="nav-menu" hidden></div>
   </header>
-  <main class="pf">
-    <h1>Portfolio</h1>
-    <p class="lead">Every MVP cohort turns industry insight into ventures with real customer evidence. Here are the cohorts, and the startups coming out of them.</p>
-    <div class="pf-stats" id="pf-stats"></div>
-    <div class="pf-filters" id="pf-filters" role="group" aria-label="Filter by sector" hidden></div>
-    <div id="portfolio"></div>
-    <noscript><p class="meta">Turn on JavaScript to see the cohorts and their startups.</p></noscript>
-    <div class="pf-cta">
-      <div>
-        <h2>Back a cohort startup</h2>
-        <p>Angels, VC funds and corporates get early sight of each cohort, and a seat at Demo Day.</p>
-        <a class="send" href="/partner.html?topic=Angel%20investor">Invest or partner</a>
+
+  <main id="top">
+    <section class="hero pf-hero" aria-labelledby="pf-title">
+      <div class="hero-grain" aria-hidden="true"></div>
+      <p class="hero-kicker mono">Mamba Venture Program · Portfolio</p>
+      <h1 class="hero-title display" id="pf-title" aria-label="Ventures built at MVP">
+        <span class="line"><span>Ventures</span></span>
+        <span class="line"><span>built at MVP</span></span>
+      </h1>
+      <div class="hero-foot">
+        <p class="hero-lede">Every cohort turns industry insight into a venture with real customer evidence. These are the cohorts, and the startups coming out of them.</p>
+        <div class="hero-ctas">
+          <a class="pill pill--black pill--lg" href="/partner.html?topic=Angel%20investor"><span class="pill-shine" aria-hidden="true"></span>Invest or partner <svg class="i"><use href="#i-arrow"/></svg></a>
+          <a class="pill pill--glass pill--lg glass" href="#cohorts">See the cohorts</a>
+        </div>
       </div>
-      <div>
-        <h2>Build the next one</h2>
-        <p>No company or co-founder needed. Applications for Cohort #3 are open now.</p>
-        <a class="send" href="/apply.html#apply">Apply to MVP</a>
-      </div>
+    </section>
+
+    <section class="facts pf-facts" id="pf-stats" aria-label="Portfolio at a glance"></section>
+
+    <div id="cohorts">
+      <div id="portfolio"></div>
+      <noscript><p class="pf-noscript">Turn on JavaScript to see the cohorts and their startups.</p></noscript>
     </div>
+
+    <section class="closer pf-closer" aria-labelledby="pf-closer-title">
+      <p class="mono hero-kicker">Cohort #<span data-cohort="n">3</span> · <span data-countdown-tbc>Dates to be announced · applications open</span><span data-countdown-open hidden>Applications close <span data-countdown="date">soon</span></span><span data-countdown-closed hidden>Applications reopen soon</span></p>
+      <h2 class="display closer-title" id="pf-closer-title">You're next</h2>
+      <div class="hero-ctas">
+        <a class="pill pill--black pill--lg" href="/apply.html#apply"><span class="pill-shine" aria-hidden="true"></span>Apply to MVP <svg class="i"><use href="#i-arrow"/></svg></a>
+        <a class="pill pill--glass pill--lg glass" href="/partner.html?topic=Angel%20investor">Back a cohort startup</a>
+      </div>
+    </section>
   </main>
+
   <footer class="site-foot">
     <div class="site-foot-grid">
       <div class="site-foot-brand">
@@ -141,7 +200,11 @@
       <span>Singapore</span>
     </div>
   </footer>
+<script src="/js/cohorts.js"></script>
+<script src="/js/countdown.js"></script>
 <script src="/js/portfolio.js"></script>
-<script src="/mockup/info-session.js" defer></script>
+<script src="/mockup/mockup.js"></script>
+<script src="/mockup/info-session.js"></script>
+<script src="/mockup/rim.js"></script>
 </body>
 </html>

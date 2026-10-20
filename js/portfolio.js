@@ -4,12 +4,13 @@
  * Add a cohort by adding an entry to PORTFOLIO (newest first). Add a startup
  * by adding it to its cohort's `startups`. Only `name` is required; without a
  * `logo` the card shows the startup's initials, and without a `oneLiner` it
- * says details are coming soon.
+ * says details are coming soon. `status` is "upcoming", "building" or
+ * "graduated".
  *
  *   {
  *     name: "Startup Name",
  *     oneLiner: "What it does, for whom, in one sentence.",
- *     sector: ["Fintech", "B2B SaaS"],          // optional tags, also the filters
+ *     sector: ["Fintech", "B2B SaaS"],          // optional tags
  *     track: "build",                           // optional: "sprint" or "build"
  *     stage: "Paid pilot",                      // optional: where it is today
  *     founders: ["Full Name", "Full Name"],     // optional
@@ -97,95 +98,80 @@ const PORTFOLIO = [
   const initials = (name) =>
     name.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
 
+  // Facts band, as on the homepage: only what is true today.
   const all = PORTFOLIO.flatMap((c) => c.startups);
-  const sectors = [...new Set(all.flatMap((s) => s.sector || []))].sort();
-
-  // Headline numbers: only what is true today.
+  const sectors = new Set(all.flatMap((s) => s.sector || []));
   const stats = document.getElementById("pf-stats");
   if (stats) {
-    const add = (value, label) => {
-      const d = el("div", "pf-stat");
-      d.append(el("strong", null, String(value)), el("span", null, label));
+    const fact = (label, value, unit) => {
+      const d = el("div", "fact reveal");
+      d.append(el("p", "mono label", label), el("p", "fact-num display", String(value)), el("p", "fact-unit", unit));
       stats.append(d);
     };
-    add(PORTFOLIO.length, PORTFOLIO.length === 1 ? "cohort" : "cohorts");
-    if (all.length) add(all.length, all.length === 1 ? "startup" : "startups");
-    if (sectors.length) add(sectors.length, sectors.length === 1 ? "sector" : "sectors");
+    const building = PORTFOLIO.filter((c) => c.status === "building").length;
+    fact("Cohorts", PORTFOLIO.length, building ? `${building} building now.` : "Since October 2026.");
+    fact("Startups", all.length, "Announced as they join a cohort.");
+    fact("Sectors", sectors.size, [...sectors].slice(0, 3).join(", ") + (sectors.size > 3 ? " and more." : "."));
+    const next = PORTFOLIO.find((c) => c.status === "upcoming");
+    if (next) fact("Next cohort", `#${next.n}`, `${next.dates}. Applications are open.`);
   }
 
   function card(s) {
-    const c = el("article", "pf-card");
-    c.dataset.sector = (s.sector || []).join("|");
-    const head = el("div", "pf-card-head");
+    const c = el("article", "pf-card reveal");
     let logo;
     if (s.logo) {
       logo = el("img", "pf-logo");
       logo.src = s.logo;
       logo.alt = `${s.name} logo`;
       logo.loading = "lazy";
-      logo.width = logo.height = 56;
+      logo.width = logo.height = 64;
     } else {
       logo = el("div", "pf-logo pf-logo--initials", initials(s.name));
       logo.setAttribute("aria-hidden", "true");
     }
-    const title = el("div");
-    title.append(el("h3", "pf-name", s.name));
-    const meta = [s.track && TRACK[s.track], s.stage].filter(Boolean).join(" · ");
-    if (meta) title.append(el("p", "pf-meta", meta));
-    head.append(logo, title);
-    c.append(head, el("p", s.oneLiner ? "pf-oneliner" : "pf-oneliner pf-oneliner--soon", s.oneLiner || "Details coming soon."));
-    if (s.sector?.length) {
-      const tags = el("div", "pf-tags");
-      for (const t of s.sector) tags.append(el("span", "pf-tag", t));
-      c.append(tags);
-    }
+    c.append(logo, el("h3", "pf-name", s.name));
+    const meta = [s.stage, s.track && TRACK[s.track]].filter(Boolean).join(" · ");
+    if (meta) c.append(el("p", "mono step pf-meta", meta));
+    c.append(el("p", s.oneLiner ? "pf-oneliner" : "pf-oneliner pf-oneliner--soon", s.oneLiner || "Details coming soon."));
+    if (s.sector?.length) c.append(el("p", "pf-sectors", s.sector.join(" · ")));
     if (s.founders?.length) c.append(el("p", "pf-founders", `Founded by ${s.founders.join(", ")}`));
     if (s.url || s.linkedin) {
       const links = el("div", "pf-links");
-      if (s.url) links.append(link("pf-link", "Website →", s.url));
-      if (s.linkedin) links.append(link("pf-link", "LinkedIn →", s.linkedin));
+      if (s.url) links.append(link("pf-link", "Website ↗", s.url));
+      if (s.linkedin) links.append(link("pf-link", "LinkedIn ↗", s.linkedin));
       c.append(links);
     }
     return c;
   }
 
+  // One section per cohort, headed like the homepage's sections.
   for (const cohort of PORTFOLIO) {
-    const sec = el("section", "pf-cohort");
+    const sec = el("section", `pf-cohort pf-cohort--${cohort.status}`);
     sec.id = `cohort-${cohort.n}`;
-    const head = el("header", "pf-cohort-head");
-    const h = el("h2", null, `Cohort #${cohort.n}`);
-    const badge = el("span", `pf-badge pf-badge--${cohort.status}`, STATUS[cohort.status] || cohort.status);
-    head.append(h, badge, el("p", "pf-dates", cohort.dates));
+    sec.setAttribute("aria-labelledby", `cohort-${cohort.n}-title`);
+    const head = el("div", "section-head");
+    const label = el("div", "pf-cohort-label");
+    label.append(el("p", "mono label", STATUS[cohort.status] || cohort.status), el("p", "pf-dates", cohort.dates));
+    const h = el("h2", "display h2", `Cohort #${cohort.n}`);
+    h.id = `cohort-${cohort.n}-title`;
+    head.append(label, h);
     sec.append(head);
 
-    const grid = el("div", "pf-grid");
-    for (const s of cohort.startups) grid.append(card(s));
-    if (!cohort.startups.length) {
-      const soon = el("article", "pf-card pf-card--soon");
-      soon.append(el("div", "pf-logo pf-logo--initials", "#" + cohort.n), el("p", "pf-oneliner", cohort.pending));
-      grid.append(soon);
-    }
-    sec.append(grid);
-    root.append(sec);
-  }
-
-  // Sector filter, shown once there are at least two sectors to choose between.
-  const filters = document.getElementById("pf-filters");
-  if (filters && sectors.length > 1) {
-    filters.hidden = false;
-    const apply = (sector) => {
-      for (const b of filters.querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.sector === sector));
-      for (const c of root.querySelectorAll(".pf-card:not(.pf-card--soon)")) {
-        c.hidden = sector !== "" && !c.dataset.sector.split("|").includes(sector);
+    if (cohort.startups.length) {
+      const grid = el("div", "pf-grid");
+      for (const s of cohort.startups) grid.append(card(s));
+      sec.append(grid);
+    } else {
+      const soon = el("div", "pf-soon reveal");
+      soon.append(el("p", null, cohort.pending));
+      if (cohort.status === "upcoming") {
+        const a = el("a", "pill pill--black");
+        a.href = "/apply.html#apply";
+        a.innerHTML = '<span class="pill-shine" aria-hidden="true"></span>Apply to MVP <svg class="i"><use href="#i-arrow"/></svg>';
+        soon.append(a);
       }
-    };
-    for (const s of ["", ...sectors]) {
-      const b = el("button", "pf-filter", s || "All");
-      b.type = "button";
-      b.dataset.sector = s;
-      b.addEventListener("click", () => apply(s));
-      filters.append(b);
+      sec.append(soon);
     }
-    apply("");
+    root.append(sec);
   }
 })();
