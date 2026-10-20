@@ -144,6 +144,24 @@
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   update();
 
+  /* Mobile menu: the glass nav's links, dropped down from the menu button.
+     Closes on a link, Escape, a tap outside, or widening past the breakpoint. */
+  const menuBtn = document.getElementById("nav-menu-btn");
+  const menu = document.getElementById("nav-menu");
+  if (menuBtn && menu) {
+    document.querySelectorAll(".nav-glass a").forEach((a) => menu.append(a.cloneNode(true)));
+    const setMenu = (open) => {
+      menu.hidden = !open;
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.setAttribute("aria-label", open ? "Close menu" : "Menu");
+    };
+    menuBtn.addEventListener("click", () => setMenu(menu.hidden));
+    menu.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { setMenu(false); menuBtn.focus(); } });
+    document.addEventListener("click", (e) => { if (!menu.hidden && !nav.contains(e.target)) setMenu(false); });
+    matchMedia("(min-width: 901px)").addEventListener("change", (e) => { if (e.matches) setMenu(false); });
+  }
+
   /* Lit pills: each comes into focus as it enters the light (the viewport);
      on hover the simulated light source follows the pointer along the top. */
   document.querySelectorAll(".pill--black").forEach((b) => {
