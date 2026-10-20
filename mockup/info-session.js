@@ -6,9 +6,10 @@
  * place and RSVP link into every [data-info] slot: the announcement strip, the
  * facts band card and the closer's RSVP button. The HTML carries the current
  * session as a fallback, so a slow or failed lookup still shows something true.
- * When Luma has no upcoming session, or the lookup fails and the fallback's
- * `data-until` has passed, the session slots step aside and RSVP links open the
- * Cybrdeck calendar. Every page with an RSVP link loads this.
+ * The HTML's session is set by hand, so it stands until its `data-until` has
+ * passed, even if Luma lists nothing; after that the session slots step aside
+ * and RSVP links open the Cybrdeck calendar. Every page with an RSVP link
+ * loads this.
  */
 (function () {
   const slots = (k) => document.querySelectorAll(`[data-info="${k}"]`);
@@ -42,12 +43,13 @@
 
   // A fallback whose session is over never shows, even if Luma can't be reached.
   const until = Date.parse(document.querySelector("[data-info][data-until]")?.dataset.until);
-  if (Number.isFinite(until) && until < Date.now()) none();
+  const over = Number.isFinite(until) && until < Date.now();
+  if (over) none();
 
   fetch("/api/next-info-session", { headers: { accept: "application/json" } })
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
     .then(({ next }) => {
-      if (!next) return none();
+      if (!next) return over ? none() : undefined;
       strip(true);
       const tz = next.timezone || "Asia/Singapore";
       const day = fmt(next.startAt, tz, { day: "2-digit" }), month = fmt(next.startAt, tz, { month: "2-digit" });
@@ -55,16 +57,17 @@
       const short = fmt(next.startAt, tz, { day: "numeric", month: "short" });
       const place = next.location ? next.location.split(",")[0] : null;
       const num = (next.name.match(/#\s*\d+/) || [""])[0].replace(/\s/g, "");
+      const kind = /open\s*house/i.test(next.name) ? "Open House" : "Info session";
 
       slots("link").forEach((a) => (a.href = next.url));
       slots("date").forEach((n) => (n.textContent = short));
       slots("detail").forEach((n) => (n.textContent = place ? `${time} at ${place}` : `${time}, venue shared on RSVP`));
-      slots("kicker").forEach((n) => (n.textContent = `Info session${num ? " " + num : ""}`));
+      slots("kicker").forEach((n) => (n.textContent = `${kind}${num ? " " + num : ""}`));
       slots("when").forEach((n) => (n.textContent = `${short}, ${time}${place ? " · " + place : ""}`));
       banner(next.endAt || next.startAt);
       slots("strip").forEach((n) => {
         n.innerHTML = "";
-        const b = document.createElement("b"); b.textContent = `Info session${num ? " " + num : ""}`;
+        const b = document.createElement("b"); b.textContent = `${kind}${num ? " " + num : ""}`;
         n.append(b, ` · ${short}, ${time}${place ? " · " + place : ""}`);
       });
     })
