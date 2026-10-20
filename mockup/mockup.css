@@ -183,6 +183,22 @@ a { color: inherit; text-decoration: none; }
 .nav-glass a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 16px; border-radius: 999px; color: #fff; font-weight: 500; font-size: .92rem; transition: background-color .2s var(--ease-out-expo); }
 .nav-glass a:hover { background: rgba(255, 255, 255, 0.14); }
 .nav > .pill { justify-self: end; }
+/* Mobile menu: the same links as the glass nav, dropped down from a button. */
+.nav-menu-btn { display: none; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid rgba(12,12,14,.12); border-radius: 50%; background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.nav-menu-btn span, .nav-menu-btn span::before, .nav-menu-btn span::after { display: block; width: 18px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s var(--ease-out-expo), background-color .2s; }
+.nav-menu-btn span { position: relative; }
+.nav-menu-btn span::before, .nav-menu-btn span::after { content: ""; position: absolute; left: 0; }
+.nav-menu-btn span::before { transform: translateY(-6px); }
+.nav-menu-btn span::after { transform: translateY(6px); }
+.nav-menu-btn[aria-expanded="true"] span { background: transparent; }
+.nav-menu-btn[aria-expanded="true"] span::before { transform: rotate(45deg); }
+.nav-menu-btn[aria-expanded="true"] span::after { transform: rotate(-45deg); }
+.nav-menu-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.nav-menu { position: absolute; top: calc(100% + 8px); left: 0; right: 0; display: grid; padding: 8px; border-radius: 22px; background: rgba(255,255,255,.96); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border: 1px solid rgba(12,12,14,.1); box-shadow: 0 24px 48px -20px rgba(0,0,0,.35); }
+.nav-menu[hidden] { display: none; }
+.nav-menu a { display: flex; align-items: center; min-height: 52px; padding: 0 16px; border-radius: 14px; color: var(--ink); font-weight: 500; font-size: 1.05rem; }
+.nav-menu a:active, .nav-menu a:hover { background: rgba(12,12,14,.06); }
+.nav-menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
 /* Over paper the glass turns light and the type turns ink. */
 .nav[data-on="light"] .nav-glass { background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.6) 46%, rgba(255,255,255,.74)); border-color: rgba(12,12,14,.12); box-shadow: inset 0 1.5px .5px -.5px #fff, 0 18px 44px -22px rgba(0,0,0,.25); }
 .nav[data-on="light"] .nav-glass a { color: var(--ink); }
@@ -456,8 +472,12 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Responsive ───────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
-  .nav { grid-template-columns: 1fr auto; }
+  .nav { grid-template-columns: 1fr auto auto; gap: 8px; }
   .nav-glass { display: none; }
+  .nav-menu-btn { display: grid; }
+}
+@media (max-width: 420px) {
+  .nav-cta-long { display: none; }
   .section-head { grid-template-columns: 1fr; gap: 12px; }
   .partner-grid { grid-template-columns: 1fr; }
   .panel-cols > div { grid-template-columns: 1fr; gap: 6px; }
