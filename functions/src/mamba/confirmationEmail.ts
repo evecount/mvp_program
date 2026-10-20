@@ -38,7 +38,7 @@ export function buildConfirmationEmail({
   const cohort = currentCohort();
   const chosen = intake?.trim();
   const durationLine = chosen
-    ? `You applied for the ${chosen.toLowerCase()} intake${cohort ? `, for the cohort that begins ${cohort.startsLabel}` : ''}`
+    ? `You applied for the ${chosen.toLowerCase()} intake${cohort ? (cohort.startsLabel ? `, for the cohort that begins ${cohort.startsLabel}` : `, for ${cohort.label} (dates to be announced; we will email you when they are set)`) : ''}`
     : PROGRAM_TERMS.duration;
   const revision =
     editUrl && editToken

@@ -38,7 +38,7 @@ import { defineSecret, defineString } from 'firebase-functions/params';
 import { logger } from 'firebase-functions';
 import nodemailer from 'nodemailer';
 import { parseApplicationSubmission } from './mamba/application';
-import { COHORTS, MAMBA_TRACKS, cohortClosesAt } from './mamba/program';
+import { COHORTS, MAMBA_TRACKS, cohortIsOpen } from './mamba/program';
 import { QUESTION_IDS } from './mamba/questionnaire';
 import { dossierFilename, interviewSheet, matchGrants, scoreApplication } from './mamba/assessment';
 import { buildDossierPdf, pdfText } from './mamba/dossierPdf';
@@ -124,8 +124,8 @@ export const onApplicationFiled = onDocumentCreated(
     /* The rules already refuse a closed cohort; this catches anything that
        reached the database another way (an admin import, a rules rollback). */
     const filedAt = record.createdAt instanceof Timestamp ? record.createdAt.toMillis() : Date.now();
-    const cohort = COHORTS.find((c) => c.starts === record.cohort);
-    if (!cohort || filedAt >= cohortClosesAt(cohort)) {
+    const cohort = COHORTS.find((c) => c.id === record.cohort);
+    if (!cohort || !cohortIsOpen(cohort, filedAt)) {
       logger.warn('[mvp] application for a closed or unknown cohort, not mailed', { id: ref.id, cohort: record.cohort });
       await ref.set({ rejected: ['cohort closed'], processedAt: FieldValue.serverTimestamp() }, { merge: true });
       return;

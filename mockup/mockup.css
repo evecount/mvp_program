@@ -459,6 +459,7 @@ a { color: inherit; text-decoration: none; }
 /* ── Closing CTA ──────────────────────────────────────────────────────── */
 .closer { min-height: 80svh; grid-template-rows: auto 1fr auto; padding-top: 72px; }
 .closer-title { align-self: end; font-size: clamp(4rem, 17vw, 15rem); color: var(--ink); }
+.countdown[hidden] { display: none; }
 
 .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 28px var(--gutter); background: var(--ink); color: rgba(255,255,255,.62); }
 .foot-note { color: var(--orange); }

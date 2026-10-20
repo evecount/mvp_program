@@ -442,8 +442,9 @@ async function submit() {
     return;
   }
 
-  // Applications close 72h before a cohort starts (the rules enforce it too).
-  const cohort = (window.MVP_COHORTS || []).find((c) => c.closesAt > Date.now());
+  // Applications close 72h before a cohort starts (the rules enforce it too);
+  // a cohort whose dates are TBC has no closing time.
+  const cohort = (window.MVP_COHORTS || []).find((c) => c.closesAt === null || c.closesAt > Date.now());
   if (!cohort) {
     showBanner("Applications are closed until the next cohort is announced. Your answers are saved on this device, so you can submit once they reopen.");
     return;
@@ -461,7 +462,7 @@ async function submit() {
     const { db, firestore } = await getDb();
     await firestore.addDoc(firestore.collection(db, COLLECTION), {
       ...buildRecord(),
-      cohort: cohort.starts,
+      cohort: cohort.id,
       status: "pending",
       schemaVersion: APP.schemaVersion,
       createdAt: firestore.serverTimestamp(),
@@ -551,6 +552,6 @@ if (new URLSearchParams(location.search).get("preview") === "submitted") {
   setTimeout(celebrate, 300);
 }
 // Tell an applicant up front when no cohort is taking applications.
-if (!(window.MVP_COHORTS || []).some((c) => c.closesAt > Date.now())) {
+if (!(window.MVP_COHORTS || []).some((c) => c.closesAt === null || c.closesAt > Date.now())) {
   showBanner("Applications are closed until the next cohort is announced. You can still fill this in; your answers are saved on this device.");
 }

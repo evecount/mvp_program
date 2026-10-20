@@ -11,13 +11,23 @@
  *   data-countdown="days"   → "in 112 days" / "in 5 hours" (updates each minute)
  *   data-countdown="date"   → "23 Jan 2027, 9am SGT"
  * [data-countdown-open] / [data-countdown-closed] are shown before / after.
+ * A cohort whose dates are TBC (closesAt null) takes applications with no
+ * deadline: [data-countdown-tbc] shows instead of both, and nothing ticks.
+ * [data-cohort="n"] gets the open cohort's number.
  * Ticks only while the tab is visible.
  */
 (function () {
-  const OPEN = (window.MVP_COHORTS || []).find((c) => c.closesAt > Date.now()) || null;
-  const CLOSE = OPEN ? OPEN.closesAt : 0;
+  const OPEN = (window.MVP_COHORTS || []).find((c) => c.closesAt === null || c.closesAt > Date.now()) || null;
+  const TBC = Boolean(OPEN && OPEN.closesAt === null);
+  const CLOSE = OPEN && !TBC ? OPEN.closesAt : 0;
   window.MVP_OPEN_COHORT = OPEN;
-  if (OPEN) document.querySelectorAll('[data-cohort="start"]').forEach((n) => (n.textContent = OPEN.startsLabel));
+  if (OPEN) document.querySelectorAll('[data-cohort="n"]').forEach((n) => (n.textContent = OPEN.n));
+  if (OPEN && !TBC) document.querySelectorAll('[data-cohort="start"]').forEach((n) => (n.textContent = OPEN.startsLabel));
+  document.querySelectorAll("[data-countdown-tbc]").forEach((n) => (n.hidden = !TBC));
+  if (TBC) {
+    document.querySelectorAll("[data-countdown-open], [data-countdown-closed]").forEach((n) => (n.hidden = true));
+    return;
+  }
 
   const nodes = () => document.querySelectorAll("[data-countdown]");
   if (!nodes().length) return;
