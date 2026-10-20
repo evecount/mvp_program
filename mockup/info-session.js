@@ -6,8 +6,9 @@
  * place and RSVP link into every [data-info] slot: the announcement strip, the
  * facts band card and the closer's RSVP button. The HTML carries the current
  * session as a fallback, so a slow or failed lookup still shows something true.
- * When Luma has no upcoming session, the session slots step aside and RSVP
- * links open the Cybrdeck calendar. Every page with an RSVP link loads this.
+ * When Luma has no upcoming session, or the lookup fails and the fallback's
+ * `data-until` has passed, the session slots step aside and RSVP links open the
+ * Cybrdeck calendar. Every page with an RSVP link loads this.
  */
 (function () {
   const slots = (k) => document.querySelectorAll(`[data-info="${k}"]`);
@@ -24,17 +25,30 @@
     box.hidden = ![...box.querySelectorAll("[data-until]")].some((n) => !n.hidden);
   };
 
+  // The strip's dot and separator belong to the session text and go with it.
+  const strip = (show) => {
+    slots("strip").forEach((n) => {
+      n.hidden = !show;
+      n.closest(".strip")?.querySelectorAll(".strip-dot, .strip-sep").forEach((m) => (m.hidden = !show));
+    });
+    slots("fact").forEach((n) => (n.hidden = !show));
+  };
+  // Nothing scheduled: RSVP links open the Cybrdeck calendar instead of a past event.
+  const none = () => {
+    slots("link").forEach((a) => (a.href = CALENDAR));
+    strip(false);
+    banner(null);
+  };
+
+  // A fallback whose session is over never shows, even if Luma can't be reached.
+  const until = Date.parse(document.querySelector("[data-info][data-until]")?.dataset.until);
+  if (Number.isFinite(until) && until < Date.now()) none();
+
   fetch("/api/next-info-session", { headers: { accept: "application/json" } })
     .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
     .then(({ next }) => {
-      if (!next) {
-        // Nothing scheduled: RSVP links open the Cybrdeck calendar instead of a past event.
-        slots("link").forEach((a) => (a.href = CALENDAR));
-        slots("strip").forEach((n) => (n.hidden = true));
-        slots("fact").forEach((n) => (n.hidden = true));
-        banner(null);
-        return;
-      }
+      if (!next) return none();
+      strip(true);
       const tz = next.timezone || "Asia/Singapore";
       const day = fmt(next.startAt, tz, { day: "2-digit" }), month = fmt(next.startAt, tz, { month: "2-digit" });
       const time = fmt(next.startAt, tz, { hour: "numeric", minute: "2-digit", hour12: true }).replace(":00", "").replace(/\s/g, "").toLowerCase();
