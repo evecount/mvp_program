@@ -3,10 +3,11 @@
  * the Firestore rules and the Cloud Function enforce the same deadlines. */
 window.MVP_COHORTS = [
   {
-    "n": 2,
-    "starts": "2027-01-26",
-    "startsAt": "2027-01-26T09:00:00+08:00",
-    "startsLabel": "26 Jan 2027",
-    "closesAt": 1800666000000
+    "id": "cohort-3",
+    "n": 3,
+    "starts": null,
+    "startsAt": null,
+    "startsLabel": null,
+    "closesAt": null
   }
 ];

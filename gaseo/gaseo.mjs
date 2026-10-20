@@ -68,7 +68,7 @@ function cohorts() {
 /** The cohort the site is selling: the first that hasn't started yet. */
 function nextCohort(now = Date.now()) {
   const list = cohorts();
-  return list.find((c) => Date.parse(c.startsAt) > now) || null;
+  return list.find((c) => !c.startsAt || Date.parse(c.startsAt) > now) || null;
 }
 
 const sgtIso = (ms) => new Date(ms + 8 * 3600e3).toISOString().replace(/\.\d{3}Z$/, "+08:00");
@@ -114,7 +114,7 @@ function programNodes() {
     url: abs("/"),
     provider: [{ "@id": ID.org() }, ...partnerNodes().filter((n) => n.url)],
     timeToComplete: p.timeToComplete,
-    ...(c ? { startDate: c.starts, applicationDeadline: sgtIso(c.closesAt) } : {}),
+    ...(c?.starts ? { startDate: c.starts, applicationDeadline: sgtIso(c.closesAt) } : {}),
     offers: {
       "@type": "Offer",
       price: p.price,
@@ -272,9 +272,9 @@ function llmsTxt() {
     ...cfg.programs.map((p) => `- ${p.name}: ${p.description} ${cfg.currency === "SGD" ? "S$" : cfg.currency + " "}${p.price.toLocaleString("en-SG")}, or 50% upfront and the rest before the program ends.`),
     "- No equity is taken to join. Mamba Partners gets the first look at investing in ventures that complete the program.",
     "- Who it's for: working professionals, SME owners and aspiring founders with industry insight, an idea or an early prototype. No company or co-founder needed.",
-    c
+    c?.startsAt
       ? `- Next cohort: #${c.n}, starts ${longDate(c.startsAt)}. Applications close ${longDate(sgtIso(c.closesAt))}, 9am Singapore time.`
-      : "- Next cohort: to be announced.",
+      : c ? `- Next cohort: #${c.n}, dates to be announced. Applications are open.` : "- Next cohort: to be announced.",
     "- Location: Singapore.",
     `- Run by: ${new Intl.ListFormat("en").format([`${cfg.organization.name} (${cfg.organization.legalName})`, ...cfg.partners.map((p) => `${p.name} (${p.role.toLowerCase()})`)])}.`,
   ];
@@ -362,7 +362,7 @@ function audit() {
   if (!faq.length) warn(cfg.faqPage, "no FAQ found (AEO): answer engines quote question-and-answer pairs");
   const c = nextCohort();
   if (!c) warn(cfg.cohortsFile, "no upcoming cohort: program schema is marked sold out; add the next cohort");
-  else if (faq.length && !faqOf(home).some(({ a }) => a.includes(longDate(c.startsAt)))) {
+  else if (c.startsAt && faq.length && !faqOf(home).some(({ a }) => a.includes(longDate(c.startsAt)))) {
     warn(cfg.faqPage, `the FAQ doesn't mention the next cohort's start date (${longDate(c.startsAt)}); update the "When does the next cohort start" answer`);
   }
 

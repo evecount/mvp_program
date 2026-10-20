@@ -60,52 +60,58 @@ export const isMambaIntakeTrack = (value: unknown): value is MambaIntakeTrack =>
  * from it — the header names the start so nobody applies blind to a programme
  * already underway. Add a cohort by adding a row; the header and the dossier
  * read the next upcoming one rather than a hardcoded sentence.
+ *
+ * A cohort whose dates are still to be set has `starts` null: it takes
+ * applications with no closing date until its dates are filled in. Its `id`
+ * stays the same once they are, so applications filed while it was TBC still
+ * name it.
  */
 export const COHORTS: ReadonlyArray<{
+  /** The key an application stores in `cohort`; the rules and the function match on it. */
+  id: string;
   label: string;
   /** Cohort ordinal — the "#n" the header's date mark nests in its ring. */
   n: number;
-  /** ISO date the cohort begins. */
-  starts: string;
+  /** ISO date the cohort begins, or null while its dates are to be announced. */
+  starts: string | null;
   /** Exact start, with its Singapore offset; applications close 72h before it. */
-  startsAt: string;
+  startsAt: string | null;
   /** Display form of the start date, as the applicant reads it. */
-  startsLabel: string;
-  /** Day of month, the oversized numeral of the header mark. */
-  day: string;
-  /** Month spelled out; the mark renders its initial as the ring. */
-  month: string;
-  /** Four-digit year, for the small caption and the mobile badge. */
-  year: string;
+  startsLabel: string | null;
 }> = [
   // Cohort #1 ran 5 Oct 2026 – 5 Jan 2027 (Mamba MVP Cohort 1 offer letter).
+  // Cohort #2 started 19 Oct 2026; its applications are closed.
   {
-    label: 'The January 2027 cohort',
-    n: 2,
-    starts: '2027-01-26',
-    startsAt: '2027-01-26T09:00:00+08:00',
-    startsLabel: '26 Jan 2027',
-    day: '26',
-    month: 'January',
-    year: '2027',
+    id: 'cohort-3',
+    label: 'Cohort #3',
+    n: 3,
+    starts: null,
+    startsAt: null,
+    startsLabel: null,
   },
 ];
 
 /** Applications for a cohort close this long before it starts. */
 export const APPLICATION_CLOSE_HOURS = 72;
 
-/** When applications for a cohort close (epoch ms). */
+/** When applications for a cohort close (epoch ms), or null while its dates are TBC. */
 export const cohortClosesAt = (c: (typeof COHORTS)[number]) =>
-  Date.parse(c.startsAt) - APPLICATION_CLOSE_HOURS * 3600 * 1000;
+  c.startsAt ? Date.parse(c.startsAt) - APPLICATION_CLOSE_HOURS * 3600 * 1000 : null;
+
+/** Whether a cohort is still taking applications at `at` (epoch ms). */
+export const cohortIsOpen = (c: (typeof COHORTS)[number], at: number) => {
+  const closes = cohortClosesAt(c);
+  return closes === null || at < closes;
+};
 
 /** The cohort the form is serving: the first whose applications are still open. */
 export function openCohort(now: Date = new Date()) {
-  return COHORTS.find((c) => cohortClosesAt(c) > now.getTime()) ?? null;
+  return COHORTS.find((c) => cohortIsOpen(c, now.getTime())) ?? null;
 }
 
 /** The cohort an application filed today would join — the first not yet begun. */
 export function currentCohort(now: Date = new Date()) {
-  return COHORTS.find((c) => new Date(`${c.starts}T00:00:00Z`).getTime() >= now.getTime())
+  return COHORTS.find((c) => !c.starts || new Date(`${c.starts}T00:00:00Z`).getTime() >= now.getTime())
     ?? COHORTS[COHORTS.length - 1]
     ?? null;
 }

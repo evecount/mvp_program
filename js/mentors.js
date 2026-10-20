@@ -88,7 +88,7 @@ const MENTORS = [
   soon.append(
     el("div", "mentor-avatar mentor-avatar--initials", "+"),
     el("h3", "mentor-name", "More mentors"),
-    el("p", "mentor-role", "Announced ahead of the January 2027 cohort."),
+    el("p", "mentor-role", "Announced ahead of Cohort #3."),
   );
   grid.append(soon);
 })();

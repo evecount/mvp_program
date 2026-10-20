@@ -94,7 +94,11 @@ const steps: Array<{ id: string; title: string; intro?: string; fields: Field[] 
   {
     id: 'track',
     title: 'Your track and intake',
-    intro: cohort ? `The next cohort begins ${cohort.startsLabel}, for both the 1-month and 3-month tracks.` : undefined,
+    intro: cohort
+      ? cohort.startsLabel
+        ? `The next cohort begins ${cohort.startsLabel}, for both the 1-month and 3-month tracks.`
+        : `${cohort.label}'s dates are to be announced. It runs both the 1-month and 3-month tracks.`
+      : undefined,
     fields: [
       {
         id: 'track', label: 'Which track are you applying for?', kind: 'select', required: true,
@@ -187,8 +191,12 @@ const fields = steps.flatMap((s) => s.fields);
 const stringFields = fields.filter((f) => f.kind !== 'checkbox');
 const required = ['fullName', 'phone', 'email', 'track', 'intake', 'currentSituation', 'motivation'];
 const allKeys = [...fields.map((f) => f.id), 'cohort', 'status', 'schemaVersion', 'createdAt'];
-/* An application must name a cohort whose applications are still open (72h before it starts). */
-const openGate = COHORTS.map((c) => `(d.cohort == '${c.starts}' && request.time < timestamp.value(${cohortClosesAt(c)}))`).join('\n              || ');
+/* An application must name a cohort whose applications are still open (72h before it
+   starts); a cohort whose dates are TBC is open with no closing time. */
+const openGate = COHORTS.map((c) => {
+  const closes = cohortClosesAt(c);
+  return closes === null ? `(d.cohort == '${c.id}')` : `(d.cohort == '${c.id}' && request.time < timestamp.value(${closes}))`;
+}).join('\n              || ');
 const q = (s: string) => `'${s.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
 const list = (xs: readonly string[], indent: string) => {
   const lines: string[] = [];
@@ -262,7 +270,7 @@ writeFileSync(
   `/* ${banner('this file')}
  * The cohort calendar: the site's countdown and the application form read it;
  * the Firestore rules and the Cloud Function enforce the same deadlines. */
-window.MVP_COHORTS = ${JSON.stringify(COHORTS.map((c) => ({ n: c.n, starts: c.starts, startsAt: c.startsAt, startsLabel: c.startsLabel, closesAt: cohortClosesAt(c) })), null, 2)};
+window.MVP_COHORTS = ${JSON.stringify(COHORTS.map((c) => ({ id: c.id, n: c.n, starts: c.starts, startsAt: c.startsAt, startsLabel: c.startsLabel, closesAt: cohortClosesAt(c) })), null, 2)};
 `,
 );
 

@@ -48,7 +48,7 @@
   "pages": [
     { "file": "index.html", "path": "/", "type": "home", "priority": 1.0, "changefreq": "weekly",
       "ogTitle": "Mamba Venture Program (MVP): build a venture that scales",
-      "ogDescription": "Validate the problem. Build the MVP. Test demand. A 1-month sprint or 3-month venture build in Singapore. Applications for the January 2027 cohort are open." },
+      "ogDescription": "Validate the problem. Build the MVP. Test demand. A 1-month sprint or 3-month venture build in Singapore. Applications for Cohort #3 are open." },
     { "file": "apply.html", "path": "/apply.html", "priority": 0.9, "changefreq": "weekly",
       "ogTitle": "Apply to the Mamba Venture Program (MVP)" },
     { "file": "portfolio.html", "path": "/portfolio.html", "priority": 0.7, "changefreq": "weekly" },

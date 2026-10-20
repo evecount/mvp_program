@@ -44,7 +44,7 @@ window.MVP_APPLICATION = {
     {
       "id": "track",
       "title": "Your track and intake",
-      "intro": "The next cohort begins 26 Jan 2027, for both the 1-month and 3-month tracks.",
+      "intro": "Cohort #3's dates are to be announced. It runs both the 1-month and 3-month tracks.",
       "fields": [
         {
           "id": "track",

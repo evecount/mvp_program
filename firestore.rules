@@ -48,7 +48,7 @@ service cloud.firestore {
         && d.consent == true
         && d.acceptTerms == true
         && d.acceptPrivacy == true
-        && ((d.cohort == '2027-01-26' && request.time < timestamp.value(1800666000000)))
+        && ((d.cohort == 'cohort-3'))
         && d.status == 'pending'
         && d.schemaVersion == 2
         && d.createdAt == request.time

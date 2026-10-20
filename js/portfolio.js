@@ -22,10 +22,17 @@
  */
 const PORTFOLIO = [
   {
-    n: 2,
-    dates: "Starts 26 Jan 2027",
+    n: 3,
+    dates: "Dates to be announced",
     status: "upcoming",
-    pending: "Applications are open. This cohort's startups are announced as they graduate.",
+    pending: "Applications are open. This cohort's startups are announced as they join.",
+    startups: [],
+  },
+  {
+    n: 2,
+    dates: "Started 19 Oct 2026",
+    status: "building",
+    pending: "Cohort #2 is building now.",
     startups: [
       {
         name: "Scripting Destiny",
