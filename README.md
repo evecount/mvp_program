@@ -20,6 +20,9 @@ Static HTML/CSS/JS with no build step. Preview locally with:
 python3 -m http.server 8080
 ```
 
+Every merge to `main` publishes the site to Firebase Hosting (`.github/workflows/deploy-firebase.yml`), using the
+`FIREBASE_SERVICE_ACCOUNT` repo secret. Cloud Functions and Firestore rules are still deployed by hand.
+
 | File | Purpose |
 |---|---|
 | `js/application-questions.js` | The form's steps and questions. **Generated** from `functions/src/mamba/` (see below), do not edit. |
