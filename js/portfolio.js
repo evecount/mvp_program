@@ -27,8 +27,18 @@ const PORTFOLIO = [
     status: "upcoming",
     pending: "Applications are open. This cohort's startups are announced as they graduate.",
     startups: [
-      { name: "Scripting Destiny" },
-      { name: "GRC Nexus" },
+      {
+        name: "Scripting Destiny",
+        oneLiner: "An AI BaZi (Four Pillars of Destiny) platform that calculates a person's chart, luck pillars and Ten Gods, then explains it through an AI destiny consultant.",
+        sector: ["Consumer AI", "Metaphysics"],
+        stage: "Prototype",
+      },
+      {
+        name: "GRC Nexus",
+        oneLiner: "A modular, AI-enabled governance, risk and compliance platform that maps a company's processes to its regulatory obligations, with every decision owned by a named person.",
+        sector: ["RegTech", "Enterprise SaaS"],
+        stage: "Prototype",
+      },
     ],
   },
   {
