@@ -44,3 +44,4 @@ main.pf { max-width: 1120px; }
 .pf-cta p { margin-top: 8px; }
 .pf-cta a.send { display: inline-flex; align-items: center; margin-top: 18px; background: var(--orange); color: var(--ink); text-decoration: none; }
 @media (max-width: 700px) { .pf-cta { grid-template-columns: 1fr; } }
+.pf-oneliner--soon { color: var(--ink-2); font-style: italic; }

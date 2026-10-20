@@ -2,8 +2,9 @@
  * Mamba MVP — Portfolio: the cohorts and the startups coming out of them.
  *
  * Add a cohort by adding an entry to PORTFOLIO (newest first). Add a startup
- * by adding it to its cohort's `startups`. Only `name` and `oneLiner` are
- * required; without a `logo` the card shows the startup's initials.
+ * by adding it to its cohort's `startups`. Only `name` is required; without a
+ * `logo` the card shows the startup's initials, and without a `oneLiner` it
+ * says details are coming soon.
  *
  *   {
  *     name: "Startup Name",
@@ -25,14 +26,34 @@ const PORTFOLIO = [
     dates: "Starts 26 Jan 2027",
     status: "upcoming",
     pending: "Applications are open. This cohort's startups are announced as they graduate.",
-    startups: [],
+    startups: [
+      { name: "Scripting Destiny" },
+      { name: "GRC Nexus" },
+    ],
   },
   {
     n: 1,
     dates: "5 Oct 2026 – 5 Jan 2027",
     status: "building",
     pending: "Cohort #1 is building now. Its startups are unveiled at Demo Day in January 2027.",
-    startups: [],
+    startups: [
+      {
+        name: "SharedOut",
+        oneLiner: "A neighbourhood marketplace where HDB residents rent idle items and book home-based services from neighbours within 500 metres.",
+        sector: ["Marketplace", "Sharing economy"],
+        stage: "Live in 21 HDB estates",
+        logo: "assets/portfolio/sharedout.png",
+        url: "https://sharedout.com.sg",
+      },
+      {
+        name: "Auvira",
+        oneLiner: "An AI health companion for women's hormonal wellbeing that links daily biometrics and cycle symptoms to an integrated care team.",
+        sector: ["Healthtech", "Women's health"],
+        stage: "Singapore pilot opening soon",
+        logo: "assets/portfolio/auvira.svg",
+        url: "https://auvira.health",
+      },
+    ],
   },
 ];
 
@@ -95,7 +116,7 @@ const PORTFOLIO = [
     const meta = [s.track && TRACK[s.track], s.stage].filter(Boolean).join(" · ");
     if (meta) title.append(el("p", "pf-meta", meta));
     head.append(logo, title);
-    c.append(head, el("p", "pf-oneliner", s.oneLiner));
+    c.append(head, el("p", s.oneLiner ? "pf-oneliner" : "pf-oneliner pf-oneliner--soon", s.oneLiner || "Details coming soon."));
     if (s.sector?.length) {
       const tags = el("div", "pf-tags");
       for (const t of s.sector) tags.append(el("span", "pf-tag", t));
