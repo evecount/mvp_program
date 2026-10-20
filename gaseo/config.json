@@ -51,6 +51,7 @@
       "ogDescription": "Validate the problem. Build the MVP. Test demand. A 1-month sprint or 3-month venture build in Singapore. Applications for the January 2027 cohort are open." },
     { "file": "apply.html", "path": "/apply.html", "priority": 0.9, "changefreq": "weekly",
       "ogTitle": "Apply to the Mamba Venture Program (MVP)" },
+    { "file": "portfolio.html", "path": "/portfolio.html", "priority": 0.7, "changefreq": "weekly" },
     { "file": "partner.html", "path": "/partner.html", "priority": 0.6, "changefreq": "monthly" },
     { "file": "contact.html", "path": "/contact.html", "priority": 0.5, "changefreq": "monthly" },
     { "file": "legal/privacy.html", "path": "/legal/privacy.html", "priority": 0.2, "changefreq": "yearly" },
