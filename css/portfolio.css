@@ -1,0 +1,46 @@
+/* Portfolio page: the legal pages' paper and ink, widened for a card grid. */
+main.pf { max-width: 1120px; }
+.pf .lead { max-width: 62ch; }
+
+.pf-stats { display: flex; flex-wrap: wrap; gap: 12px 40px; margin-top: 32px; }
+.pf-stat strong { display: block; font-family: "Big Shoulders Display", sans-serif; font-weight: 800; font-size: 2.6rem; line-height: 1; }
+.pf-stat span { color: var(--ink-2); font-size: .92rem; }
+
+.pf-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 36px; }
+.pf-filter { font: inherit; font-size: .9rem; font-weight: 500; color: var(--ink); background: transparent; border: 1px solid var(--hair); border-radius: 999px; min-height: 40px; padding: 0 16px; cursor: pointer; }
+.pf-filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+@media (hover: hover) { .pf-filter:hover:not([aria-pressed="true"]) { border-color: var(--orange); } }
+
+.pf-cohort { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--hair); scroll-margin-top: 24px; }
+.pf-cohort-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; }
+.pf-cohort-head h2 { margin: 0; font-family: "Big Shoulders Display", sans-serif; font-weight: 800; text-transform: uppercase; font-size: clamp(1.8rem, 4vw, 2.4rem); line-height: 1; letter-spacing: 0; }
+.pf-badge { align-self: center; font-size: .78rem; font-weight: 600; letter-spacing: .02em; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--hair); }
+.pf-badge--upcoming { background: var(--orange); border-color: var(--orange); }
+.pf-badge--building { background: var(--ink); border-color: var(--ink); color: #fff; }
+.pf-dates { margin: 0; flex-basis: 100%; color: var(--ink-2); font-size: .95rem; }
+
+.pf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 24px; }
+.pf-card { display: flex; flex-direction: column; gap: 12px; padding: 22px; background: #fff; border: 1px solid var(--hair); border-radius: 16px; }
+.pf-card[hidden] { display: none; }
+.pf-card p { margin: 0; }
+.pf-card-head { display: flex; align-items: center; gap: 14px; }
+.pf-logo { flex: none; width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
+.pf-logo--initials { display: grid; place-items: center; background: var(--ink); color: var(--orange); font-family: "Big Shoulders Display", sans-serif; font-weight: 800; font-size: 1.4rem; }
+.pf-name { margin: 0; font-size: 1.1rem; font-weight: 700; }
+.pf-meta { color: var(--ink-2); font-size: .85rem; }
+.pf-oneliner { font-size: .98rem; }
+.pf-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pf-tag { font-size: .78rem; font-weight: 500; padding: 3px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--hair); }
+.pf-founders { color: var(--ink-2); font-size: .88rem; }
+.pf-links { display: flex; gap: 16px; margin-top: auto; padding-top: 4px; font-size: .9rem; font-weight: 600; }
+.pf-link { text-decoration: none; }
+.pf-link:hover { color: var(--orange-text); }
+.pf-card--soon { flex-direction: row; align-items: center; background: transparent; border-style: dashed; grid-column: 1 / -1; }
+.pf-card--soon .pf-oneliner { color: var(--ink-2); }
+
+.pf-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 72px; }
+.pf-cta > div { padding: 28px; border-radius: 16px; background: var(--ink); color: rgba(255,255,255,.75); }
+.pf-cta h2 { margin: 0; color: #fff; }
+.pf-cta p { margin-top: 8px; }
+.pf-cta a.send { display: inline-flex; align-items: center; margin-top: 18px; background: var(--orange); color: var(--ink); text-decoration: none; }
+@media (max-width: 700px) { .pf-cta { grid-template-columns: 1fr; } }
